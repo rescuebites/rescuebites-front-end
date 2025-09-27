@@ -1,8 +1,7 @@
 {
   "projectName": ".",
-  "mode": "file-router",
+  "mode": "router",
   "typescript": true,
-  "tailwind": true,
   "packageManager": "npm",
   "git": true,
   "version": 1,
