@@ -1,6 +1,7 @@
 import { AuthRoutes } from "@/routes/AuthRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { CommerceRoutes } from "@/routes/CommerceRoutes";
 
 export default function RoutesProvider() {
   return (
@@ -12,6 +13,8 @@ export default function RoutesProvider() {
       <Route path="/auth/*" element={<AuthRoutes />} />
 
       <Route path="/api/users/*" element={<UserRoutes />} />
+
+      <Route path="/register/*" element={<CommerceRoutes />} />
     </Routes>
   );
 }
