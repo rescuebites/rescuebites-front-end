@@ -9,7 +9,7 @@ export const useRegisterCommerce = () => {
     formState: { errors },
   } = useForm<Inputs>({
     defaultValues: {
-      tiposComercio: [],
+      commerceTypes: [],
     },
   });
   const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);

@@ -1,12 +1,12 @@
 import { Route, Routes } from "react-router-dom";
 import { AuthLayout } from "@/shared/pages/layouts/AuthLayout";
-import { RegisterFormPage } from "@/shared/pages/auth/RegisterFormPage";
+import RegisterForm from "@/modules/commerce/components/CommerceRegisterForm";
 
 export function CommerceRoutes() {
   return (
     <Routes>
       <Route element={<AuthLayout />}>
-        <Route path={"register"} element={<RegisterFormPage />} />
+        <Route index element={<RegisterForm />} />
       </Route>
     </Routes>
   );

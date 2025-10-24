@@ -1,24 +1,21 @@
-import Card from "@mui/material/Card";
-import CardContent from "@mui/material/CardContent";
-import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
-import InputsRegisterForm from "./InputsRegisterForm";
+import InputsRegisterForm from "./LoginInputsRegisterForm";
 import CommerceInputsRegisterForm from "./CommerceInputsRegisterForm";
 import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerce";
-// import { Link } from "react-router-dom";
+import Typography from "@mui/material/Typography";
 
 export type Inputs = {
-  correoElectronico: string;
-  contraseña: string;
-  nombre: string;
-  descripcion?: string;
-  tiposComercio: string[];
-  horario: string;
-  direccion: string;
-  localidad: string;
-  fotoPerfil: File;
-  numeroTelefono: number;
+  email: string;
+  password: string;
+  name: string;
+  description?: string;
+  commerceTypes: string[];
+  schedule: string;
+  address: string;
+  city: string;
+  profilePhoto: File;
+  phoneNumber: number;
 };
 
 export default function RegisterForm() {
@@ -28,22 +25,30 @@ export default function RegisterForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Box sx={{ "& .MuiTextField-root": { m: 1, width: "50ch" } }}>
-          <Card sx={{ minWidth: 275 }}>
-            <CardContent>
-              <InputsRegisterForm register={register} />
-              <CommerceInputsRegisterForm
-                control={control}
-                errors={errors}
-                register={register}
-              />
-
-              <Button type="submit" variant="contained">
-                Registrar
-              </Button>
-            </CardContent>
-          </Card>
-        </Box>
+        <Typography variant="h4" component="h1" align="center">
+          Registrar Comercio
+        </Typography>
+        <Stack spacing={2} sx={{ mt: 3 }}>
+          <InputsRegisterForm register={register} />
+        </Stack>
+        <Stack spacing={2} sx={{ mt: 2 }}>
+          <CommerceInputsRegisterForm
+            control={control}
+            errors={errors}
+            register={register}
+          />
+        </Stack>
+        <Stack spacing={2} sx={{ mt: 4 }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{
+              backgroundColor: "#77a778",
+            }}
+          >
+            Registrar
+          </Button>
+        </Stack>
       </form>
     </>
   );
