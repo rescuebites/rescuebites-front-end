@@ -19,7 +19,7 @@ export type Inputs = {
 };
 
 export default function RegisterForm() {
-  const { register, handleSubmit, control, errors, onSubmit } =
+  const { register, handleSubmit, control, errors, onSubmit, isPending } =
     useRegisterCommerce();
 
   return (
@@ -42,11 +42,10 @@ export default function RegisterForm() {
           <Button
             type="submit"
             variant="contained"
-            sx={{
-              backgroundColor: "#77a778",
-            }}
+            disabled={isPending} //desactiva el botón mientras se envía el form
+            sx={{ backgroundColor: "#77a778" }}
           >
-            Registrar
+            {isPending ? "Registrando..." : "Registrar"}
           </Button>
         </Stack>
       </form>
