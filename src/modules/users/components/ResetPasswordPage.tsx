@@ -1,8 +1,9 @@
 import { useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { TextField, Button, Box } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { useResetPassword } from "@/modules/users/hooks/useResetPassword";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import CustomButton from "@/shared/components/CustomButton";
 
 export function ResetPasswordPage() {
   const [searchParams] = useSearchParams();
@@ -23,7 +24,6 @@ export function ResetPasswordPage() {
 
     if (!isValidUUID(token)) {
       showMessage("El token no es válido", "error");
-      console.log("Token recibido:", token);
 
       return;
     }
@@ -61,22 +61,11 @@ export function ResetPasswordPage() {
         onChange={(e) => setConfirmPassword(e.target.value)}
         sx={{ mb: 2 }}
       />
-      <Button
+      <CustomButton
         type="submit"
-        variant="contained"
-        sx={{
-          mt: 2,
-          backgroundColor: "#77A787",
-          width: "80%",
-          alignItems: "center",
-          mx: "auto",
-          display: "block",
-          "&:hover": { backgroundColor: "#77A787" },
-        }}
-        loading={isPending}
-      >
-        {isPending ? "Cargando..." : "Cambiar Contraseña"}
-      </Button>
+        text="Cambiar Contraseña"
+        isLoading={isPending}
+      />
     </Box>
   );
 }
