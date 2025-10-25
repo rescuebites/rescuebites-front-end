@@ -1,3 +1,4 @@
+import { FieldErrors } from "react-hook-form";
 import TextField from "@mui/material/TextField";
 import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
 import InputAdornment from "@mui/material/InputAdornment";
@@ -8,9 +9,10 @@ import React from "react";
 
 type Props = {
   register: any;
+  errors: FieldErrors<Inputs>;
 };
 
-export default function InputsRegisterForm({ register }: Props) {
+export default function InputsRegisterForm({ register, errors }: Props) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -30,20 +32,24 @@ export default function InputsRegisterForm({ register }: Props) {
   return (
     <>
       <TextField
-        {...register("correoElectronico", {
+        {...register("email", {
           required: "Ingrese su correo electrónico",
         })}
-        id="correo electronico"
+        id="email"
         label="Correo electrónico"
         type="text"
         fullWidth
+        error={!!errors.email}
+        helperText={errors.email?.message}
       />
       <TextField
-        {...register("contraseña", { required: true })}
-        id="contraseña"
+        {...register("password", { required: "Ingrese una contraseña" })}
+        id="password"
         label="Contraseña"
         type={showPassword ? "text" : "password"}
         fullWidth
+        error={!!errors.password}
+        helperText={errors.password?.message}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">

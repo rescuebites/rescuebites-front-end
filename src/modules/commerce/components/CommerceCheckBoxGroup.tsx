@@ -28,7 +28,7 @@ export default function CommerceCheckboxGroup({ control, errors }: Props) {
     <FormControl error={!!errors.commerceTypes} variant="standard">
       <FormLabel component="legend">Tipo de comercio</FormLabel>
 
-      <Controller
+      <Controller //conecta los checkboxes con react-hook-form, para controlar su valor y validación.
         name="commerceTypes"
         control={control}
         rules={{
@@ -47,8 +47,9 @@ export default function CommerceCheckboxGroup({ control, errors }: Props) {
                       <Checkbox
                         icon={<RadioButtonUncheckedIcon />}
                         checkedIcon={<RadioButtonCheckedIcon />}
-                        checked={field.value?.includes(option) || false}
+                        checked={field.value?.includes(option) || false} //determina si se selecciona un check
                         onChange={(e) => {
+                          //se actualiza el array de opciones al marcar o desmarcar los check
                           const checked = e.target.checked;
                           const newValue = checked
                             ? [...(field.value || []), option]

@@ -29,7 +29,7 @@ export default function RegisterForm() {
           Registrar Comercio
         </Typography>
         <Stack spacing={2} sx={{ mt: 3 }}>
-          <InputsRegisterForm register={register} />
+          <InputsRegisterForm register={register} errors={errors} />
         </Stack>
         <Stack spacing={2} sx={{ mt: 2 }}>
           <CommerceInputsRegisterForm
