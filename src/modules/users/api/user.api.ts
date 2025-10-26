@@ -11,3 +11,9 @@ export const sendRecoveryEmail = async (data: EmailRequest): Promise<void> => {
 export const resetPassword = async ({token, newPassword, confirmNewPassword}: ResetPasswordRequest): Promise<void> => {
   await httpClient.post<void>(`${USER_URL}/reset-password`, { token, newPassword, confirmNewPassword });
 };
+
+export const resendVerificationEmail = async (email: string): Promise<void> => {
+  await httpClient.post<void>(`${USER_URL}/resend-verification-account`, {
+    email,
+  });
+};

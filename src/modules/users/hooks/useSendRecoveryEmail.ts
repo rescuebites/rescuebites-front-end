@@ -1,11 +1,11 @@
 import { useMutation } from "@tanstack/react-query";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore.ts";
-import { sendRecoveryEmail } from "../services/user.service";
+import { sendRecoveryEmail } from "../api/user.api";
 
-export const useSendRecoveryEmail = () => {
+export function useSendRecoveryEmail() {
   const showMessage = useSnackbarStore((state) => state.showMessage);
 
-  const mutation = useMutation({
+  const { isError, isPending, mutate } = useMutation({
     mutationFn: sendRecoveryEmail,
     onSuccess: () => {
       showMessage("Se envió un enlace de recuperación a tu correo electrónico", "success");
@@ -15,5 +15,9 @@ export const useSendRecoveryEmail = () => {
     },
   });
 
-  return mutation;
+  return {
+    isError,
+    isPending,
+    mutate,
+  };
 };

@@ -78,8 +78,6 @@ export default function CommerceCheckForm({
       />
 
       <CommerceCheckboxGroup control={control} errors={errors} />
-
-      <ImageUpload register={register} error={errors?.profilePhoto?.message} />
     </>
   );
 }

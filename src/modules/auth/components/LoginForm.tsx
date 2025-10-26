@@ -1,28 +1,22 @@
 import React, { useState } from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import { TextField} from "@mui/material";
 import { useLogin } from "@/modules/auth/hooks/useLogin";
+import CustomTitle from "@/shared/components/CustomTitle";
+import CustomButton from "@/shared/components/CustomButton";
 
 const LoginForm: React.FC = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const { isPending, mutate } = useLogin();
 
-  
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     mutate({ email, password });
   };
   
   return (
-    <Box>
-      <Typography
-        variant="h5"
-        align="center"
-        gutterBottom
-        sx={{ fontWeight: "bold", color: "##77A787" }}
-      >
-        Iniciar Sesión
-      </Typography>
+    <>
+      <CustomTitle text="Iniciar Sesión" />
 
       <form onSubmit={handleSubmit}>
         <TextField
@@ -51,24 +45,13 @@ const LoginForm: React.FC = () => {
             shrink: true,
           }}
         />
-        <Button
+        <CustomButton
           type="submit"
-          variant="contained"
-          sx={{
-            mt: 2,
-            backgroundColor: "#77A787",
-            width: "80%",
-            alignItems: "center",
-            mx: "auto",
-            display: "block",
-            "&:hover": { backgroundColor: "#77A787" },
-          }}
-          loading={isPending}
-        >
-          {isPending ? "Cargando..." : "Iniciar Sesión"}
-        </Button>
+          text="Iniciar Sesión"
+          isLoading={isPending}
+        />
       </form>
-    </Box>
+    </>
   );
 };
 

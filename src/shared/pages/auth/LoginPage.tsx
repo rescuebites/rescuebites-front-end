@@ -11,7 +11,7 @@ export function LoginPage() {
         registerMessage={"¿No tienes una cuenta?"}
         linkHrefCommerce={"/register-commerce"}
         linkTextCommerce={"Registrate como comercio"}
-        linkHrefClient={"/register-client"}
+        linkHrefClient={"/auth/register-client"}
         linkTextClient={"Registrate como cliente"}
       />
     </>

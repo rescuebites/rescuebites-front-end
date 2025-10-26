@@ -2,13 +2,13 @@ import {
   FormControl,
   FormControlLabel,
   FormHelperText,
-  FormLabel,
   Checkbox,
   Grid,
 } from "@mui/material";
 import { Controller } from "react-hook-form";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
+import CustomTitle from "@/shared/components/CustomTitle";
 
 type Props = {
   control: any;
@@ -26,7 +26,7 @@ const commerceTypes = [
 export default function CommerceCheckboxGroup({ control, errors }: Props) {
   return (
     <FormControl error={!!errors.commerceTypes} variant="standard">
-      <FormLabel component="legend">Tipo de comercio</FormLabel>
+      <CustomTitle variant="h6" align="left" text="Preferencias alimenticias" />
 
       <Controller //conecta los checkboxes con react-hook-form, para controlar su valor y validación.
         name="commerceTypes"
@@ -39,7 +39,7 @@ export default function CommerceCheckboxGroup({ control, errors }: Props) {
           <>
             <Grid container spacing={1} alignItems="flex-start">
               {commerceTypes.map((option) => (
-                <Grid sx={{ xs: 6 }} key={option}>
+                <Grid sx={{ xs: 12, md: 6 }} key={option}>
                   <FormControlLabel
                     sx={{ width: "100%" }}
                     key={option}

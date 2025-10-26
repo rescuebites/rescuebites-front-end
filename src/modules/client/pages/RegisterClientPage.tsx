@@ -1,18 +1,16 @@
 import { Box, Avatar, IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useState } from "react";
-import Typography from "@mui/material/Typography";
+import CustomTitle from "@/shared/components/CustomTitle";
+import RegisterClientForm from "@/modules/client/components/RegisterClientForm"; 
 
-type Props = {
-  register: any;
-  error?: string;
-};
-
-export default function ImageUpload({ register, error }: Props) {
+export function RegisterClientPage() {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   return (
     <>
+      <CustomTitle text="Registrar Cliente" />
+
       <Box sx={{ display: "flex", justifyContent: "center", mt: 2, mb: 2 }}>
         <Avatar
           src={profilePicture ? URL.createObjectURL(profilePicture) : undefined}
@@ -28,7 +26,6 @@ export default function ImageUpload({ register, error }: Props) {
             hidden
             accept="image/png, image/jpeg"
             type="file"
-            {...register("profilePhoto", { required: "Suba una imagen" })}
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
@@ -60,12 +57,12 @@ export default function ImageUpload({ register, error }: Props) {
             </span>
           </IconButton>
         )}
-        {error && (
-          <Typography variant="caption" color="error">
-            {error}
-          </Typography>
-        )}
       </Box>
+
+      <RegisterClientForm
+        profilePicture={profilePicture}
+        setProfilePicture={setProfilePicture}
+      />
     </>
   );
 }

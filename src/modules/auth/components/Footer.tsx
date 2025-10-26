@@ -1,5 +1,6 @@
 import { Link as RouterLink } from "react-router-dom";
-import { Link, Typography, Box, Stack } from "@mui/material";
+import { Link, Box, Stack } from "@mui/material";
+import CustomTitle from "@/shared/components/CustomTitle";
 
 interface FooterProps {
   resetPasswordMessage: string;
@@ -35,18 +36,16 @@ export function Footer({
           to={resetPasswordHref}
           underline="hover"
           color="#77A787"
-          sx={{ fontSize: 14, textAlign: "center" }}
+          sx={{ fontSize: 15, textAlign: "center" }}
         >
           {resetPasswordMessage}
         </Link>
 
-        <Typography
-          variant="body2"
+        <CustomTitle
+          text={registerMessage}
+          variant="subtitle1"
           color="text.secondary"
-          sx={{ fontSize: 14, textAlign: "center" }}
-        >
-          {registerMessage}
-        </Typography>
+        />
 
         <Stack
           direction="row"

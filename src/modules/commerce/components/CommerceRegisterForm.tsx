@@ -4,6 +4,9 @@ import InputsRegisterForm from "./LoginInputsRegisterForm";
 import CommerceInputsRegisterForm from "./CommerceInputsRegisterForm";
 import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerce";
 import Typography from "@mui/material/Typography";
+import ImageUpload from "./ImageUpload";
+import CustomTitle from "@/shared/components/CustomTitle";
+import CustomButton from "@/shared/components/CustomButton";
 
 export type Inputs = {
   email: string;
@@ -25,10 +28,13 @@ export default function RegisterForm() {
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Typography variant="h4" component="h1" align="center">
-          Registrar Comercio
-        </Typography>
+        <CustomTitle text="Registrar Comercio" />
+
         <Stack spacing={2} sx={{ mt: 3 }}>
+          <ImageUpload
+            register={register}
+            error={errors?.profilePhoto?.message}
+          />
           <InputsRegisterForm register={register} errors={errors} />
         </Stack>
         <Stack spacing={2} sx={{ mt: 2 }}>
@@ -39,14 +45,12 @@ export default function RegisterForm() {
           />
         </Stack>
         <Stack spacing={2} sx={{ mt: 4 }}>
-          <Button
+          <CustomButton
+            text="Registrar"
             type="submit"
-            variant="contained"
-            disabled={isPending} //desactiva el botón mientras se envía el form
-            sx={{ backgroundColor: "#77a778" }}
-          >
-            {isPending ? "Registrando..." : "Registrar"}
-          </Button>
+            fullWidth
+            isLoading={isPending}
+          ></CustomButton>
         </Stack>
       </form>
     </>
