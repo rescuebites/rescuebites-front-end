@@ -1,8 +1,7 @@
 import { FieldErrors } from "react-hook-form";
-import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
+import type { Inputs } from "../interfaces/createCommerceInteface";
 import TextField from "@mui/material/TextField";
 import CommerceCheckboxGroup from "./CommerceCheckBoxGroup";
-import ImageUpload from "./ImageUpload";
 
 type Props = {
   register: any;

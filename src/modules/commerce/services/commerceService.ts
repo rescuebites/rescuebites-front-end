@@ -1,5 +1,5 @@
 import { httpClient } from "@/shared/lib/httpClient";
-import type { Inputs } from "../components/CommerceRegisterForm";
+import type { Inputs } from "../interfaces/createCommerceInteface";
 
 export const registerCommerce = async (data: Inputs) => {
   //recibe datos del formulario (data) y los envía al back
@@ -21,3 +21,7 @@ export const registerCommerce = async (data: Inputs) => {
 
   return response.data;
 };
+
+export async function updateCommerce(id: string, data: Inputs) {
+  return await httpClient.put(`/commerces/${id}`, data);
+}

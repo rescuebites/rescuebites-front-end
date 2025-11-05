@@ -1,25 +1,10 @@
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import InputsRegisterForm from "./LoginInputsRegisterForm";
 import CommerceInputsRegisterForm from "./CommerceInputsRegisterForm";
 import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerce";
-import Typography from "@mui/material/Typography";
 import ImageUpload from "./ImageUpload";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
-
-export type Inputs = {
-  email: string;
-  password: string;
-  name: string;
-  description?: string;
-  commerceTypes: string[];
-  schedule: string;
-  address: string;
-  city: string;
-  profilePhoto: File;
-  phoneNumber: number;
-};
 
 export default function RegisterForm() {
   const { register, handleSubmit, control, errors, onSubmit, isPending } =

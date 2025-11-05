@@ -1,5 +1,5 @@
 import { useForm, SubmitHandler } from "react-hook-form";
-import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
+import type { Inputs } from "../interfaces/createCommerceInteface";
 import { useRegisterCommerceMutation } from "../hooks/useMutationRegisterCommerce";
 
 export const useRegisterCommerce = () => {
