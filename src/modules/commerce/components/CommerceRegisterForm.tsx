@@ -5,10 +5,38 @@ import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerc
 import ImageUpload from "./ImageUpload";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
+import { getCommerceProfile } from "../services/updateCommerce";
+import { useEffect, useState } from "react";
+import type { Inputs } from "../interfaces/createCommerceInteface";
 
-export default function RegisterForm() {
-  const { register, handleSubmit, control, errors, onSubmit, isPending } =
-    useRegisterCommerce();
+type Props = {
+  mode?: "create" | "edit";
+  commerceId?: string;
+};
+
+export default function CommerceForm({ mode = "create", commerceId }: Props) {
+  const [initialValues, setInitialValues] = useState<Inputs>();
+  const {
+    register,
+    handleSubmit,
+    control,
+    errors,
+    onSubmit,
+    isPending,
+    setValue,
+  } = useRegisterCommerce();
+
+  useEffect(() => {
+    if (mode === "edit" && commerceId) {
+      // Fetch existing commerce data and set as initial values
+      getCommerceProfile(commerceId).then((data) => {
+        setInitialValues(data);
+        Object.entries(data).forEach(([key, value]) => {
+          setValue(key as keyof Inputs, value);
+        });
+      });
+    }
+  }, [mode, commerceId, setValue]);
 
   return (
     <>
@@ -31,7 +59,7 @@ export default function RegisterForm() {
         </Stack>
         <Stack spacing={2} sx={{ mt: 4 }}>
           <CustomButton
-            text="Registrar"
+            text={mode === "edit" ? "Actualizar" : "Registrar"}
             type="submit"
             fullWidth
             isLoading={isPending}

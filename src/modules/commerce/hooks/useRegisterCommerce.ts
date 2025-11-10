@@ -11,6 +11,7 @@ export const useRegisterCommerce = () => {
     control,
     formState: { errors },
     reset,
+    setValue,
   } = useForm<Inputs>({
     defaultValues: {
       commerceTypes: [],
@@ -30,5 +31,6 @@ export const useRegisterCommerce = () => {
     errors,
     onSubmit,
     isPending,
+    setValue,
   };
 };

@@ -1,5 +1,5 @@
 //rellenar datos back
-import { getClientProfile } from "../services/updateCommerce";
+import { getCommerceProfile } from "../services/updateCommerce";
 import { useForm } from "react-hook-form";
 import type { Inputs } from "../interfaces/createCommerceInteface";
 
@@ -7,7 +7,7 @@ export const fillUpFields = async () => {
   const { setValue } = useForm<Inputs>();
 
   try {
-    const clientData = await getClientProfile();
+    const clientData = await getCommerceProfile();
 
     setValue("email", clientData.email);
     setValue("password", clientData.password);
