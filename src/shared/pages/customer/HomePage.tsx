@@ -1,18 +1,19 @@
 import { Box, Container, Stack } from "@mui/material";
-import Header from "./Header";
-import SearchBar from "./SearchBar";
-import CategoryChips from "./CategoryChips";
-import FeaturedStores from "./FeaturedStores";
-import TopDeals from "./TopDeals";
+import Header from "../../../modules/customer/home/components/Header";
+import SearchBar from "../../../modules/customer/home/components/SearchBar";
+import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
+import FeaturedStores from "../../../modules/customer/home/components/FeaturedStores";
+import TopDeals from "../../../modules/customer/home/components/TopDeals";
 
 export default function HomePage() {
   const handleSearchChange =(value:string) => {
     console.log("Buscando:", value);
   }
   return (
+    
     <Box sx={{ bgcolor: "#fffff8", pb: { xs: 8, md: 10 } }}>
       <Header />
-
+  
       <Container
         maxWidth="lg"
         sx={{
