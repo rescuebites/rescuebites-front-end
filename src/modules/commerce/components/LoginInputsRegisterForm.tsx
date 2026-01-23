@@ -10,9 +10,10 @@ import React from "react";
 type Props = {
   register: any;
   errors: FieldErrors<Inputs>;
+  isEditMode?: boolean;
 };
 
-export default function InputsRegisterForm({ register, errors }: Props) {
+export default function InputsRegisterForm({ register, errors, isEditMode }: Props) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);

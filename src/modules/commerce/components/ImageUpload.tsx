@@ -6,9 +6,10 @@ import Typography from "@mui/material/Typography";
 type Props = {
   register: any;
   error?: string;
+  currentImage?: string;
 };
 
-export default function ImageUpload({ register, error }: Props) {
+export default function ImageUpload({ register, error, currentImage  }: Props) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   return (
