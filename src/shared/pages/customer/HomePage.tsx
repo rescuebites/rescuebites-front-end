@@ -1,4 +1,4 @@
-import { Box, Container, Stack } from "@mui/material";
+import { Box, Container, Stack, Typography } from "@mui/material";
 import Header from "../../../modules/customer/home/components/Header";
 import SearchBar from "../../../modules/customer/home/components/SearchBar";
 import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
@@ -6,41 +6,55 @@ import FeaturedStores from "../../../modules/customer/home/components/FeaturedSt
 import TopDeals from "../../../modules/customer/home/components/TopDeals";
 
 export default function HomePage() {
-  const handleSearchChange =(value:string) => {
+  const handleSearchChange = (value: string) => {
     console.log("Buscando:", value);
-  }
+  };
+
   return (
-    
-    <Box sx={{ bgcolor: "#fffff8", pb: { xs: 8, md: 10 } }}>
+    <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh', pb: { xs: 8, md: 10 } }}>
       <Header />
-  
+
+      {/* Sección de búsqueda y categorías */}
       <Container
-        maxWidth="lg"
+        maxWidth={false}
         sx={{
-          pt: { xs: 1, sm: 2 },
-          px: { xs: 1, sm: 2 },
-          mt: { xs: 1, sm: 2 },
+          pt: { xs: 2, sm: 3 },
+          px: { xs: 2, sm: 3 },
+          maxWidth: '1600px',
+          mx: 'auto',
         }}
       >
-        <Stack spacing={{ xs: 1, sm: 2 }}>
+        <Stack spacing={{ xs: 2, sm: 3 }}>
           <SearchBar onSearchChange={handleSearchChange} />
           <CategoryChips />
         </Stack>
       </Container>
 
+      {/* Sección de locales destacados */}
       <Container
-        maxWidth="lg"
-        sx={{ pt: { xs: 2, md: 3 }, mt: { xs: 3, md: 4 } }}
+        maxWidth={false}
+        sx={{ 
+          pt: { xs: 3, md: 4 }, 
+          px: { xs: 2, sm: 3 },
+          maxWidth: '1600px',
+          mx: 'auto',
+        }}
       >
         <Stack spacing={2}>
-          <SectionTitle primary="Locales destacados" secondary="Ver todo" />
+          <SectionTitle primary="Locales" secondary="Ver todo" />
           <FeaturedStores />
         </Stack>
       </Container>
 
+      {/* Sección de productos destacados */}
       <Container
-        maxWidth="lg"
-        sx={{ pt: { xs: 2, md: 3 }, mt: { xs: 3, md: 4 } }}
+        maxWidth={false}
+        sx={{ 
+          pt: { xs: 3, md: 4 }, 
+          px: { xs: 2, sm: 3 },
+          maxWidth: '1600px',
+          mx: 'auto',
+        }}
       >
         <Stack spacing={2}>
           <SectionTitle primary="Productos destacados" secondary="Ver todo" />
@@ -60,33 +74,42 @@ function SectionTitle({
 }) {
   return (
     <Stack
-      direction={{ xs: "column", sm: "row" }}
+      direction="row"
       justifyContent="space-between"
-      alignItems={{ xs: "flex-start", sm: "center" }}
+      alignItems="center"
     >
-      <Box
+      <Typography
         component="h2"
         sx={{
-          color: "#0e1b0e",
-          fontSize: { xs: 18, sm: 22 },
+          color: '#2D2D2D',
+          fontSize: { xs: 18, sm: 20, md: 22 },
           fontWeight: 700,
           m: 0,
         }}
       >
         {primary}
-      </Box>
+      </Typography>
       {secondary && (
-        <Box
-          component="h3"
+        <Typography
+          component="button"
           sx={{
-            color: "#0e1b0e",
-            fontSize: { xs: 16, sm: 18 },
-            fontWeight: 700,
+            color: '#757575',
+            fontSize: { xs: 13, sm: 14 },
+            fontWeight: 600,
             m: 0,
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 0.5,
+            '&:hover': {
+              color: '#77A787',
+            },
           }}
         >
-          {secondary}
-        </Box>
+          {secondary} <span>→</span>
+        </Typography>
       )}
     </Stack>
   );

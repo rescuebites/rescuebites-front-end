@@ -2,7 +2,7 @@ import type { Store, Deal } from "./../interfaces/types";
 
 export const stores: Store[] = [
   {
-    id: "1",
+    id: 1,
     name: "Supera",
     subtitle: "Downtown | Delivery available",
     imageUrl:
@@ -13,7 +13,7 @@ export const stores: Store[] = [
     phoneNumber: "+54 353 123-4567",
   },
   {
-    id: "2",
+    id: 2,
     name: "La parillada",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -23,7 +23,7 @@ export const stores: Store[] = [
     deliveryAvailable: true,
   },
   {
-    id: "3",
+    id: 3,
     name: "Doña Vicky",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -33,7 +33,7 @@ export const stores: Store[] = [
     deliveryAvailable: true,
   },
   {
-    id: "4",
+    id: 4,
     name: "Jumbo",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -43,7 +43,7 @@ export const stores: Store[] = [
     deliveryAvailable: true,
   },
   {
-    id: "5",
+    id: 5,
     name: "Kiosco Cartu",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -53,7 +53,7 @@ export const stores: Store[] = [
     deliveryAvailable: false,
   },
   {
-    id: "6",
+    id: 6,
     name: "Boston 24hs",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -63,7 +63,7 @@ export const stores: Store[] = [
     deliveryAvailable: true,
   },
   {
-    id: "7",
+    id: 7,
     name: "Fresh",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -73,7 +73,7 @@ export const stores: Store[] = [
     deliveryAvailable: true,
   },
   {
-    id: "8",
+    id: 8,
     name: "Home made",
     subtitle: "Uptown | Delivery available",
     imageUrl:
@@ -84,9 +84,27 @@ export const stores: Store[] = [
   },
 ];
 
+// Función helper para calcular días hasta expiración
+const getDaysUntilExpiration = (expirationDate: string): string => {
+  const today = new Date();
+  const expDate = new Date(expirationDate);
+  const diffTime = expDate.getTime() - today.getTime();
+  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  
+  if (diffDays <= 0) return "today";
+  if (diffDays === 1) return "one day";
+  if (diffDays === 2) return "two days";
+  if (diffDays === 3) return "three days";
+  if (diffDays === 4) return "four days";
+  if (diffDays <= 7) return `${diffDays} days`;
+  if (diffDays <= 14) return "one week";
+  if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} weeks`;
+  return "one month";
+};
+
 export const deals: Deal[] = [
   {
-    id: "1",
+    id: 1,
     title: "Pan para rallar",
     description:
       "Pan del día anterior ideal para hacer pan rallado casero. Producto en perfecto estado de conservación.",
@@ -97,13 +115,14 @@ export const deals: Deal[] = [
     discount: 30,
     stock: 8,
     expirationDate: "2026-11-20T00:00:00",
+    expiresIn: getDaysUntilExpiration("2026-11-20T00:00:00"),
     category: "Panadería",
     productType: "Pan",
     storeId: "8",
     tags: ["buen-estado", "vegetariano"],
   },
   {
-    id: "2",
+    id: 2,
     title: "Duraznos para mermelada",
     description:
       "Duraznos maduros perfectos para hacer mermeladas, compotas o conservas. Frutas orgánicas de producción local.",
@@ -113,13 +132,14 @@ export const deals: Deal[] = [
     discount: 25,
     stock: 5,
     expirationDate: "2026-11-20T00:00:00-03:00",
+    expiresIn: getDaysUntilExpiration("2026-11-20T00:00:00-03:00"),
     category: "Verdulería",
     productType: "Frutas",
     storeId: "3",
     tags: ["maduro", "vegano", "organico"],
   },
   {
-    id: "3",
+    id: 3,
     title: "Arroz próximo a vencer",
     description:
       "Arroz largo fino de excelente calidad. Fecha de vencimiento próxima pero producto en perfectas condiciones.",
@@ -132,13 +152,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 5 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "five days",
     category: "Supermercado",
     productType: "Granos",
     storeId: "1",
     tags: ["vegano", "sin-gluten", "buen-estado"],
   },
   {
-    id: "4",
+    id: 4,
     title: "Berenjenas un poco marchitas (para guisos)",
     description:
       "Berenjenas que presentan signos de maduración pero ideales para cocinar. Perfectas para guisos, berenjenas a la parmesana o escabeche.",
@@ -151,13 +172,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 1 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "one day",
     category: "Verdulería",
     productType: "Verduras",
     storeId: "3",
     tags: ["maduro", "vegano", "sin-gluten"],
   },
   {
-    id: "5",
+    id: 5,
     title: "Pan de molde del día anterior",
     description:
       "Pan de molde lactal del día anterior. Ideal para tostadas, sándwiches o budín de pan. Conserva su frescura.",
@@ -169,13 +191,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 3 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "three days",
     category: "Panadería",
     productType: "Pan",
     storeId: "8",
     tags: ["buen-estado", "vegetariano"],
   },
   {
-    id: "6",
+    id: 6,
     title: "Yogur próximo a vencer",
     description:
       "Yogur bebible de excelente calidad. Próximo a vencer pero en perfectas condiciones de consumo.",
@@ -188,13 +211,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 2 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "two days",
     category: "Supermercado",
     productType: "Lácteos",
     storeId: "1",
     tags: ["buen-estado", "vegetariano"],
   },
   {
-    id: "7",
+    id: 7,
     title: "Hamburguesas congeladas con empaque dañado",
     description:
       "Hamburguesas de carne vacuna congeladas. El empaque exterior está levemente dañado pero el producto mantiene la cadena de frío.",
@@ -207,13 +231,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 30 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "one month",
     category: "Supermercado",
     productType: "Carnes",
     storeId: "4",
     tags: ["buen-estado"],
   },
   {
-    id: "9",
+    id: 9,
     title: "Cereales abiertos parcialmente",
     description:
       "Caja de cereales con el empaque exterior parcialmente abierto. Producto sellado interiormente y en perfecto estado.",
@@ -225,13 +250,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 20 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "three weeks",
     category: "Supermercado",
     productType: "Desayuno",
     storeId: "4",
     tags: ["buen-estado", "vegetariano"],
   },
   {
-    id: "11",
+    id: 11,
     title: "Facturas del día anterior (panadería)",
     description:
       "Facturas surtidas del día anterior. Ideales para desayuno o merienda. Mantienen su sabor y textura.",
@@ -244,13 +270,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 1 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "one day",
     category: "Panadería",
     productType: "Repostería",
     storeId: "8",
     tags: ["buen-estado", "vegetariano"],
   },
   {
-    id: "12",
+    id: 12,
     title: "Fideos con fecha próxima (supermercado)",
     description:
       "Fideos guiseros de excelente marca. Fecha de vencimiento próxima. Producto seco que conserva todas sus propiedades.",
@@ -263,13 +290,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 10 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "ten days",
     category: "Supermercado",
     productType: "Pasta",
     storeId: "1",
     tags: ["buen-estado", "vegano"],
   },
   {
-    id: "13",
+    id: 13,
     title: "Ensaladas preparadas para llevar",
     description:
       "Ensaladas frescas preparadas en el día. Deben consumirse hoy. Opciones vegetarianas y veganas disponibles.",
@@ -282,13 +310,14 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 0.5 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "today",
     category: "Restaurante",
     productType: "Comida preparada",
     storeId: "7",
     tags: ["vegano", "sin-gluten", "buen-estado"],
   },
   {
-    id: "14",
+    id: 14,
     title: "Tomate para salsa",
     description:
       "Tomates perita maduros, perfectos para elaborar salsas, conservas o concentrado. Producto fresco de huerta.",
@@ -301,6 +330,7 @@ export const deals: Deal[] = [
     expirationDate: new Date(
       Date.now() + 2 * 24 * 60 * 60 * 1000
     ).toISOString(),
+    expiresIn: "two days",
     category: "Verdulería",
     productType: "Verduras",
     storeId: "3",

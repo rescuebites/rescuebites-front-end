@@ -1,4 +1,4 @@
-import { Box, Card, CardContent, Typography } from "@mui/material";
+import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 import { useState } from "react";
 import { deals } from "./mockData";
 import type { Deal } from "./../interfaces/types";
@@ -21,21 +21,25 @@ export default function TopDeals() {
   return (
     <>
       <Box
-        sx={{
-          pt: 1,
-          display: "grid",
-          gap: 2,
-          gridTemplateColumns: {
-            xs: "repeat(2, 1fr)",
-            sm: "repeat(3, 1fr)",
-            md: "repeat(4, 1fr)",
-          },
-        }}
-      >
-        {sortedDeals.map((d: Deal) => (
-          <DealCard key={d.id} deal={d} onClick={() => handleDealClick(d)} />
-        ))}
-      </Box>
+  sx={{
+    pt: 1,
+    display: "grid",
+    gap: { xs: 2, sm: 2.5, md: 3 },
+    gridTemplateColumns: {
+      xs: "repeat(2, 1fr)",
+      sm: "repeat(3, 1fr)",
+      md: "repeat(4, 1fr)",
+      lg: "repeat(5, 1fr)",
+      xl: "repeat(6, 1fr)",
+    },
+    // 👇 Previene expansión excesiva en pantallas muy grandes
+    maxWidth: '100%',
+  }}
+>
+  {sortedDeals.map((d: Deal) => (
+    <DealCard key={d.id} deal={d} onClick={() => handleDealClick(d)} />
+  ))}
+</Box>
 
       <ProductDetailDialog
         open={selectedDeal !== null}
@@ -51,68 +55,118 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
     <Card
       onClick={onClick}
       sx={{
-        borderRadius: 2,
-        overflow: "hidden",
-        position: "relative",
-        cursor: "pointer",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-        "&:hover": {
-          transform: "translateY(-4px)",
-          boxShadow: "0 8px 16px rgba(0,0,0,0.15)",
+        borderRadius: 3,
+        overflow: 'hidden',
+        bgcolor: '#FFFFFF',
+        boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+        cursor: 'pointer',
+        transition: 'all 0.2s ease',
+        '&:hover': {
+          transform: 'translateY(-4px)',
+          boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
+        },
+        '&:active': {
+          transform: 'scale(0.98)',
         },
       }}
     >
-      {/* Imagen y burbuja descuento */}
-      <Box
-        sx={{
-          position: "relative",
-          aspectRatio: "3 / 4",
-          backgroundImage: `url(${deal.imageUrl})`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-        }}
-      >
-        {deal.discount && (
+      {/* Contenedor de imagen con badge */}
+      <Box sx={{ position: 'relative' }}>
+        <Box
+          component="img"
+          src={deal.imageUrl}
+          loading="lazy"
+          alt={deal.title}
+          sx={{
+            width: '100%',
+            aspectRatio: '1 / 1',
+            objectFit: 'cover',
+            display: 'block',
+          }}
+        />
+
+        {/* Badge de descuento */}
+        {deal.discount > 0 && (
           <Box
             sx={{
-              position: "absolute",
-              top: 12,
-              left: 12,
-              px: 2,
-              py: 1,
-              borderRadius: "50px",
-              bgcolor: "rgba(253, 251, 246, 0.8)",
-              fontSize: 16,
+              position: 'absolute',
+              top: { xs: 10, sm: 12 },
+              right: { xs: 10, sm: 12 },
+              px: { xs: 1.5, sm: 2 },
+              py: { xs: 0.5, sm: 0.75 },
+              borderRadius: '20px',
+              bgcolor: '#FF8A65',
+              fontSize: { xs: 13, sm: 14 },
               fontWeight: 700,
-              color: "#0e1b0e",
-              boxShadow: "0 2px 6px rgba(0,0,0,0.15)",
+              color: '#FFFFFF',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
+              lineHeight: 1,
             }}
           >
-            -{deal.discount}%
+            {deal.discount}%
           </Box>
         )}
       </Box>
 
-      {/* Nombre y precio */}
-      <CardContent sx={{ p: 2 }}>
+      {/* Contenido de la tarjeta */}
+      <CardContent sx={{ p: { xs: 1.5, sm: 2 } }}>
+        {/* Título del producto */}
         <Typography
-          variant="subtitle1"
           sx={{
             fontWeight: 600,
-            color: "#0e1b0e",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            display: "-webkit-box",
+            fontSize: { xs: 14, sm: 15 },
+            color: '#2D2D2D',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            display: '-webkit-box',
             WebkitLineClamp: 2,
-            WebkitBoxOrient: "vertical",
-            minHeight: 48,
+            WebkitBoxOrient: 'vertical',
+            minHeight: { xs: 40, sm: 44 },
+            mb: 1,
+            lineHeight: 1.4,
           }}
         >
           {deal.title}
         </Typography>
-        <Typography variant="body2" sx={{ color: "#509550", fontWeight: 500 }}>
-          ${deal.price}
-        </Typography>
+
+        {/* Precios */}
+        <Stack direction="row" spacing={1} alignItems="center" sx={{ mb: 0.5 }}>
+          <Typography 
+            sx={{ 
+              color: '#2D2D2D', 
+              fontWeight: 700,
+              fontSize: { xs: 16, sm: 18 }
+            }}
+          >
+            ${deal.price.toFixed(2)}
+          </Typography>
+          
+          {/* Precio original tachado */}
+          {deal.originalPrice && (
+            <Typography
+              sx={{
+                color: '#BDBDBD',
+                fontSize: { xs: 13, sm: 14 },
+                textDecoration: 'line-through',
+              }}
+            >
+              ${deal.originalPrice.toFixed(2)}
+            </Typography>
+          )}
+        </Stack>
+
+        {/* Tiempo de expiración */}
+        {deal.expiresIn && (
+          <Typography
+            sx={{
+              color: '#FF6B6B',
+              fontSize: { xs: 11, sm: 12 },
+              fontWeight: 500,
+            }}
+          >
+            Expires in {deal.expiresIn}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );
