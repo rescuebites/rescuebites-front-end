@@ -1,6 +1,6 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import Header from "../../../modules/customer/home/components/Header";
-import SearchBar from "../../../modules/customer/home/components/SearchBar";
+import Header from "../../../shared/components/layout/Header";
+import SearchBar from "../../components/layout/SearchBar";
 import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
 import FeaturedStores from "../../../modules/customer/home/components/FeaturedStores";
 import TopDeals from "../../../modules/customer/home/components/TopDeals";

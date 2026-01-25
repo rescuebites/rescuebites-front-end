@@ -1,6 +1,6 @@
 import { AppBar, Toolbar, Box, IconButton, Typography } from "@mui/material";
 import { MdPerson } from "react-icons/md";
-import { Logo } from "./../../../../shared/components/ui/Logo"; 
+import { Logo } from "./../ui/Logo"; 
 
 export default function Header() {
   return (

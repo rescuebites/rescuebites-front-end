@@ -1,5 +1,5 @@
 import { httpClient } from "@/shared/lib/httpClient";
-import {Deal, Store} from "../home/interfaces/types";
+import {Deal, Store} from "../interfaces/types";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
