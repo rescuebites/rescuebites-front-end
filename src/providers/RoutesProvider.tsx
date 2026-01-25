@@ -1,5 +1,6 @@
 import { AuthRoutes } from "@/routes/AuthRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
+import {CustomerRoutes} from "@/routes/CustomerRoutes";
 import { Navigate, Route, Routes } from "react-router-dom";
 
 export default function RoutesProvider() {
@@ -12,6 +13,8 @@ export default function RoutesProvider() {
       <Route path="/auth/*" element={<AuthRoutes />} />
 
       <Route path="/api/users/*" element={<UserRoutes />} />
+
+      <Route path="/customer/*" element={<CustomerRoutes />} />
     </Routes>
   );
 }

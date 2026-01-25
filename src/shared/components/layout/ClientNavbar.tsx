@@ -1,4 +1,4 @@
-import { Paper, Box, IconButton, Badge } from "@mui/material";
+import { Paper, Box, IconButton, Badge, useMediaQuery, useTheme } from "@mui/material";
 import { 
   MdHome, 
   MdGridView, 
@@ -6,14 +6,12 @@ import {
   MdNotifications, 
   MdPerson 
 } from "react-icons/md";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useState } from "react";
 
 export default function ClientNavbar() {
-  const navigate = useNavigate();
-  const location = useLocation();
-
-  // Función para saber si una ruta está activa y resaltar el ícono correspondiente
-  const isActive = (path: string) => location.pathname === path;
+  const [activeTab, setActiveTab] = useState('home');
+  const theme = useTheme();
+  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
   return (
     <Paper
@@ -30,61 +28,69 @@ export default function ClientNavbar() {
     >
       <Box
         sx={{
-          display: 'flex',
-          justifyContent: 'space-around',
+          display: 'grid',
+          gridTemplateColumns: '1fr 1fr auto 1fr 1fr', //espaciado equitativo
           alignItems: 'center',
-          height: 70,
-          maxWidth: '600px',
+          gap: { xs: 4, sm: 6, md: 8, lg: 18, xl: 22 }, // Espacio entre columnas amplio
+          height: { xs: 70, sm: 80, md: 90 },
+          maxWidth: { xs: '100%', sm: '700px', md: '1000px', lg: '1800px', xl: '2000px' }, //Ancho máximo muy amplio
           mx: 'auto',
-          px: 2,
+          px: { xs: 3, sm: 4, md: 8, lg: 12, xl: 16 }, // Padding lateral muy amplio
           position: 'relative',
         }}
       >
         {/* Home */}
         <IconButton
-          onClick={() => navigate('/home')}
+          onClick={() => setActiveTab('home')}
           sx={{
-            color: isActive('/home') ? '#77A787' : '#757575',
+            color: activeTab === 'home' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
+            width: { xs: 48, md: 56, lg: 64 },
+            height: { xs: 48, md: 56, lg: 64 },
+            justifySelf: 'center', 
             '&:hover': {
               bgcolor: 'rgba(119, 167, 135, 0.08)',
             },
           }}
         >
-          <MdHome size={26} />
+          <MdHome size={isMobile ? 26 : 32} />
         </IconButton>
 
         {/* Categories/Grid */}
         <IconButton
-          onClick={() => navigate('/orders')}
+          onClick={() => setActiveTab('categories')}
           sx={{
-            color: isActive('/orders') ? '#77A787' : '#757575',
+            color: activeTab === 'categories' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
+            width: { xs: 48, md: 56, lg: 64 },
+            height: { xs: 48, md: 56, lg: 64 },
+            justifySelf: 'center',
             '&:hover': {
               bgcolor: 'rgba(119, 167, 135, 0.08)',
             },
           }}
         >
-          <MdGridView size={26} />
+          <MdGridView size={isMobile ? 26 : 32} />
         </IconButton>
 
         {/* Cart - Botón central elevado */}
         <Box
           sx={{
-            position: 'absolute',
-            top: -20,
-            left: '50%',
-            transform: 'translateX(-50%)',
+            position: 'relative',
+            justifySelf: 'center',
           }}
         >
           <IconButton
-            onClick={() => navigate('/cart')}
+            onClick={() => setActiveTab('cart')}
             sx={{
-              width: 64,
-              height: 64,
+              width: { xs: 64, md: 76, lg: 88 },
+              height: { xs: 64, md: 76, lg: 88 },
               bgcolor: '#77A787',
               color: '#FFFFFF',
+              border: '4px solid #FFFFFF', 
               boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
+              position: 'relative',
+              top: { xs: -32, md: -38, lg: -44 }, 
               '&:hover': {
                 bgcolor: '#6B9A7B',
                 boxShadow: '0 6px 16px rgba(119, 167, 135, 0.5)',
@@ -93,61 +99,69 @@ export default function ClientNavbar() {
             }}
           >
             <Badge
-              badgeContent={3}
+              badgeContent={0} // Cambiar este número según los items en el carrito
               color="error"
               sx={{
                 '& .MuiBadge-badge': {
-                  top: 8,
-                  right: 8,
-                  fontSize: 11,
+                  top: { xs: 8, md: 10, lg: 12 },
+                  right: { xs: 8, md: 10, lg: 12 },
+                  fontSize: { xs: 11, md: 13, lg: 14 },
                   fontWeight: 700,
+                  minWidth: { xs: 20, md: 24, lg: 26 },
+                  height: { xs: 20, md: 24, lg: 26 },
                 },
               }}
             >
-              <MdShoppingCart size={28} />
+              <MdShoppingCart size={isMobile ? 28 : 36} />
             </Badge>
           </IconButton>
         </Box>
 
         {/* Notifications */}
         <IconButton
-          onClick={() => navigate('/notifications')}
+          onClick={() => setActiveTab('notifications')}
           sx={{
-            color: isActive('/notifications') ? '#77A787' : '#757575',
+            color: activeTab === 'notifications' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
+            width: { xs: 48, md: 56, lg: 64 },
+            height: { xs: 48, md: 56, lg: 64 },
+            justifySelf: 'center',
             '&:hover': {
               bgcolor: 'rgba(119, 167, 135, 0.08)',
             },
           }}
         >
           <Badge
-            badgeContent={2}
+            badgeContent={0} // Cambiar este número según las notificaciones no leídas
             color="error"
             sx={{
               '& .MuiBadge-badge': {
-                fontSize: 10,
+                fontSize: { xs: 10, md: 12, lg: 13 },
                 fontWeight: 700,
-                minWidth: 18,
-                height: 18,
+                minWidth: { xs: 18, md: 22, lg: 24 },
+                height: { xs: 18, md: 22, lg: 24 },
               },
             }}
           >
-            <MdNotifications size={26} />
+            <MdNotifications size={isMobile ? 26 : 32} />
           </Badge>
         </IconButton>
 
         {/* Profile */}
         <IconButton
-          onClick={() => navigate('/profile')}
+          onClick={() => setActiveTab('profile')}
           sx={{
-            color: isActive('/profile') ? '#77A787' : '#757575',
+            color: activeTab === 'profile' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
+            width: { xs: 48, md: 56, lg: 64 },
+            height: { xs: 48, md: 56, lg: 64 },
+            justifySelf: 'center',
             '&:hover': {
               bgcolor: 'rgba(119, 167, 135, 0.08)',
             },
           }}
         >
-          <MdPerson size={26} />
+          <MdPerson size={isMobile ? 26 : 32} />
         </IconButton>
       </Box>
     </Paper>
