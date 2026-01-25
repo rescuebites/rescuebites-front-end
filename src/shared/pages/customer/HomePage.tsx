@@ -4,10 +4,23 @@ import SearchBar from "../../../modules/customer/home/components/SearchBar";
 import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
 import FeaturedStores from "../../../modules/customer/home/components/FeaturedStores";
 import TopDeals from "../../../modules/customer/home/components/TopDeals";
+import { useNavigate } from "react-router-dom";
+
+
 
 export default function HomePage() {
   const handleSearchChange = (value: string) => {
     console.log("Buscando:", value);
+  };
+
+  const navigate = useNavigate();
+
+  const handleGoToAllStores = () => {
+    navigate("/home/stores");
+  };
+
+  const handleGoToAllDeals = () => {
+    navigate("/home/allProducts");
   };
 
   return (
@@ -41,7 +54,7 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={2}>
-          <SectionTitle primary="Locales" secondary="Ver todo" />
+          <SectionTitle primary="Locales" secondary="Ver todo" onSecondaryClick={handleGoToAllStores} />
           <FeaturedStores />
         </Stack>
       </Container>
@@ -57,7 +70,7 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={2}>
-          <SectionTitle primary="Productos destacados" secondary="Ver todo" />
+          <SectionTitle primary="Productos destacados" secondary="Ver todo" onSecondaryClick={handleGoToAllDeals} />
           <TopDeals />
         </Stack>
       </Container>
@@ -65,13 +78,19 @@ export default function HomePage() {
   );
 }
 
+type SectionTitleProps = {
+  primary: string;
+  secondary?: string;
+  onSecondaryClick?: () => void;
+};
+
+
 function SectionTitle({
   primary,
   secondary,
-}: {
-  primary: string;
-  secondary?: string;
-}) {
+  onSecondaryClick,
+}: SectionTitleProps) {
+
   return (
     <Stack
       direction="row"
@@ -91,25 +110,27 @@ function SectionTitle({
       </Typography>
       {secondary && (
         <Typography
-          component="button"
-          sx={{
-            color: '#757575',
-            fontSize: { xs: 13, sm: 14 },
-            fontWeight: 600,
-            m: 0,
-            cursor: 'pointer',
-            background: 'none',
-            border: 'none',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            '&:hover': {
-              color: '#77A787',
-            },
-          }}
-        >
-          {secondary} <span>→</span>
+            component="button"
+            onClick={onSecondaryClick}
+            sx={{
+              color: '#757575',
+              fontSize: { xs: 13, sm: 14 },
+              fontWeight: 600,
+              m: 0,
+              cursor: 'pointer',
+              background: 'none',
+              border: 'none',
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              '&:hover': {
+                color: '#77A787',
+              },
+            }}
+          >
+            {secondary} <span>→</span>
         </Typography>
+
       )}
     </Stack>
   );
