@@ -15,6 +15,7 @@ export default function RoutesProvider() {
       <Route path="/api/users/*" element={<UserRoutes />} />
 
       <Route path="/customer/*" element={<CustomerRoutes />} />
+      <Route path="/home/*" element={<CustomerRoutes />} />
     </Routes>
   );
 }

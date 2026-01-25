@@ -7,11 +7,19 @@ import {
   MdPerson 
 } from "react-icons/md";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom"; 
 
 export default function ClientNavbar() {
+  const navigate = useNavigate(); //Hook para navegar
   const [activeTab, setActiveTab] = useState('home');
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
+
+  //Función para manejar navegación con tipos
+  const handleNavigation = (route: string, tabName: string) => {
+    setActiveTab(tabName);
+    navigate(route);
+  };
 
   return (
     <Paper
@@ -29,19 +37,19 @@ export default function ClientNavbar() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr auto 1fr 1fr', //espaciado equitativo
+          gridTemplateColumns: '1fr 1fr auto 1fr 1fr', // 👈 Grid para espaciado equitativo
           alignItems: 'center',
-          gap: { xs: 4, sm: 6, md: 8, lg: 18, xl: 22 }, // Espacio entre columnas amplio
+          gap: { xs: 2, sm: 4, md: 8, lg: 12, xl: 16 }, // 👈 Espacio entre columnas MUY amplio
           height: { xs: 70, sm: 80, md: 90 },
-          maxWidth: { xs: '100%', sm: '700px', md: '1000px', lg: '1800px', xl: '2000px' }, //Ancho máximo muy amplio
+          maxWidth: { xs: '100%', sm: '700px', md: '1000px', lg: '1800px', xl: '2200px' }, // 👈 Ancho máximo muy amplio
           mx: 'auto',
-          px: { xs: 3, sm: 4, md: 8, lg: 12, xl: 16 }, // Padding lateral muy amplio
+          px: { xs: 3, sm: 4, md: 8, lg: 12, xl: 16 }, // 👈 Padding lateral muy amplio
           position: 'relative',
         }}
       >
         {/* Home */}
         <IconButton
-          onClick={() => setActiveTab('home')}
+          onClick={() => handleNavigation('/home', 'home')} //Navega a home
           sx={{
             color: activeTab === 'home' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
@@ -56,11 +64,11 @@ export default function ClientNavbar() {
           <MdHome size={isMobile ? 26 : 32} />
         </IconButton>
 
-        {/* Categories/Grid */}
+        {/* orders/Grid */}
         <IconButton
-          onClick={() => setActiveTab('categories')}
+          onClick={() => handleNavigation('/customer/orders', 'orders')} //Navega a pedidos
           sx={{
-            color: activeTab === 'categories' ? '#77A787' : '#757575',
+            color: activeTab === 'orders' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -81,7 +89,7 @@ export default function ClientNavbar() {
           }}
         >
           <IconButton
-            onClick={() => setActiveTab('cart')}
+            onClick={() => handleNavigation('/customer/cart', 'cart')} //Navega al carrito
             sx={{
               width: { xs: 64, md: 76, lg: 88 },
               height: { xs: 64, md: 76, lg: 88 },
@@ -99,7 +107,7 @@ export default function ClientNavbar() {
             }}
           >
             <Badge
-              badgeContent={0} // Cambiar este número según los items en el carrito
+              badgeContent={0} //modificar para mostrar número de items en el carrito
               color="error"
               sx={{
                 '& .MuiBadge-badge': {
@@ -119,7 +127,7 @@ export default function ClientNavbar() {
 
         {/* Notifications */}
         <IconButton
-          onClick={() => setActiveTab('notifications')}
+          onClick={() => handleNavigation('/customer/notifications', 'notifications')} //Navega a notificaciones
           sx={{
             color: activeTab === 'notifications' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
@@ -132,7 +140,7 @@ export default function ClientNavbar() {
           }}
         >
           <Badge
-            badgeContent={0} // Cambiar este número según las notificaciones no leídas
+            badgeContent={0} //modificar para mostrar número de notificaciones sin leer
             color="error"
             sx={{
               '& .MuiBadge-badge': {
@@ -149,7 +157,7 @@ export default function ClientNavbar() {
 
         {/* Profile */}
         <IconButton
-          onClick={() => setActiveTab('profile')}
+          onClick={() => handleNavigation('/customer/profile', 'profile')} //Navega a perfil
           sx={{
             color: activeTab === 'profile' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
