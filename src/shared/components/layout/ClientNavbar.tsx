@@ -6,18 +6,27 @@ import {
   MdNotifications, 
   MdPerson 
 } from "react-icons/md";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate, useLocation } from "react-router-dom"; 
 
 export default function ClientNavbar() {
-  const navigate = useNavigate(); //Hook para navegar
-  const [activeTab, setActiveTab] = useState('home');
+  const navigate = useNavigate();
+  const location = useLocation();
   const theme = useTheme();
   const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
-  //Función para manejar navegación con tipos
-  const handleNavigation = (route: string, tabName: string) => {
-    setActiveTab(tabName);
+  const getActiveTab = () => {
+    const path = location.pathname;
+    if (path === '/home' || path === '/') return 'home';
+    if (path.includes('/orders')) return 'orders';
+    if (path.includes('/cart')) return 'cart';
+    if (path.includes('/notifications')) return 'notifications';
+    if (path.includes('/profile')) return 'profile';
+    return 'home';
+  };
+
+  const activeTab = getActiveTab();
+
+  const handleNavigation = (route: string) => {
     navigate(route);
   };
 
@@ -37,19 +46,18 @@ export default function ClientNavbar() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr auto 1fr 1fr', // 👈 Grid para espaciado equitativo
+          gridTemplateColumns: '1fr 1fr auto 1fr 1fr',
           alignItems: 'center',
-          gap: { xs: 2, sm: 4, md: 8, lg: 12, xl: 16 }, // 👈 Espacio entre columnas MUY amplio
+          gap: { xs: 2, sm: 4, md: 8, lg: 12, xl: 16 },
           height: { xs: 70, sm: 80, md: 90 },
-          maxWidth: { xs: '100%', sm: '700px', md: '1000px', lg: '1800px', xl: '2200px' }, // 👈 Ancho máximo muy amplio
+          maxWidth: { xs: '100%', sm: '700px', md: '1000px', lg: '1800px', xl: '2200px' },
           mx: 'auto',
-          px: { xs: 3, sm: 4, md: 8, lg: 12, xl: 16 }, // 👈 Padding lateral muy amplio
+          px: { xs: 3, sm: 4, md: 8, lg: 12, xl: 16 },
           position: 'relative',
         }}
       >
-        {/* Home */}
         <IconButton
-          onClick={() => handleNavigation('/home', 'home')} //Navega a home
+          onClick={() => handleNavigation('/home')} //Naviga a home
           sx={{
             color: activeTab === 'home' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
@@ -64,9 +72,8 @@ export default function ClientNavbar() {
           <MdHome size={isMobile ? 26 : 32} />
         </IconButton>
 
-        {/* orders/Grid */}
         <IconButton
-          onClick={() => handleNavigation('/customer/orders', 'orders')} //Navega a pedidos
+          onClick={() => handleNavigation('/customer/orders')} //Navega a pedidos
           sx={{
             color: activeTab === 'orders' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
@@ -81,7 +88,6 @@ export default function ClientNavbar() {
           <MdGridView size={isMobile ? 26 : 32} />
         </IconButton>
 
-        {/* Cart - Botón central elevado */}
         <Box
           sx={{
             position: 'relative',
@@ -89,25 +95,25 @@ export default function ClientNavbar() {
           }}
         >
           <IconButton
-            onClick={() => handleNavigation('/customer/cart', 'cart')} //Navega al carrito
+            onClick={() => handleNavigation('/customer/cart')}
             sx={{
-              width: { xs: 64, md: 76, lg: 88 },
-              height: { xs: 64, md: 76, lg: 88 },
-              bgcolor: '#77A787',
-              color: '#FFFFFF',
-              border: '4px solid #FFFFFF', 
-              boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
-              position: 'relative',
-              top: { xs: -32, md: -38, lg: -44 }, 
-              '&:hover': {
+                width: { xs: 64, md: 76, lg: 88 },
+                height: { xs: 64, md: 76, lg: 88 },
+                bgcolor: activeTab === 'cart' ? '#77A787' : '#3E6A53',
+                color: '#FFFFFF',
+                border: '4px solid #FFFFFF', 
+                boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
+                position: 'relative',
+                top: { xs: -32, md: -38, lg: -44 }, 
+                '&:hover': {
                 bgcolor: '#6B9A7B',
                 boxShadow: '0 6px 16px rgba(119, 167, 135, 0.5)',
-              },
-              transition: 'all 0.2s',
+                },
+                transition: 'all 0.2s',
             }}
-          >
+            >
             <Badge
-              badgeContent={0} //modificar para mostrar número de items en el carrito
+              badgeContent={0}
               color="error"
               sx={{
                 '& .MuiBadge-badge': {
@@ -125,9 +131,8 @@ export default function ClientNavbar() {
           </IconButton>
         </Box>
 
-        {/* Notifications */}
         <IconButton
-          onClick={() => handleNavigation('/customer/notifications', 'notifications')} //Navega a notificaciones
+          onClick={() => handleNavigation('/customer/notifications')}
           sx={{
             color: activeTab === 'notifications' ? '#77A787' : '#757575',
             transition: 'color 0.2s',
@@ -140,7 +145,7 @@ export default function ClientNavbar() {
           }}
         >
           <Badge
-            badgeContent={0} //modificar para mostrar número de notificaciones sin leer
+            badgeContent={0}
             color="error"
             sx={{
               '& .MuiBadge-badge': {
@@ -155,9 +160,8 @@ export default function ClientNavbar() {
           </Badge>
         </IconButton>
 
-        {/* Profile */}
         <IconButton
-          onClick={() => handleNavigation('/customer/profile', 'profile')} //Navega a perfil
+          onClick={() => handleNavigation('/customer/profile')}
           sx={{
             color: activeTab === 'profile' ? '#77A787' : '#757575',
             transition: 'color 0.2s',

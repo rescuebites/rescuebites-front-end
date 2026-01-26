@@ -5,7 +5,7 @@ import ClientNavbar from "../../shared/components/layout/ClientNavbar";
 
 export default function TestNavbar() {
   return (
-    <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh', pb: 10 }}>
+    <Box sx={{ bgcolor: "#FFFBFA", minHeight: '100vh', pb: 10 }}>
       {/* Header simple para contexto */}
       <Box sx={{ bgcolor: '#FFFFFF', p: 2, borderBottom: '1px solid #F0F0F0' }}>
         <Typography variant="h6" sx={{ textAlign: 'center', color: '#77A787' }}>
