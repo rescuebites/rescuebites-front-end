@@ -19,12 +19,7 @@ export interface Deal {
 export interface Store {
   id: number;
   name: string;
-  subtitle: string;
-  imageUrl: string;
-  location?: string;
-  schedule?: string;
-  deliveryAvailable: boolean;
-  phoneNumber?: string;
+  profileImageUrl: string;
 }
 
 export const categories = [

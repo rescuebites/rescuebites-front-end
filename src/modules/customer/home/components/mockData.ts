@@ -4,83 +4,83 @@ export const stores: Store[] = [
   {
     id: 1,
     name: "Supera",
-    subtitle: "Downtown | Delivery available",
-    imageUrl:
+    //subtitle: "Downtown | Delivery available",
+    profileImageUrl:
       "https://acdn-us.mitiendanube.com/stores/001/252/117/themes/common/logo-1326126770-1594263950-404d77509db5b1747138c82e5a8d257e1594263951.png?0",
-    location: "Av. San Martín 1234, Centro",
-    schedule: "Lun-Vie 8:00-20:00, Sáb 9:00-13:00",
-    deliveryAvailable: true,
-    phoneNumber: "+54 353 123-4567",
+    //location: "Av. San Martín 1234, Centro",
+    //schedule: "Lun-Vie 8:00-20:00, Sáb 9:00-13:00",
+    //deliveryAvailable: true,
+    //phoneNumber: "+54 353 123-4567",
   },
   {
     id: 2,
     name: "La parillada",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://mir-s3-cdn-cf.behance.net/project_modules/1400/aad4d0110142211.5fe4b63868daa.jpg",
-    location: "Calle Belgrano 567",
-    schedule: "Lun-Dom 11:00-15:00, 19:00-23:00",
-    deliveryAvailable: true,
+    //location: "Calle Belgrano 567",
+    //schedule: "Lun-Dom 11:00-15:00, 19:00-23:00",
+    //deliveryAvailable: true,
   },
   {
     id: 3,
     name: "Doña Vicky",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://i.pinimg.com/originals/77/1e/03/771e0354d08d3c87c62057137cbad533.jpg",
-    location: "Av. Sabattini 890",
-    schedule: "Mar-Dom 8:00-13:00",
-    deliveryAvailable: true,
+    //location: "Av. Sabattini 890",
+    //schedule: "Mar-Dom 8:00-13:00",
+    //deliveryAvailable: true,
   },
   {
     id: 4,
     name: "Jumbo",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://e7.pngegg.com/pngimages/573/590/png-clipart-brand-logo-supermarket-jumbo-lider-harvard-business-publishing-text-logo.png",
-    location: "Shopping Nuestro, Local 45",
-    schedule: "Lun-Dom 9:00-21:00",
-    deliveryAvailable: true,
+    //location: "Shopping Nuestro, Local 45",
+    //schedule: "Lun-Dom 9:00-21:00",
+    //deliveryAvailable: true,
   },
   {
     id: 5,
     name: "Kiosco Cartu",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://lacomuna12.com.ar/images/2021/sociedad/kioscovillaurquiza2.jpg",
-    location: "Calle Sarmiento 234",
-    schedule: "Lun-Dom 7:00-23:00",
-    deliveryAvailable: false,
+    //location: "Calle Sarmiento 234",
+    //schedule: "Lun-Dom 7:00-23:00",
+    //deliveryAvailable: false,
   },
   {
     id: 6,
     name: "Boston 24hs",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://lapiramide.net/wp-content/uploads/2024/02/WhatsApp-Image-2024-02-26-at-17.55.33-e1708981357121.jpeg",
-    location: "Av. Colón 789",
-    schedule: "24 horas",
-    deliveryAvailable: true,
+    //location: "Av. Colón 789",
+    //schedule: "24 horas",
+    //deliveryAvailable: true,
   },
   {
     id: 7,
     name: "Fresh",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://www.shutterstock.com/image-vector/supermarket-logo-fruit-inside-shopping-260nw-2446378847.jpg",
-    location: "Calle 9 de Julio 456",
-    schedule: "Lun-Sáb 8:00-20:00",
-    deliveryAvailable: true,
+    //location: "Calle 9 de Julio 456",
+    //schedule: "Lun-Sáb 8:00-20:00",
+    //deliveryAvailable: true,
   },
   {
     id: 8,
     name: "Home made",
-    subtitle: "Uptown | Delivery available",
-    imageUrl:
+    //subtitle: "Uptown | Delivery available",
+    profileImageUrl:
       "https://images.vexels.com/media/users/3/172803/raw/ecfb62e1a465e71be07ac4aa734a2f0a-diseno-de-logo-de-panaderia.jpg",
-    location: "Bv. Savio 123",
-    schedule: "Mar-Dom 7:00-13:00",
-    deliveryAvailable: true,
+    //location: "Bv. Savio 123",
+    //schedule: "Mar-Dom 7:00-13:00",
+    //deliveryAvailable: true,
   },
 ];
 

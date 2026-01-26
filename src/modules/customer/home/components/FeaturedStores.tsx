@@ -45,7 +45,7 @@ function StoreCard({ store }: { store: Store }) {
         sx={{
           width: '100%',
           height: { xs: 120, sm: 140 },
-          backgroundImage: `url(${store.imageUrl})`,
+          backgroundImage: `url(${store.profileImageUrl})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
