@@ -1,30 +1,37 @@
-// import { httpClient } from "@/shared/lib/httpClient";
-// import {Deal, Store, Product} from "../interfaces/types";
+import { httpClient } from "@/shared/lib/httpClient";
+import { 
+  ProductResponse, 
+  CommercePublicResponse, 
+  PaginatedResponse 
+} from "../interfaces/responses";
 
-// // Tipo genérico para respuestas paginadas. Service actúa comocapa de adaptación para la vista de topDeals
-// interface PaginatedResponse<T> {
-//   content: T[];
-//   totalElements: number;
-//   totalPages: number;
-//   size: number;
-//   number: number;
-// }
+// Productos destacados del home (ordenados por precio)
+export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {
+  const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+    `/api/v1/public/products/ordered-by-price`,
+    { params: { page: 0, size } }
+  );
+  return data.content;
+};
 
-// const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+// Todos los productos paginados -> para secciones de tiendas
+export const getAllProducts = async (page = 0, size = 10): Promise<PaginatedResponse<ProductResponse>> => {
+  const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+    `/api/v1/public/products`,
+    { params: { page, size } }
+  );
+  return data;
+};
 
-// export const getFeaturedStores = async (): Promise<Store[]> => {
-//     const {data} = await httpClient.get<Store[]>(`${BACKEND_URL}/stores/featured`);
-//     return data;
-// };
-
-// export const getProducts  =async (page=0, size=10): Promise<PaginatedResponse<Product>> => {
-//     const {data} = await httpClient.get<PaginatedResponse<Product>>(`/api/v1/products`, {params:{ page, size }});
-//     return data;
-// };
-
-// export const getTopDeals = async (size = 6): Promise<Product[]> => {
-//   const { data } = await getProducts(0, size);
-//   return data.content
-//     .filter(product => product.active)
-//     .sort((a, b) => b.discountPercentage - a.discountPercentage);
-// };
+// Comercios por tipo (para stores)
+export const getCommercesByType = async (
+  commerceType: string, 
+  page = 0, 
+  size = 6
+): Promise<PaginatedResponse<CommercePublicResponse>> => {
+  const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
+    `/api/v1/public/commerces/type/${commerceType}`,
+    { params: { page, size } }
+  );
+  return data;
+};

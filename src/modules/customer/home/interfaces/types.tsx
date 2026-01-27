@@ -24,27 +24,43 @@ export interface Product {
   imageUrls: string[];
   active: boolean;
 }
+
 export interface Deal {
   id: number;
   title: string;
   price: number;
-  originalPrice?: number;  
+  originalPrice: number;  
   discount: number;
   imageUrl: string;
-  expiresIn?: string;  // ej: "two days", "one day"
+  expiresIn?: string;
   description: string;
   stock: number;
-  expirationDate: string; // ISO date string
+  expirationDate: string;
   category: string;
   productType: string;
-  storeId: string;
-  tags: string[];
+  storeId: number;
+  tags?: ProductTag[];
 }
+
+export type ProductTag =
+  | "maduro"
+  | "vegano"
+  | "vegetariano"
+  | "sin-gluten"
+  | "sin-lactosa"
+  | "organico"
+  | "buen-estado";
 
 export interface Store {
   id: number;
   name: string;
-  profileImageUrl: string;
+  subtitle?: string;
+  profileImageUrl?: string;
+  imageUrl?: string;
+  location?: string;
+  schedule?: string;
+  deliveryAvailable?: boolean;
+  phoneNumber?: string;
   categories: string[];
 }
 

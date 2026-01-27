@@ -49,10 +49,9 @@ const tagColors: Record<ProductTag, string> = {
 };
 
 function parseLocalDate(dateString: string): Date {
-  // Maneja "YYYY-MM-DD" o "YYYY-MM-DDTHH:mm:ss"
   const [datePart] = dateString.split("T");
   const [y, m, d] = datePart.split("-").map(Number);
-  const dt = new Date(y, m - 1, d); // Fecha local (no UTC)
+  const dt = new Date(y, m - 1, d);
   dt.setHours(0, 0, 0, 0);
   return dt;
 }
@@ -80,14 +79,12 @@ export default function ProductDetailDialog({
   onClose,
   deal,
 }: ProductDetailDialogProps) {
-  // Si no hay deal, el diálogo simplemente no se muestra
   if (!open || !deal) {
     return null;
   }
 
   const store = stores.find((s) => s.id === deal.storeId);
 
-  // Calcular días hasta el vencimiento
   const daysUntilExpiration = getDaysUntilExpiration(deal.expirationDate);
   const formattedDate = formatDateEsAR(deal.expirationDate);
   const isExpiringSoon = daysUntilExpiration <= 2;
@@ -105,7 +102,6 @@ export default function ProductDetailDialog({
         },
       }}
     >
-      {/* Header con botón de cerrar */}
       <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
         <IconButton
           onClick={onClose}
@@ -119,7 +115,6 @@ export default function ProductDetailDialog({
       </Box>
 
       <DialogContent sx={{ p: 0 }}>
-        {/* Imagen principal */}
         <Box
           sx={{
             position: "relative",
@@ -130,7 +125,6 @@ export default function ProductDetailDialog({
             backgroundPosition: "center",
           }}
         >
-          {/* Badge de descuento */}
           <Box
             sx={{
               position: "absolute",
@@ -150,10 +144,8 @@ export default function ProductDetailDialog({
           </Box>
         </Box>
 
-        {/* Contenido */}
         <Box sx={{ p: { xs: 2, sm: 3 } }}>
           <Stack spacing={3}>
-            {/* Título y categoría */}
             <Box>
               <Typography
                 variant="h5"
@@ -176,12 +168,10 @@ export default function ProductDetailDialog({
               </Stack>
             </Box>
 
-            {/* Descripción */}
             <Typography sx={{ color: "#0e1b0e", lineHeight: 1.6 }}>
               {deal.description}
             </Typography>
 
-            {/* Precios */}
             <Box>
               <Stack direction="row" spacing={2} alignItems="baseline">
                 <Typography
@@ -207,7 +197,6 @@ export default function ProductDetailDialog({
 
             <Divider />
 
-            {/* Stock y vencimiento */}
             <Stack spacing={2}>
               <Stack
                 direction="row"
@@ -254,7 +243,6 @@ export default function ProductDetailDialog({
               )}
             </Stack>
 
-            {/* Etiquetas del producto */}
             {(deal.tags ?? []).length > 0 && (
               <Box>
                 <Typography sx={{ color: "#0e1b0e", fontWeight: 600, mb: 1.5 }}>
@@ -282,7 +270,6 @@ export default function ProductDetailDialog({
 
             <Divider />
 
-            {/* Información del comercio */}
             {store && (
               <Box>
                 <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
@@ -296,14 +283,13 @@ export default function ProductDetailDialog({
                 </Stack>
 
                 <Stack spacing={2}>
-                  {/* Nombre y logo */}
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Box
                       sx={{
                         width: 60,
                         height: 60,
                         borderRadius: 2,
-                        backgroundImage: `url(${store.imageUrl})`,
+                        backgroundImage: `url(${store.imageUrl || store.profileImageUrl})`,
                         backgroundSize: "cover",
                         backgroundPosition: "center",
                         border: "2px solid #e8f3e8",
@@ -313,47 +299,51 @@ export default function ProductDetailDialog({
                       <Typography sx={{ fontWeight: 600, color: "#0e1b0e" }}>
                         {store.name}
                       </Typography>
-                      <Typography sx={{ color: "#509550", fontSize: 14 }}>
-                        {store.subtitle}
-                      </Typography>
+                      {store.subtitle && (
+                        <Typography sx={{ color: "#509550", fontSize: 14 }}>
+                          {store.subtitle}
+                        </Typography>
+                      )}
                     </Box>
                   </Stack>
 
-                  {/* Ubicación */}
-                  <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                    <MdLocationOn
-                      size={20}
-                      color="#509550"
-                      style={{ marginTop: 2 }}
-                    />
-                    <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
-                      {store.location}
-                    </Typography>
-                  </Stack>
+                  {store.location && (
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <MdLocationOn
+                        size={20}
+                        color="#509550"
+                        style={{ marginTop: 2 }}
+                      />
+                      <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
+                        {store.location}
+                      </Typography>
+                    </Stack>
+                  )}
 
-                  {/* Horario */}
-                  <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                    <MdSchedule
-                      size={20}
-                      color="#509550"
-                      style={{ marginTop: 2 }}
-                    />
-                    <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
-                      {store.schedule}
-                    </Typography>
-                  </Stack>
+                  {store.schedule && (
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <MdSchedule
+                        size={20}
+                        color="#509550"
+                        style={{ marginTop: 2 }}
+                      />
+                      <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
+                        {store.schedule}
+                      </Typography>
+                    </Stack>
+                  )}
 
-                  {/* Delivery */}
-                  <Stack direction="row" spacing={1.5} alignItems="center">
-                    <MdLocalShipping size={20} color="#509550" />
-                    <Typography sx={{ color: "#0e1b0e" }}>
-                      {store.deliveryAvailable
-                        ? "Delivery disponible"
-                        : "Solo retiro en local"}
-                    </Typography>
-                  </Stack>
+                  {store.deliveryAvailable !== undefined && (
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                      <MdLocalShipping size={20} color="#509550" />
+                      <Typography sx={{ color: "#0e1b0e" }}>
+                        {store.deliveryAvailable
+                          ? "Delivery disponible"
+                          : "Solo retiro en local"}
+                      </Typography>
+                    </Stack>
+                  )}
 
-                  {/* Teléfono si está disponible */}
                   {store.phoneNumber && (
                     <Stack direction="row" spacing={1.5} alignItems="center">
                       <MdPhone size={20} color="#509550" />
@@ -366,7 +356,6 @@ export default function ProductDetailDialog({
               </Box>
             )}
 
-            {/* Botones de acción */}
             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} pt={2}>
               <Button
                 fullWidth
