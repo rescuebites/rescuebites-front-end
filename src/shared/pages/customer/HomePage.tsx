@@ -4,13 +4,19 @@ import SearchBar from "../../components/layout/SearchBar";
 import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
 import FeaturedStores from "../../../modules/customer/home/components/FeaturedStores";
 import TopDeals from "../../../modules/customer/home/components/TopDeals";
+import FilterDrawer from "../../../modules/customer/home/components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
+import { useFilters } from "@/modules/customer/home/hooks/useFilters";
 
 
 
 export default function HomePage() {
+  const { applyFilters, hasActiveFilters } = useFilters();
   const handleSearchChange = (value: string) => {
     console.log("Buscando:", value);
+    if (hasActiveFilters) {
+      applyFilters({ searchQuery: value });
+    }
   };
 
   const navigate = useNavigate();
@@ -31,13 +37,14 @@ export default function HomePage() {
       <Container
         maxWidth={false}
         sx={{
+          //mt: { xs: 4, md: 6 },
           pt: { xs: 2, sm: 3 },
           px: { xs: 2, sm: 3 },
           maxWidth: '1600px',
           mx: 'auto',
         }}
       >
-        <Stack spacing={{ xs: 2, sm: 3 }}>
+        <Stack spacing={{ xs: 3, sm: 4 }}>
           <SearchBar onSearchChange={handleSearchChange} />
           <CategoryChips />
         </Stack>
@@ -47,13 +54,14 @@ export default function HomePage() {
       <Container
         maxWidth={false}
         sx={{ 
+          mt: { xs: 4, md: 6 },
           pt: { xs: 3, md: 4 }, 
           px: { xs: 2, sm: 3 },
           maxWidth: '1600px',
           mx: 'auto',
         }}
       >
-        <Stack spacing={2}>
+        <Stack spacing={3}>
           <SectionTitle primary="Locales" secondary="Ver todo" onSecondaryClick={handleGoToAllStores} />
           <FeaturedStores />
         </Stack>
@@ -63,17 +71,21 @@ export default function HomePage() {
       <Container
         maxWidth={false}
         sx={{ 
+          mt: { xs: 4, md: 6 },
           pt: { xs: 3, md: 4 }, 
           px: { xs: 2, sm: 3 },
           maxWidth: '1600px',
           mx: 'auto',
         }}
       >
-        <Stack spacing={2}>
+        <Stack spacing={3}>
           <SectionTitle primary="Productos destacados" secondary="Ver todo" onSecondaryClick={handleGoToAllDeals} />
           <TopDeals />
         </Stack>
       </Container>
+
+      {/* Drawer de filtros */}
+      <FilterDrawer />
     </Box>
   );
 }
@@ -98,7 +110,7 @@ function SectionTitle({
       alignItems="center"
     >
       <Typography
-        component="h2"
+        component="h1"
         sx={{
           color: '#2D2D2D',
           fontSize: { xs: 18, sm: 20, md: 22 },

@@ -1,8 +1,11 @@
-import { TextField, InputAdornment, IconButton } from "@mui/material";
+import { TextField, InputAdornment, IconButton, Box, Badge } from "@mui/material";
 import { useState } from "react";
 import { MdClose, MdSearch } from "react-icons/md";
+import TuneIcon from "@mui/icons-material/Tune";
+import { useFilterStore } from '../../../modules/customer/home/useFilterStore';
 
-export default function SearchBar({
+
+export default function SearchBar({ 
   onSearchChange,
 }: {
   onSearchChange: (value: string) => void;
@@ -20,7 +23,18 @@ export default function SearchBar({
     onSearchChange("");
   };
 
+  const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
+  const activeFiltersCount = getActiveFiltersCount();
+
+
   return (
+    <Box
+      sx={{
+        display: 'flex',
+        gap: 3.5,
+        alignItems: 'center',
+      }}
+    >
     <TextField
       fullWidth
       placeholder="Buscar productos..."
@@ -35,7 +49,10 @@ export default function SearchBar({
         bgcolor: '#F5F5F5',
         borderRadius: 3,
         '& .MuiOutlinedInput-root': {
-          fontSize: { xs: 14, sm: 15 },
+          fontSize: { xs: 30, sm: 18 },
+          '& .MuiOutlinedInput-input': {
+            py: { xs: 10, sm: 2.5 },
+          },    
           '& fieldset': {
             border: 'none',
           },
@@ -43,14 +60,14 @@ export default function SearchBar({
             border: 'none',
           },
           '&.Mui-focused fieldset': {
-            border: '2px solid #77A787',
+            border: '4px solid #77A787',
           },
         },
       }}
       InputProps={{
         startAdornment: (
           <InputAdornment position="start">
-            <MdSearch size={20} color="#757575" />
+            <MdSearch size={32} color="#757575" />
           </InputAdornment>
         ),
         endAdornment: value && (
@@ -63,11 +80,44 @@ export default function SearchBar({
                 '&:hover': { color: '#2D2D2D' }
               }}
             >
-              <MdClose size={20} />
+              <MdClose size={28} />
             </IconButton>
           </InputAdornment>
+          
         ),
       }}
     />
+    <IconButton
+        onClick={openFilterDrawer}
+        sx={{
+          bgcolor: '#FFF',
+          border: '1px solid #E0E0E0',
+          borderRadius: 2,
+          width: { xs: 56, sm: 48 },
+          height: { xs: 56, sm: 48 },
+          '&:hover': {
+            bgcolor: '#F5F5F5',
+            borderColor: '#77A787',
+          },
+        }}
+      >
+        <Badge
+          badgeContent={activeFiltersCount}
+          color="primary"
+          sx={{
+            '& .MuiBadge-badge': {
+              bgcolor: '#77A787',
+              color: '#FFF',
+              fontSize: { xs: 18, sm: 11 },
+              fontWeight: 700,
+              minWidth: { xs: 26, sm: 18 },
+              height: { xs: 26, sm: 18 },
+            },
+          }}
+        >
+          <TuneIcon sx={{ color: '#77A787', fontSize: 24 }} />
+        </Badge>
+      </IconButton>
+    </Box>
   );
 }

@@ -26,9 +26,8 @@ export default function TopDeals() {
     display: "grid",
     gap: { xs: 2, sm: 2.5, md: 3 },
     gridTemplateColumns: {
-      xs: "repeat(2, 1fr)",
-      sm: "repeat(3, 1fr)",
-      md: "repeat(4, 1fr)",
+      xs: "repeat(3, 1fr)",
+      md: "repeat(3, 1fr)",
       lg: "repeat(5, 1fr)",
       xl: "repeat(6, 1fr)",
     },

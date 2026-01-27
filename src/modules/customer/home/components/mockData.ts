@@ -11,6 +11,7 @@ export const stores: Store[] = [
     //schedule: "Lun-Vie 8:00-20:00, Sáb 9:00-13:00",
     //deliveryAvailable: true,
     //phoneNumber: "+54 353 123-4567",
+    categories: ["Verduleria"],
   },
   {
     id: 2,
@@ -21,6 +22,7 @@ export const stores: Store[] = [
     //location: "Calle Belgrano 567",
     //schedule: "Lun-Dom 11:00-15:00, 19:00-23:00",
     //deliveryAvailable: true,
+    categories: ["Restaurante"],
   },
   {
     id: 3,
@@ -31,6 +33,7 @@ export const stores: Store[] = [
     //location: "Av. Sabattini 890",
     //schedule: "Mar-Dom 8:00-13:00",
     //deliveryAvailable: true,
+    categories: ["Panaderia"],
   },
   {
     id: 4,
@@ -41,6 +44,7 @@ export const stores: Store[] = [
     //location: "Shopping Nuestro, Local 45",
     //schedule: "Lun-Dom 9:00-21:00",
     //deliveryAvailable: true,
+    categories: ["Supermercado"],
   },
   {
     id: 5,
@@ -51,6 +55,7 @@ export const stores: Store[] = [
     //location: "Calle Sarmiento 234",
     //schedule: "Lun-Dom 7:00-23:00",
     //deliveryAvailable: false,
+    categories: ["Kiosco"],
   },
   {
     id: 6,
@@ -61,6 +66,7 @@ export const stores: Store[] = [
     //location: "Av. Colón 789",
     //schedule: "24 horas",
     //deliveryAvailable: true,
+    categories: ["Kiosco"],
   },
   {
     id: 7,
@@ -71,6 +77,7 @@ export const stores: Store[] = [
     //location: "Calle 9 de Julio 456",
     //schedule: "Lun-Sáb 8:00-20:00",
     //deliveryAvailable: true,
+    categories: ["Verduleria"],
   },
   {
     id: 8,
@@ -81,6 +88,7 @@ export const stores: Store[] = [
     //location: "Bv. Savio 123",
     //schedule: "Mar-Dom 7:00-13:00",
     //deliveryAvailable: true,
+    categories: ["Panaderia"],
   },
 ];
 
@@ -91,15 +99,15 @@ const getDaysUntilExpiration = (expirationDate: string): string => {
   const diffTime = expDate.getTime() - today.getTime();
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
   
-  if (diffDays <= 0) return "today";
-  if (diffDays === 1) return "one day";
-  if (diffDays === 2) return "two days";
-  if (diffDays === 3) return "three days";
-  if (diffDays === 4) return "four days";
-  if (diffDays <= 7) return `${diffDays} days`;
-  if (diffDays <= 14) return "one week";
-  if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} weeks`;
-  return "one month";
+  if (diffDays <= 0) return "Hoy";
+  if (diffDays === 1) return "1 día";
+  if (diffDays === 2) return "2 días";
+  if (diffDays === 3) return "3 días";
+  if (diffDays === 4) return "4 días";
+  if (diffDays <= 7) return `${diffDays} días`;
+  if (diffDays <= 14) return "una semana";
+  if (diffDays <= 30) return `${Math.ceil(diffDays / 7)} semanas`;
+  return "un mes o más";
 };
 
 export const deals: Deal[] = [
@@ -197,26 +205,7 @@ export const deals: Deal[] = [
     storeId: "8",
     tags: ["buen-estado", "vegetariano"],
   },
-  {
-    id: 6,
-    title: "Yogur próximo a vencer",
-    description:
-      "Yogur bebible de excelente calidad. Próximo a vencer pero en perfectas condiciones de consumo.",
-    imageUrl:
-      "https://laserenisimaclasico.com.ar/wp-content/uploads/2024/06/Card-bebible-frente.webp",
-    price: 180,
-    originalPrice: 327,
-    discount: 45,
-    stock: 20,
-    expirationDate: new Date(
-      Date.now() + 2 * 24 * 60 * 60 * 1000
-    ).toISOString(),
-    expiresIn: "two days",
-    category: "Supermercado",
-    productType: "Lácteos",
-    storeId: "1",
-    tags: ["buen-estado", "vegetariano"],
-  },
+  
   {
     id: 7,
     title: "Hamburguesas congeladas con empaque dañado",
