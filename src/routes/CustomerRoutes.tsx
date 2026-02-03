@@ -1,7 +1,7 @@
 import { Routes, Route } from "react-router-dom";
-import HomePage from "@/shared/pages/customer/HomePage";
-import StoresPage from "@/shared/pages/customer/StoresPage";
-import ProductsDealsPage from "@/shared/pages/customer/DealProductsPage";
+import HomePage from "@/modules/customer/home/pages/HomePage";
+import StoresPage from "@/modules/customer/home/pages/StoresPage";
+import ProductsDealsPage from "@/modules/customer/home/pages/DealProductsPage";
 
 export function CustomerRoutes() {
   return (
