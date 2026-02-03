@@ -1,12 +1,14 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CreateClientParams } from "@/modules/client/interfaces/requests/createClient.interface";
+import type { CreateCommerceParams } from "@/modules/commerce/interfaces/createCommerce.interface";
 
 interface PendingRegistrationState {
   clientData?: CreateClientParams;
-  profilePicture?: File | null; // <-- campo temporal (no persistido)
-  commerceData?: any;
+  profilePicture?: File | null;
+  commerceData?: CreateCommerceParams;
   setClientData: (data: CreateClientParams) => void;
+  setCommerceData: (data: CreateCommerceParams) => void;
   setProfilePicture: (file: File | null) => void;
   clearData: () => void;
 }
@@ -19,7 +21,7 @@ export const usePendingRegistrationStore = create<PendingRegistrationState>()(
       commerceData: undefined,
 
       setClientData: (data) => set({ clientData: data }),
-
+      setCommerceData: (data) => set({ commerceData: data }),  
       setProfilePicture: (file) => set({ profilePicture: file }),
 
       clearData: () =>
@@ -28,11 +30,12 @@ export const usePendingRegistrationStore = create<PendingRegistrationState>()(
     {
       name: "pending-registration-store",
       partialize: (state) => ({
-        // 🔹 Solo persistimos lo que NO tiene File
         clientData: state.clientData
           ? { ...state.clientData, profilePicture: undefined }
           : undefined,
-        commerceData: state.commerceData,
+        commerceData: state.commerceData
+          ? { ...state.commerceData, profilePicture: undefined } 
+          : undefined,
       }),
     }
   )
