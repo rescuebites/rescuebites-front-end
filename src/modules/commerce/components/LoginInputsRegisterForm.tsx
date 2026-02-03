@@ -7,6 +7,7 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import React from "react";
 
+
 type Props = {
   register: any;
   errors: FieldErrors<Inputs>;
@@ -64,6 +65,15 @@ export default function InputsRegisterForm({ register, errors }: Props) {
             </InputAdornment>
           ),
         }}
+      />
+      <TextField                                                        
+        {...register("confirmPassword", { required: "Confirmé la contraseña" })}
+        id="confirmPassword"
+        label="Confirmar Contraseña"
+        type={showPassword ? "text" : "password"}
+        fullWidth
+        error={!!errors.confirmPassword}
+        helperText={errors.confirmPassword?.message}
       />
     </>
   );

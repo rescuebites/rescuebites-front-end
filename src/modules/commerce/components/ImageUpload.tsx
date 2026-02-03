@@ -2,13 +2,15 @@ import { Box, Avatar, IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
+import type { UseFormSetValue } from "react-hook-form";
+import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
 
 type Props = {
-  register: any;
+  setValue: UseFormSetValue<Inputs>;
   error?: string;
 };
 
-export default function ImageUpload({ register, error }: Props) {
+export default function ImageUpload({ setValue, error }: Props) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   return (
@@ -28,7 +30,6 @@ export default function ImageUpload({ register, error }: Props) {
             hidden
             accept="image/png, image/jpeg"
             type="file"
-            {...register("profilePhoto", { required: "Suba una imagen" })}
             onChange={(e) => {
               const file = e.target.files?.[0];
               if (!file) return;
@@ -37,20 +38,17 @@ export default function ImageUpload({ register, error }: Props) {
                 return;
               }
               setProfilePicture(file);
-              const reader = new FileReader();
-              reader.onloadend = () =>
-                localStorage.setItem(
-                  "profilePictureBase64",
-                  reader.result as string
-                );
-              reader.readAsDataURL(file);
+              setValue("profilePhoto", file);
             }}
           />
         </IconButton>
 
         {profilePicture && (
           <IconButton
-            onClick={() => setProfilePicture(null)}
+            onClick={() => {
+              setProfilePicture(null);
+              setValue("profilePhoto", null as any); //En typeScript no permite null en File, por eso el any (hace una excepción)
+            }}
             sx={{ ml: -4, color: "#77A787", width: 30, height: 30 }}
           >
             <span
@@ -60,6 +58,7 @@ export default function ImageUpload({ register, error }: Props) {
             </span>
           </IconButton>
         )}
+
         {error && (
           <Typography variant="caption" color="error">
             {error}

@@ -9,6 +9,7 @@ export const useRegisterCommerce = () => {
     register,
     handleSubmit,
     control,
+    setValue,
     formState: { errors },
     reset,
   } = useForm<Inputs>({
@@ -27,6 +28,7 @@ export const useRegisterCommerce = () => {
     register,
     handleSubmit,
     control,
+    setValue,                                                            
     errors,
     onSubmit,
     isPending,

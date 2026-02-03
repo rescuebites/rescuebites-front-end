@@ -1,28 +1,30 @@
-import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import InputsRegisterForm from "./LoginInputsRegisterForm";
 import CommerceInputsRegisterForm from "./CommerceInputsRegisterForm";
 import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerce";
-import Typography from "@mui/material/Typography";
 import ImageUpload from "./ImageUpload";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
 
 export type Inputs = {
+  // Datos del usuario
   email: string;
   password: string;
+  confirmPassword: string;
+
+  // Datos del comercio
   name: string;
   description?: string;
   commerceTypes: string[];
-  schedule: string;
+  openingHours: string;
   address: string;
-  city: string;
-  profilePhoto: File;
-  phoneNumber: number;
+  locality: string;
+  phone: string;       
+  profilePhoto: File; 
 };
 
 export default function RegisterForm() {
-  const { register, handleSubmit, control, errors, onSubmit, isPending } =
+  const { register, handleSubmit, control, errors, onSubmit, isPending, setValue } =
     useRegisterCommerce();
 
   return (
@@ -32,7 +34,7 @@ export default function RegisterForm() {
 
         <Stack spacing={2} sx={{ mt: 3 }}>
           <ImageUpload
-            register={register}
+            setValue={setValue}
             error={errors?.profilePhoto?.message}
           />
           <InputsRegisterForm register={register} errors={errors} />

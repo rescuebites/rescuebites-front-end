@@ -2,7 +2,6 @@ import { FieldErrors } from "react-hook-form";
 import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
 import TextField from "@mui/material/TextField";
 import CommerceCheckboxGroup from "./CommerceCheckBoxGroup";
-import ImageUpload from "./ImageUpload";
 
 type Props = {
   register: any;
@@ -39,24 +38,24 @@ export default function CommerceCheckForm({
         helperText={errors.address?.message}
       />
       <TextField
-        {...register("city", { required: "Ingrese su localidad" })}
-        id="city"
+        {...register("locality", { required: "Ingrese su localidad" })}
+        id="locality"
         label="Localidad"
         type="text"
         fullWidth
-        error={!!errors.city}
-        helperText={errors.city?.message}
+        error={!!errors.locality}
+        helperText={errors.locality?.message}
       />
       <TextField
-        {...register("phoneNumber", {
+        {...register("phone", {
           required: "Ingrese un número de teléfono",
         })}
-        id="phoneNumber"
+        id="phone"
         label="Teléfono"
-        type="number"
+        type="text"
         fullWidth
-        error={!!errors.phoneNumber}
-        helperText={errors.phoneNumber?.message}
+        error={!!errors.phone}
+        helperText={errors.phone?.message}
       />
 
       <TextField
@@ -68,13 +67,13 @@ export default function CommerceCheckForm({
       />
 
       <TextField
-        {...register("schedule", { required: "Ingrese el horario" })}
-        id="schedule"
+        {...register("openingHours", { required: "Ingrese el horario" })}
+        id="openingHours"
         label="Horario"
         type="text"
         fullWidth
-        error={!!errors.schedule}
-        helperText={errors.schedule?.message}
+        error={!!errors.openingHours}
+        helperText={errors.openingHours?.message}
       />
 
       <CommerceCheckboxGroup control={control} errors={errors} />
