@@ -1,10 +1,10 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import Header from "../../../shared/components/layout/Header";
-import SearchBar from "../../components/layout/SearchBar";
-import CategoryChips from "../../../modules/customer/home/components/CategoryChips";
-import FeaturedStores from "../../../modules/customer/home/components/FeaturedStores";
-import TopDeals from "../../../modules/customer/home/components/TopDeals";
-import FilterDrawer from "../../../modules/customer/home/components/FilterDrawer";
+import Header from "../../../../shared/components/layout/Header";
+import SearchBar from "../../../../shared/components/layout/SearchBar";
+import CategoryChips from "../components/CategoryChips";
+import FeaturedStores from "../components/FeaturedStores";
+import TopDeals from "../components/TopDeals";
+import FilterDrawer from "../components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
 import { useFilters } from "@/modules/customer/home/hooks/useFilters";
 

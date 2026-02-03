@@ -1,17 +1,47 @@
-import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
+import { Box, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { deals } from "./mockData";
-import type { Deal } from "./../interfaces/types";
-import ProductDetailDialog from "./ProductDetailDialog";
+import { useTopDeals } from "../hooks/useProducts";
+import type { ProductResponse} from "./../interfaces/responses";
+//import ProductDetailDialog from "./ProductDetailDialog";
 
 export default function TopDeals() {
-  const [selectedDeal, setSelectedDeal] = useState<Deal | null>(null);
+  const [selectedDeal, setSelectedDeal] = useState<ProductResponse | null>(null);
 
-  // Ordenar por descuento
-  const sortedDeals = [...deals].sort((a, b) => b.discount - a.discount);
+  const { data: products, isLoading, error } = useTopDeals(12);
 
-  const handleDealClick = (deal: Deal) => {
-    setSelectedDeal(deal);
+// Manejo de loading
+if (isLoading) {
+  return (
+    <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+      <CircularProgress sx={{ color: '#77A787' }} />
+    </Box>
+  );
+}
+
+// Manejo de error
+if (error) {
+  return (
+    <Box textAlign="center" py={4}>
+      <Typography color="error">
+        Error al cargar productos destacados
+      </Typography>
+    </Box>
+  );
+}
+
+// Manejo de sin datos
+if (!products || products.length === 0) {
+  return (
+    <Box textAlign="center" py={4}>
+      <Typography color="text.secondary">
+        No hay productos destacados disponibles
+      </Typography>
+    </Box>
+  );
+}
+
+  const handleDealClick = (product: ProductResponse) => {
+    setSelectedDeal(product);
   };
 
   const handleCloseDialog = () => {
@@ -35,21 +65,21 @@ export default function TopDeals() {
     maxWidth: '100%',
   }}
 >
-  {sortedDeals.map((d: Deal) => (
-    <DealCard key={d.id} deal={d} onClick={() => handleDealClick(d)} />
+  {products?.map((product: ProductResponse) => (
+    <DealCard key={product.productId} product={product} onClick={() => handleDealClick(product)} />
   ))}
 </Box>
 
-      <ProductDetailDialog
+      {/* <ProductDetailDialog
         open={selectedDeal !== null}
         onClose={handleCloseDialog}
         deal={selectedDeal}
-      />
+      /> */}
     </>
   );
 }
 
-function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
+function DealCard({ product, onClick }: { product: ProductResponse; onClick: () => void }) {
   return (
     <Card
       onClick={onClick}
@@ -73,9 +103,9 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
       <Box sx={{ position: 'relative' }}>
         <Box
           component="img"
-          src={deal.imageUrl}
+          src={product.images[0]?.imageUrl || '/placeholder.jpg'}
           loading="lazy"
-          alt={deal.title}
+          alt={product.name}
           sx={{
             width: '100%',
             aspectRatio: '1 / 1',
@@ -85,7 +115,7 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
         />
 
         {/* Badge de descuento */}
-        {deal.discount > 0 && (
+        {product.discountPercentage > 0 && (
           <Box
             sx={{
               position: 'absolute',
@@ -102,7 +132,7 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
               lineHeight: 1,
             }}
           >
-            {deal.discount}%
+            {Math.round(product.discountPercentage)}%
           </Box>
         )}
       </Box>
@@ -125,7 +155,7 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
             lineHeight: 1.4,
           }}
         >
-          {deal.title}
+          {product.name}
         </Typography>
 
         {/* Precios */}
@@ -137,11 +167,11 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
               fontSize: { xs: 16, sm: 18 }
             }}
           >
-            ${deal.price.toFixed(2)}
+            ${product.discountedPrice.toFixed(2)}
           </Typography>
           
           {/* Precio original tachado */}
-          {deal.originalPrice && (
+          {product.originalPrice && (
             <Typography
               sx={{
                 color: '#BDBDBD',
@@ -149,13 +179,13 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
                 textDecoration: 'line-through',
               }}
             >
-              ${deal.originalPrice.toFixed(2)}
+              ${product.originalPrice.toFixed(2)}
             </Typography>
           )}
         </Stack>
 
         {/* Tiempo de expiración */}
-        {deal.expiresIn && (
+        {product.expirationDate && (
           <Typography
             sx={{
               color: '#FF6B6B',
@@ -163,7 +193,7 @@ function DealCard({ deal, onClick }: { deal: Deal; onClick: () => void }) {
               fontWeight: 500,
             }}
           >
-            Expires in {deal.expiresIn}
+            Vence: {new Date(product.expirationDate).toLocaleDateString('es-AR')}
           </Typography>
         )}
       </CardContent>

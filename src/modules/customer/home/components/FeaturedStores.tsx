@@ -1,8 +1,35 @@
-import { Box, Stack, Typography } from "@mui/material";
-import { stores } from "./mockData";
-import type { Store } from "../interfaces/types";
+import { Box, Stack, Typography, CircularProgress } from "@mui/material";
+import { useCommercesByType } from "../hooks/useCommerces";
+import { CommercePublicResponse } from "../interfaces/responses";
 
 export default function FeaturedStores() {
+  // Puedes cambiar 'BAKERY' por el tipo que prefieras
+  const { data, isLoading, error } = useCommercesByType('BAKERY', 6);
+
+  if (isLoading) {
+    return (
+      <Box display="flex" justifyContent="center" alignItems="center" py={4}>
+        <CircularProgress sx={{ color: '#77A787' }} />
+      </Box>
+    );
+  }
+
+  if (error) {
+    return (
+      <Box textAlign="center" py={4}>
+        <Typography color="error">Error al cargar comercios</Typography>
+      </Box>
+    );
+  }
+
+  if (!data || data.content.length === 0) {
+    return (
+      <Box textAlign="center" py={4}>
+        <Typography color="text.secondary">No hay comercios disponibles</Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box
       sx={{
@@ -15,14 +42,14 @@ export default function FeaturedStores() {
         scrollbarWidth: 'none',
       }}
     >
-      {stores.map((s) => (
-        <StoreCard key={s.id} store={s} />
+      {data.content.map((commerce) => (
+        <StoreCard key={commerce.commerceId} commerce={commerce} />
       ))}
     </Box>
   );
 }
 
-function StoreCard({ store }: { store: Store }) {
+function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
   return (
     <Stack
       sx={{
@@ -45,7 +72,7 @@ function StoreCard({ store }: { store: Store }) {
         sx={{
           width: '100%',
           height: { xs: 120, sm: 140 },
-          backgroundImage: `url(${store.profileImageUrl})`,
+          backgroundImage: `url(${commerce.images[0]?.imageUrl || '/placeholder.jpg'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -69,7 +96,7 @@ function StoreCard({ store }: { store: Store }) {
             textAlign: 'center',
           }}
         >
-          {store.name}
+          {commerce.name}
         </Typography>
       </Stack>
     </Stack>
