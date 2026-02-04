@@ -9,5 +9,6 @@ export function useTopDeals(size = 6) {
     queryFn: () => getTopDeals(size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    placeholderData: [], //valor por defecto si la query falla, por si no hay productos en la bd
   });
 }

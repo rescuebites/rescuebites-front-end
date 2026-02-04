@@ -7,11 +7,16 @@ import {
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {
-  const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
-    `/api/v1/public/products/ordered-by-price`,
-    { params: { page: 0, size } }
-  );
-  return data.content;
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/public/products/ordered-by-price`,
+      { params: { page: 0, size } }
+    );
+    return data?.content ?? [];
+  } catch (error) {
+    console.error("Error fetching top deals:", error);
+    return []; // Retorna un array vacío en caso de error
+  }
 };
 
 // Todos los productos paginados -> para secciones de tiendas
@@ -29,9 +34,27 @@ export const getCommercesByType = async (
   page = 0, 
   size = 6
 ): Promise<PaginatedResponse<CommercePublicResponse>> => {
-  const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
-    `/api/v1/public/commerces/type/${commerceType}`,
-    { params: { page, size } }
-  );
-  return data;
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
+      `/api/v1/public/commerces/type/${commerceType}`,
+      { params: { page, size } }
+    );
+    // Si la respuesta es null/undefined, devolver estructura vacía
+      return data ?? { 
+        content: [], 
+        totalElements: 0, 
+        totalPages: 0, 
+        size: 0, 
+        number: 0 
+      };
+    } catch (error) {
+    console.error('Error al obtener comercios:', error);
+    return { 
+      content: [], 
+      totalElements: 0, 
+      totalPages: 0, 
+      size: 0, 
+      number: 0 
+    };
+  }
 };

@@ -9,5 +9,12 @@ export function useCommercesByType(commerceType: string, size = 6) {
     staleTime: 5 * 60 * 1000,
     retry: 2,
     enabled: !!commerceType, // Solo ejecuta si commerceType existe
+    placeholderData: { // Valor por defecto si la query falla, si no hay comercios por ej
+      content: [], 
+      totalElements: 0, 
+      totalPages: 0, 
+      size: 0, 
+      number: 0 
+    },
   });
 }

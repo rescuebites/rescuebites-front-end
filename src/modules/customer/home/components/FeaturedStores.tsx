@@ -3,7 +3,6 @@ import { useCommercesByType } from "../hooks/useCommerces";
 import { CommercePublicResponse } from "../interfaces/responses";
 
 export default function FeaturedStores() {
-  // Puedes cambiar 'BAKERY' por el tipo que prefieras
   const { data, isLoading, error } = useCommercesByType('BAKERY', 6);
 
   if (isLoading) {
@@ -14,15 +13,17 @@ export default function FeaturedStores() {
     );
   }
 
-  if (error) {
+  if (error || !data) {
     return (
       <Box textAlign="center" py={4}>
-        <Typography color="error">Error al cargar comercios</Typography>
+        <Typography color="text.secondary">No hay comercios disponibles</Typography>
       </Box>
     );
   }
 
-  if (!data || data.content.length === 0) {
+  const stores = data.content || [];
+
+  if (stores.length === 0) {
     return (
       <Box textAlign="center" py={4}>
         <Typography color="text.secondary">No hay comercios disponibles</Typography>
@@ -42,7 +43,7 @@ export default function FeaturedStores() {
         scrollbarWidth: 'none',
       }}
     >
-      {data.content.map((commerce) => (
+      {stores.map((commerce) => (
         <StoreCard key={commerce.commerceId} commerce={commerce} />
       ))}
     </Box>
