@@ -1,405 +1,487 @@
-// import {
-//   Dialog,
-//   DialogContent,
-//   IconButton,
-//   Box,
-//   Typography,
-//   Stack,
-//   Chip,
-//   Divider,
-//   Button,
-//   Alert,
-// } from "@mui/material";
-// import {
-//   MdClose,
-//   MdStorefront,
-//   MdLocalShipping,
-//   MdSchedule,
-//   MdLocationOn,
-//   MdPhone,
-// } from "react-icons/md";
-// import { FaCheckCircle } from "react-icons/fa";
-// import type { Deal, ProductTag } from "../interfaces/types";
-// import { stores } from "./mockData";
+import {
+  Dialog,
+  DialogContent,
+  IconButton,
+  Box,
+  Typography,
+  Stack,
+  Chip,
+  Divider,
+  Button,
+  Alert,
+  CircularProgress,
+} from "@mui/material";
+import {
+  MdClose,
+  MdStorefront,
+  MdSchedule,
+  MdLocationOn,
+  MdPhone,
+  MdAdd,
+  MdRemove,
+} from "react-icons/md";
+import { FaCheckCircle } from "react-icons/fa";
+import { useState } from "react";
+import type { ProductResponse } from "../interfaces/responses";
+import { useProductDetail } from "../hooks/useProductDetail";
 
-// interface ProductDetailDialogProps {
-//   open: boolean;
-//   onClose: () => void;
-//   deal: Deal | null;
-// }
+interface ProductDetailDialogProps {
+  open: boolean;
+  onClose: () => void;
+  product: ProductResponse | null;
+}
 
-// const tagLabels: Record<ProductTag, string> = {
-//   maduro: "Maduro",
-//   vegano: "Vegano",
-//   vegetariano: "Vegetariano",
-//   "sin-gluten": "Sin gluten",
-//   "sin-lactosa": "Sin lactosa",
-//   organico: "Orgánico",
-//   "buen-estado": "Buen estado",
-// };
+// Helper para calcular días hasta vencimiento
+function getDaysUntilExpiration(expirationDate: string): number {
+  const exp = new Date(expirationDate);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  exp.setHours(0, 0, 0, 0);
+  const ms = exp.getTime() - today.getTime();
+  const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
+  return Math.max(0, days);
+}
 
-// const tagColors: Record<ProductTag, string> = {
-//   maduro: "#ff9800",
-//   vegano: "#4caf50",
-//   vegetariano: "#8bc34a",
-//   "sin-gluten": "#2196f3",
-//   "sin-lactosa": "#03a9f4",
-//   organico: "#66bb6a",
-//   "buen-estado": "#509550",
-// };
+// Helper para obtener color según condición
+function getConditionColor(condition: string): string {
+  if (["EXCELLENT", "GOOD", "FRESHLY_BAKED", "READY_TO_SERVE"].includes(condition)) {
+    return "#4caf50";
+  }
+  if (["ALMOST_RIPE", "RIPE", "NEAR_EXPIRY", "PREVIOUS_DAY"].includes(condition)) {
+    return "#ff9800";
+  }
+  if (["OVERRIPE", "EXPIRED_TODAY", "SAME_DAY"].includes(condition)) {
+    return "#ff5252";
+  }
+  return "#9e9e9e";
+}
 
-// function parseLocalDate(dateString: string): Date {
-//   const [datePart] = dateString.split("T");
-//   const [y, m, d] = datePart.split("-").map(Number);
-//   const dt = new Date(y, m - 1, d);
-//   dt.setHours(0, 0, 0, 0);
-//   return dt;
-// }
+export default function ProductDetailDialog({
+  open,
+  onClose,
+  product,
+}: ProductDetailDialogProps) {
+  const [quantity, setQuantity] = useState(1);
 
-// function getDaysUntilExpiration(expiration: string): number {
-//   const exp = parseLocalDate(expiration);
-//   const today = new Date();
-//   today.setHours(0, 0, 0, 0);
-//   const ms = exp.getTime() - today.getTime();
-//   const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
-//   return Math.max(0, days);
-// }
+  // Fetch del detalle completo del producto cuando se abre el dialog
+  const { data: productDetail, isLoading } = useProductDetail(
+    product?.productId.toString() || null
+  );
 
-// function formatDateEsAR(expiration: string): string {
-//   const exp = parseLocalDate(expiration);
-//   return exp.toLocaleDateString("es-AR", {
-//     day: "2-digit",
-//     month: "2-digit",
-//     year: "numeric",
-//   });
-// }
+  if (!open || !product) {
+    return null;
+  }
 
-// export default function ProductDetailDialog({
-//   open,
-//   onClose,
-//   deal,
-// }: ProductDetailDialogProps) {
-//   if (!open || !deal) {
-//     return null;
-//   }
+  // Mostrar loading mientras se carga el detalle
+  if (isLoading || !productDetail) {
+    return (
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 3,
+            bgcolor: "#FDFBF6",
+          },
+        }}
+        slotProps={{
+          backdrop: {
+            sx: {
+              backdropFilter: "blur(4px)",
+              backgroundColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        }}
+      >
+        <DialogContent>
+          <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+            <CircularProgress sx={{ color: "#77A787" }} />
+          </Box>
+        </DialogContent>
+      </Dialog>
+    );
+  }
 
-//   const store = stores.find((s) => s.id === deal.storeId);
+  const daysUntilExpiration = productDetail.expirationDate
+    ? getDaysUntilExpiration(productDetail.expirationDate)
+    : null;
+  const isExpiringSoon = daysUntilExpiration !== null && daysUntilExpiration <= 2;
 
-//   const daysUntilExpiration = getDaysUntilExpiration(deal.expirationDate);
-//   const formattedDate = formatDateEsAR(deal.expirationDate);
-//   const isExpiringSoon = daysUntilExpiration <= 2;
+  const handleIncrement = () => {
+    if (quantity < productDetail.stock) {
+      setQuantity(quantity + 1);
+    }
+  };
 
-//   return (
-//     <Dialog
-//       open={open}
-//       onClose={onClose}
-//       maxWidth="md"
-//       fullWidth
-//       PaperProps={{
-//         sx: {
-//           borderRadius: 3,
-//           maxHeight: "90vh",
-//         },
-//       }}
-//     >
-//       <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
-//         <IconButton
-//           onClick={onClose}
-//           sx={{
-//             bgcolor: "rgba(255, 255, 255, 0.9)",
-//             "&:hover": { bgcolor: "rgba(255, 255, 255, 1)" },
-//           }}
-//         >
-//           <MdClose />
-//         </IconButton>
-//       </Box>
+  const handleDecrement = () => {
+    if (quantity > 1) {
+      setQuantity(quantity - 1);
+    }
+  };
 
-//       <DialogContent sx={{ p: 0 }}>
-//         <Box
-//           sx={{
-//             position: "relative",
-//             width: "100%",
-//             height: { xs: 250, sm: 350 },
-//             backgroundImage: `url(${deal.imageUrl})`,
-//             backgroundSize: "cover",
-//             backgroundPosition: "center",
-//           }}
-//         >
-//           <Box
-//             sx={{
-//               position: "absolute",
-//               top: 16,
-//               left: 16,
-//               px: 3,
-//               py: 1.5,
-//               borderRadius: "50px",
-//               bgcolor: "rgba(253, 251, 246, 0.95)",
-//               fontSize: 20,
-//               fontWeight: 700,
-//               color: "#0e1b0e",
-//               boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
-//             }}
-//           >
-//             -{deal.discount}%
-//           </Box>
-//         </Box>
+  const totalPrice = (Number(productDetail.discountedPrice) * quantity).toFixed(2);
 
-//         <Box sx={{ p: { xs: 2, sm: 3 } }}>
-//           <Stack spacing={3}>
-//             <Box>
-//               <Typography
-//                 variant="h5"
-//                 sx={{ fontWeight: 700, color: "#0e1b0e", mb: 1 }}
-//               >
-//                 {deal.title}
-//               </Typography>
-//               <Stack direction="row" spacing={1}>
-//                 <Chip
-//                   label={deal.category}
-//                   size="small"
-//                   sx={{ bgcolor: "#e8f3e8", color: "#509550" }}
-//                 />
-//                 <Chip
-//                   label={deal.productType}
-//                   size="small"
-//                   variant="outlined"
-//                   sx={{ borderColor: "#509550", color: "#509550" }}
-//                 />
-//               </Stack>
-//             </Box>
+  return (
+    <Dialog
+      open={open}
+      onClose={onClose}
+      maxWidth="sm"
+      fullWidth
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          maxHeight: "90vh",
+          bgcolor: "#FDFBF6",
+        },
+      }}
+      slotProps={{
+        backdrop: {
+          sx: {
+            backdropFilter: "blur(4px)",
+            backgroundColor: "rgba(0, 0, 0, 0.5)",
+          },
+        },
+      }}
+    >
+      <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+        <IconButton
+          onClick={onClose}
+          sx={{
+            bgcolor: "rgba(255, 255, 255, 0.95)",
+            "&:hover": { bgcolor: "rgba(255, 255, 255, 1)" },
+          }}
+        >
+          <MdClose />
+        </IconButton>
+      </Box>
 
-//             <Typography sx={{ color: "#0e1b0e", lineHeight: 1.6 }}>
-//               {deal.description}
-//             </Typography>
+      <DialogContent sx={{ p: 0 }}>
+        <Box
+          sx={{
+            position: "relative",
+            width: "100%",
+            height: 280,
+            backgroundImage: `url(${productDetail.imageUrls[0] || "/placeholder.jpg"})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+          }}
+        >
+          {Number(productDetail.discountPercentage) > 0 && (
+            <Box
+              sx={{
+                position: "absolute",
+                top: 16,
+                left: 16,
+                px: 2.5,
+                py: 1,
+                borderRadius: "50px",
+                bgcolor: "#77A787",
+                fontSize: 18,
+                fontWeight: 700,
+                color: "#fff",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+              }}
+            >
+              {Math.round(Number(productDetail.discountPercentage))}%
+            </Box>
+          )}
+        </Box>
 
-//             <Box>
-//               <Stack direction="row" spacing={2} alignItems="baseline">
-//                 <Typography
-//                   variant="h4"
-//                   sx={{ fontWeight: 700, color: "#509550" }}
-//                 >
-//                   ${deal.price}
-//                 </Typography>
-//                 <Typography
-//                   sx={{
-//                     textDecoration: "line-through",
-//                     color: "#999",
-//                     fontSize: 18,
-//                   }}
-//                 >
-//                   ${deal.originalPrice}
-//                 </Typography>
-//               </Stack>
-//               <Typography sx={{ color: "#509550", mt: 0.5, fontWeight: 500 }}>
-//                 Ahorrás ${deal.originalPrice - deal.price}
-//               </Typography>
-//             </Box>
+        <Box sx={{ p: 3 }}>
+          <Stack spacing={2.5}>
+            <Box>
+              <Typography
+                variant="h5"
+                sx={{ fontWeight: 700, color: "#0e1b0e", mb: 1.5 }}
+              >
+                {productDetail.name}
+              </Typography>
 
-//             <Divider />
+              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
+                <Chip
+                  label={productDetail.categoryDisplayName}
+                  size="small"
+                  sx={{
+                    bgcolor: "#77A787",
+                    color: "#fff",
+                    fontWeight: 600,
+                  }}
+                />
 
-//             <Stack spacing={2}>
-//               <Stack
-//                 direction="row"
-//                 justifyContent="space-between"
-//                 alignItems="center"
-//               >
-//                 <Typography sx={{ color: "#0e1b0e", fontWeight: 600 }}>
-//                   Stock disponible:
-//                 </Typography>
-//                 <Typography
-//                   sx={{
-//                     color: deal.stock < 5 ? "#ff9800" : "#509550",
-//                     fontWeight: 700,
-//                   }}
-//                 >
-//                   {deal.stock} unidades
-//                 </Typography>
-//               </Stack>
+                {daysUntilExpiration !== null && (
+                  <Chip
+                    icon={<MdSchedule />}
+                    label={`Vence en ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "día" : "días"}`}
+                    size="small"
+                    sx={{
+                      bgcolor: isExpiringSoon ? "#ff525220" : "#ff980020",
+                      color: isExpiringSoon ? "#d32f2f" : "#ff9800",
+                      fontWeight: 600,
+                      "& .MuiChip-icon": {
+                        color: isExpiringSoon ? "#d32f2f" : "#ff9800",
+                      },
+                    }}
+                  />
+                )}
 
-//               <Stack
-//                 direction="row"
-//                 justifyContent="space-between"
-//                 alignItems="center"
-//               >
-//                 <Typography sx={{ color: "#0e1b0e", fontWeight: 600 }}>
-//                   Fecha de vencimiento:
-//                 </Typography>
-//                 <Typography
-//                   sx={{
-//                     color: isExpiringSoon ? "#d32f2f" : "#0e1b0e",
-//                     fontWeight: 600,
-//                   }}
-//                 >
-//                   {formattedDate}
-//                 </Typography>
-//               </Stack>
+                <Chip
+                  label={`${productDetail.stock} unid. disponibles`}
+                  size="small"
+                  sx={{
+                    bgcolor: productDetail.stock < 5 ? "#ff980020" : "#4caf5020",
+                    color: productDetail.stock < 5 ? "#ff9800" : "#4caf50",
+                    fontWeight: 600,
+                  }}
+                />
+              </Stack>
+            </Box>
 
-//               {isExpiringSoon && (
-//                 <Alert severity="warning" sx={{ borderRadius: 2 }}>
-//                   Este producto vence en {daysUntilExpiration}{" "}
-//                   {daysUntilExpiration === 1 ? "día" : "días"}. Se recomienda
-//                   consumo inmediato.
-//                 </Alert>
-//               )}
-//             </Stack>
+            {productDetail.description && (
+              <Typography sx={{ color: "#0e1b0e", lineHeight: 1.6, fontSize: 15 }}>
+                {productDetail.description}
+              </Typography>
+            )}
 
-//             {(deal.tags ?? []).length > 0 && (
-//               <Box>
-//                 <Typography sx={{ color: "#0e1b0e", fontWeight: 600, mb: 1.5 }}>
-//                   Características:
-//                 </Typography>
-//                 <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-//                   {deal.tags?.map((tag) => (
-//                     <Chip
-//                       key={tag}
-//                       icon={<FaCheckCircle size={14} />}
-//                       label={tagLabels[tag]}
-//                       sx={{
-//                         bgcolor: `${tagColors[tag]}20`,
-//                         color: tagColors[tag],
-//                         fontWeight: 600,
-//                         "& .MuiChip-icon": {
-//                           color: tagColors[tag],
-//                         },
-//                       }}
-//                     />
-//                   ))}
-//                 </Stack>
-//               </Box>
-//             )}
+            {isExpiringSoon && (
+              <Alert
+                severity="warning"
+                sx={{
+                  borderRadius: 2,
+                  bgcolor: "#fff3e0",
+                  "& .MuiAlert-icon": { color: "#ff9800" },
+                }}
+              >
+                Este producto vence en {daysUntilExpiration}{" "}
+                {daysUntilExpiration === 1 ? "día" : "días"}. Se recomienda consumo
+                inmediato.
+              </Alert>
+            )}
 
-//             <Divider />
+            {productDetail.conditionDisplayName && (
+              <Box>
+                <Stack direction="row" spacing={1} alignItems="center">
+                  <FaCheckCircle
+                    size={18}
+                    color={getConditionColor(productDetail.condition)}
+                  />
+                  <Typography
+                    sx={{
+                      color: getConditionColor(productDetail.condition),
+                      fontWeight: 600,
+                      fontSize: 15,
+                    }}
+                  >
+                    {productDetail.conditionDisplayName}
+                  </Typography>
+                </Stack>
+              </Box>
+            )}
 
-//             {store && (
-//               <Box>
-//                 <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-//                   <MdStorefront size={24} color="#509550" />
-//                   <Typography
-//                     variant="h6"
-//                     sx={{ fontWeight: 700, color: "#0e1b0e" }}
-//                   >
-//                     Información del comercio
-//                   </Typography>
-//                 </Stack>
+            <Divider />
 
-//                 <Stack spacing={2}>
-//                   <Stack direction="row" spacing={2} alignItems="center">
-//                     <Box
-//                       sx={{
-//                         width: 60,
-//                         height: 60,
-//                         borderRadius: 2,
-//                         backgroundImage: `url(${store.imageUrl || store.profileImageUrl})`,
-//                         backgroundSize: "cover",
-//                         backgroundPosition: "center",
-//                         border: "2px solid #e8f3e8",
-//                       }}
-//                     />
-//                     <Box>
-//                       <Typography sx={{ fontWeight: 600, color: "#0e1b0e" }}>
-//                         {store.name}
-//                       </Typography>
-//                       {store.subtitle && (
-//                         <Typography sx={{ color: "#509550", fontSize: 14 }}>
-//                           {store.subtitle}
-//                         </Typography>
-//                       )}
-//                     </Box>
-//                   </Stack>
+            {productDetail.commerce && (
+              <Box>
+                <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
+                  <MdStorefront size={22} color="#77A787" />
+                  <Typography
+                    variant="h6"
+                    sx={{ fontWeight: 700, color: "#0e1b0e", fontSize: 17 }}
+                  >
+                    Información del comercio
+                  </Typography>
+                </Stack>
 
-//                   {store.location && (
-//                     <Stack direction="row" spacing={1.5} alignItems="flex-start">
-//                       <MdLocationOn
-//                         size={20}
-//                         color="#509550"
-//                         style={{ marginTop: 2 }}
-//                       />
-//                       <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
-//                         {store.location}
-//                       </Typography>
-//                     </Stack>
-//                   )}
+                <Stack spacing={2}>
+                  <Stack direction="row" spacing={2} alignItems="center">
+                    <Box
+                      sx={{
+                        width: 56,
+                        height: 56,
+                        borderRadius: 2,
+                        backgroundImage: `url(${productDetail.commerce.images?.[0]?.imageUrl || "/placeholder-store.jpg"})`,
+                        backgroundSize: "cover",
+                        backgroundPosition: "center",
+                        border: "2px solid #77A787",
+                      }}
+                    />
+                    <Box flex={1}>
+                      <Typography sx={{ fontWeight: 600, color: "#0e1b0e" }}>
+                        {productDetail.commerce.name}
+                      </Typography>
+                      {productDetail.commerce.description && (
+                        <Typography
+                          sx={{
+                            color: "#77A787",
+                            fontSize: 13,
+                            lineHeight: 1.4,
+                          }}
+                        >
+                          {productDetail.commerce.description}
+                        </Typography>
+                      )}
+                    </Box>
+                  </Stack>
 
-//                   {store.schedule && (
-//                     <Stack direction="row" spacing={1.5} alignItems="flex-start">
-//                       <MdSchedule
-//                         size={20}
-//                         color="#509550"
-//                         style={{ marginTop: 2 }}
-//                       />
-//                       <Typography sx={{ color: "#0e1b0e", flex: 1 }}>
-//                         {store.schedule}
-//                       </Typography>
-//                     </Stack>
-//                   )}
+                  {productDetail.commerce.address && (
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <MdLocationOn
+                        size={20}
+                        color="#77A787"
+                        style={{ marginTop: 2 }}
+                      />
+                      <Typography sx={{ color: "#0e1b0e", flex: 1, fontSize: 14 }}>
+                        {productDetail.commerce.address}, {productDetail.commerce.locality}
+                      </Typography>
+                    </Stack>
+                  )}
 
-//                   {store.deliveryAvailable !== undefined && (
-//                     <Stack direction="row" spacing={1.5} alignItems="center">
-//                       <MdLocalShipping size={20} color="#509550" />
-//                       <Typography sx={{ color: "#0e1b0e" }}>
-//                         {store.deliveryAvailable
-//                           ? "Delivery disponible"
-//                           : "Solo retiro en local"}
-//                       </Typography>
-//                     </Stack>
-//                   )}
+                  {productDetail.commerce.openingHours && (
+                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
+                      <MdSchedule
+                        size={20}
+                        color="#77A787"
+                        style={{ marginTop: 2 }}
+                      />
+                      <Typography sx={{ color: "#0e1b0e", flex: 1, fontSize: 14 }}>
+                        {productDetail.commerce.openingHours}
+                      </Typography>
+                    </Stack>
+                  )}
 
-//                   {store.phoneNumber && (
-//                     <Stack direction="row" spacing={1.5} alignItems="center">
-//                       <MdPhone size={20} color="#509550" />
-//                       <Typography sx={{ color: "#0e1b0e" }}>
-//                         {store.phoneNumber}
-//                       </Typography>
-//                     </Stack>
-//                   )}
-//                 </Stack>
-//               </Box>
-//             )}
+                  {productDetail.commerce.phone && (
+                    <Stack direction="row" spacing={1.5} alignItems="center">
+                      <MdPhone size={20} color="#77A787" />
+                      <Typography sx={{ color: "#0e1b0e", fontSize: 14 }}>
+                        {productDetail.commerce.phone}
+                      </Typography>
+                    </Stack>
+                  )}
+                </Stack>
+              </Box>
+            )}
 
-//             <Stack direction={{ xs: "column", sm: "row" }} spacing={2} pt={2}>
-//               <Button
-//                 fullWidth
-//                 variant="contained"
-//                 size="large"
-//                 sx={{
-//                   bgcolor: "#509550",
-//                   color: "#fff",
-//                   fontWeight: 700,
-//                   py: 1.5,
-//                   borderRadius: 2,
-//                   textTransform: "none",
-//                   fontSize: 16,
-//                   "&:hover": {
-//                     bgcolor: "#3d7a3d",
-//                   },
-//                 }}
-//               >
-//                 Agregar al carrito
-//               </Button>
-//               <Button
-//                 fullWidth
-//                 variant="outlined"
-//                 size="large"
-//                 sx={{
-//                   borderColor: "#509550",
-//                   color: "#509550",
-//                   fontWeight: 700,
-//                   py: 1.5,
-//                   borderRadius: 2,
-//                   textTransform: "none",
-//                   fontSize: 16,
-//                   "&:hover": {
-//                     borderColor: "#3d7a3d",
-//                     bgcolor: "#e8f3e8",
-//                   },
-//                 }}
-//               >
-//                 Reservar
-//               </Button>
-//             </Stack>
-//           </Stack>
-//         </Box>
-//       </DialogContent>
-//     </Dialog>
-//   );
-// }
+            <Divider />
+
+            <Box>
+              <Typography
+                sx={{ color: "#0e1b0e", fontWeight: 600, mb: 1.5, fontSize: 15 }}
+              >
+                Cantidad
+              </Typography>
+              <Stack
+                direction="row"
+                spacing={2}
+                alignItems="center"
+                justifyContent="space-between"
+              >
+                <Stack
+                  direction="row"
+                  spacing={0}
+                  alignItems="center"
+                  sx={{
+                    border: "2px solid #77A787",
+                    borderRadius: 2,
+                    overflow: "hidden",
+                  }}
+                >
+                  <IconButton
+                    onClick={handleDecrement}
+                    disabled={quantity <= 1}
+                    sx={{
+                      borderRadius: 0,
+                      px: 2,
+                      py: 1,
+                      color: "#77A787",
+                      "&:hover": { bgcolor: "#77A78710" },
+                      "&:disabled": { color: "#ccc" },
+                    }}
+                  >
+                    <MdRemove size={20} />
+                  </IconButton>
+                  <Typography
+                    sx={{
+                      px: 3,
+                      fontWeight: 700,
+                      fontSize: 18,
+                      color: "#0e1b0e",
+                      minWidth: 40,
+                      textAlign: "center",
+                    }}
+                  >
+                    {quantity}
+                  </Typography>
+                  <IconButton
+                    onClick={handleIncrement}
+                    disabled={quantity >= productDetail.stock}
+                    sx={{
+                      borderRadius: 0,
+                      px: 2,
+                      py: 1,
+                      color: "#77A787",
+                      "&:hover": { bgcolor: "#77A78710" },
+                      "&:disabled": { color: "#ccc" },
+                    }}
+                  >
+                    <MdAdd size={20} />
+                  </IconButton>
+                </Stack>
+
+                <Stack alignItems="flex-end">
+                  <Typography
+                    variant="h5"
+                    sx={{ fontWeight: 700, color: "#77A787" }}
+                  >
+                    ${totalPrice}
+                  </Typography>
+                  {productDetail.originalPrice && quantity === 1 && (
+                    <Typography
+                      sx={{
+                        textDecoration: "line-through",
+                        color: "#999",
+                        fontSize: 14,
+                      }}
+                    >
+                      ${Number(productDetail.originalPrice).toFixed(2)}
+                    </Typography>
+                  )}
+                </Stack>
+              </Stack>
+            </Box>
+
+            <Button
+              fullWidth
+              variant="contained"
+              size="large"
+              startIcon={<MdAdd size={24} />}
+              sx={{
+                bgcolor: "#77A787",
+                color: "#fff",
+                fontWeight: 700,
+                py: 1.8,
+                borderRadius: 2,
+                textTransform: "none",
+                fontSize: 16,
+                boxShadow: "0 4px 12px rgba(119, 167, 135, 0.3)",
+                "&:hover": {
+                  bgcolor: "#5d8a6d",
+                  boxShadow: "0 6px 16px rgba(119, 167, 135, 0.4)",
+                },
+              }}
+              onClick={() => {
+                console.log("Agregar al carrito:", {
+                  productId: productDetail.productId,
+                  quantity,
+                  price: productDetail.discountedPrice,
+                });
+              }}
+            >
+              Agregar al carrito
+            </Button>
+          </Stack>
+        </Box>
+      </DialogContent>
+    </Dialog>
+  );
+}

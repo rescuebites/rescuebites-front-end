@@ -31,11 +31,41 @@ export interface ProductPublicResponse {
   expirationDate: string | null;
   images: ImageResponse[];
 }
+export interface ProductDetailResponse {
+  productId: string;
+  commerce: CommerceResponse; 
+  name: string;
+  description: string;  
+  stock: number;
+  originalPrice: number;
+  discountPercentage: number;
+  discountedPrice: number;
+  savings: number;
+  category: string;
+  categoryDisplayName: string;
+  condition: string;
+  conditionDisplayName: string;
+  expirationDate: string | null;
+  imageUrls: string[];
+  active: boolean;
+}
 
 export interface CommercePublicResponse {
   commerceId: string;
   name: string;
   images: ImageResponse[];
+}
+
+export interface CommerceResponse {
+  commerceId: string;
+  name: string;
+  description?: string;
+  address: string;
+  locality: string;
+  openingHours: string;
+  phone: string;
+  images: ImageResponse[];
+  commerceTypes?: string[];
 }
 
 //para mantener la estructura de paginacion en las respuestas (backend)
