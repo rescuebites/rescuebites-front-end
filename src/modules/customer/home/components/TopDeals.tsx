@@ -2,12 +2,18 @@ import { Box, Card, CardContent, CircularProgress, Stack, Typography } from "@mu
 import { useState } from "react";
 import { useTopDeals } from "../hooks/useProducts";
 import type { ProductResponse} from "./../interfaces/responses";
-//import ProductDetailDialog from "./ProductDetailDialog";
+import ProductDetailDialog from "./ProductDetailDialog";
 
 export default function TopDeals() {
   const [selectedDeal, setSelectedDeal] = useState<ProductResponse | null>(null);
 
   const { data: products, isLoading, error } = useTopDeals(12);
+
+  // 🔍 DEBUGGING - AGREGAR ESTO
+  console.log('RAW DATA:', products);
+  console.log('IS LOADING:', isLoading);
+  console.log('ERROR:', error);
+  
 
 // Manejo de loading
 if (isLoading) {
@@ -70,11 +76,11 @@ if (!products || products.length === 0) {
   ))}
 </Box>
 
-      {/* <ProductDetailDialog
+      <ProductDetailDialog
         open={selectedDeal !== null}
         onClose={handleCloseDialog}
-        deal={selectedDeal}
-      /> */}
+        product={selectedDeal}
+      /> 
     </>
   );
 }
@@ -103,7 +109,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
       <Box sx={{ position: 'relative' }}>
         <Box
           component="img"
-          src={product.images[0]?.imageUrl || '/placeholder.jpg'}
+          src={product.images[0]?.url || '/placeholder.jpg'}
           loading="lazy"
           alt={product.name}
           sx={{

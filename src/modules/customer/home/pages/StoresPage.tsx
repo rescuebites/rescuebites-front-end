@@ -1,3 +1,6 @@
-export default function StoresPage() {
+import CommerceDetailDialog from "../components/CommerceDetailDialog";
+
+  export default function StoresPage() {
   return (
-<h1>Locales</h1>)};
+<CommerceDetailDialog />)
+};

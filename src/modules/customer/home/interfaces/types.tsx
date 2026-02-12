@@ -10,19 +10,20 @@ export enum ProductCondition {
 
 export interface Product {
   productId: string;
-  commerceId: string;
-  commerceName: string;
+  commerceId?: string;
+  commerceName?: string;
   name: string;
-  description: string;
+  description?: string;
   stock: number;
   originalPrice: number;
   discountPercentage: number;
   discountedPrice: number;
-  category: ProductCategory;
-  condition: ProductCondition;
+  category?: ProductCategory;
+  condition?: ProductCondition;
   expirationDate: string | null;
   imageUrls: string[];
-  active: boolean;
+  tags?: ProductTag[];
+  active?: boolean;
 }
 
 export interface Deal {
@@ -52,7 +53,7 @@ export type ProductTag =
   | "buen-estado";
 
 export interface Store {
-  id: number;
+  id?: number;
   name: string;
   subtitle?: string;
   profileImageUrl?: string;
@@ -61,7 +62,7 @@ export interface Store {
   schedule?: string;
   deliveryAvailable?: boolean;
   phoneNumber?: string;
-  categories: string[];
+  categories?: string[];
 }
 
 export const categories = [

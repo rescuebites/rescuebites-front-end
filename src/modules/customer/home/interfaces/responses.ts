@@ -1,6 +1,6 @@
 export interface ImageResponse {
   imageId: string;
-  imageUrl: string;
+  url: string;
 }
 
 export interface ProductResponse {

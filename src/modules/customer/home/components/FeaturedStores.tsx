@@ -1,6 +1,7 @@
 import { Box, Stack, Typography, CircularProgress } from "@mui/material";
 import { useCommercesByType } from "../hooks/useCommerces";
 import { CommercePublicResponse } from "../interfaces/responses";
+import { useNavigate } from "react-router-dom";
 
 export default function FeaturedStores() {
   const { data, isLoading, error } = useCommercesByType('BAKERY', 6);
@@ -51,6 +52,13 @@ export default function FeaturedStores() {
 }
 
 function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
+
+    const navigate = useNavigate();
+
+  const handleStoreClick = (commerceId:string) => {
+    navigate(`/home/stores/${commerceId}`);
+  };
+
   return (
     <Stack
       sx={{
@@ -73,7 +81,7 @@ function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
         sx={{
           width: '100%',
           height: { xs: 120, sm: 140 },
-          backgroundImage: `url(${commerce.images[0]?.imageUrl || '/placeholder.jpg'})`,
+          backgroundImage: `url(${commerce.images[0]?.url || '/placeholder.jpg'})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
         }}
@@ -87,6 +95,7 @@ function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
         }}
       >
         <Typography 
+          onClick={() => handleStoreClick(commerce.commerceId)}
           sx={{ 
             color: '#2D2D2D', 
             fontWeight: 600,
@@ -97,7 +106,7 @@ function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
             textAlign: 'center',
           }}
         >
-          {commerce.name}
+          {commerce.name} 
         </Typography>
       </Stack>
     </Stack>
