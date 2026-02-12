@@ -74,39 +74,30 @@ const CommerceDetailDialog: React.FC = () => {
     >
       <Box
         sx={{
-          pt: { xs: 3, sm: 3, md: 4 },
-          px: { xs: 3, sm: 3, md: 4 },
+          pt: { xs: 5, sm: 7, md: 10, lg: 12 },
+          px: { xs: 3, sm: 3, md: 5 },
           maxWidth: { xs: '100%', md: '1400px' },
           mx: 'auto',
         }}
       >
-        {/* Restaurant Header Card */}
-        <Card
-          sx={{
-            mb: { xs: 5.1, sm: 5.1 },
-            borderRadius: { xs: 4, md: 4 },
-            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            p: { xs: 3, sm: 3, md: 4 },
-          }}
-        >
           {/* Restaurant Header Section */}
           <Box
             sx={{
               display: 'flex',
               alignItems: 'flex-start',
-              gap: { xs: 3, sm: 3, md: 3.5 },
-              mb: { xs: 3, sm: 3, md: 3.5 },
+              gap: { xs: 3, sm: 3, md: 5 },
+              mb: { xs: 3, sm: 3, md: 10 },
             }}
           >
             <Avatar
               sx={{
-                width: { xs: 200, sm: 130, md: 140, lg: 150 },
-                height: { xs: 200, sm: 130, md: 140, lg: 150 },
+                width: { xs: 150, sm: 200, md: 270, lg: 250 },
+                height: { xs: 150, sm: 200, md: 270, lg: 250 },
                 backgroundColor: '#77A787',
                 flexShrink: 0,
               }}
             >
-              <RestaurantIcon sx={{ fontSize: { xs: 50, sm: 50, md: 55, lg: 65 } }} />
+              {/* <RestaurantIcon sx={{ fontSize: { xs: 55, sm: 55, md: 100, lg: 65 } }} /> imagen/foto perfil del comercio */}
             </Avatar>
 
             <Box sx={{ flex: 1, minWidth: 0 }}>
@@ -114,8 +105,8 @@ const CommerceDetailDialog: React.FC = () => {
                 variant="h4"
                 sx={{
                   fontWeight: 700,
-                  fontSize: { xs: 32, sm: 32, md: 34, lg: 40 },
-                  mb: { xs: 1.2, sm: 1.2, md: 1.25 },
+                  fontSize: { xs: 34, sm: 60, md: 80, lg: 70 },
+                  mb: { xs: 1.2, sm: 1.2, md: 3, lg: 3 },
                   lineHeight: 1.2,
                   color: '#2D2D2D',
                 }}
@@ -127,21 +118,9 @@ const CommerceDetailDialog: React.FC = () => {
                 variant="body1"
                 sx={{
                   color: '#757575',
-                  fontSize: { xs: 20, sm: 20, md: 22, lg: 24 },
-                  mb: 0.5,
-                  lineHeight: 1.4,
-                }}
-              >
-                {restaurantInfo.subtitle}
-              </Typography>
-
-              <Typography
-                variant="body1"
-                sx={{
-                  color: '#757575',
-                  fontSize: { xs: 17, sm: 17, md: 18, lg: 20 },
-                  mb: { xs: 1.5, sm: 1.5, md: 2, lg: 2.5 },
-                  lineHeight: 1.4,
+                  fontSize: { xs: 22, sm: 26, md: 35, lg: 30 },
+                  mb: 4,
+                  lineHeight: 1,
                 }}
               >
                 {restaurantInfo.subtitle}
@@ -150,19 +129,25 @@ const CommerceDetailDialog: React.FC = () => {
               <Chip
                 label="Restaurant"
                 size="medium"
-                icon={<RestaurantIcon sx={{ fontSize: { xs: 18, sm: 18, md: 20 } }} />}
+                icon={<RestaurantIcon sx={{ fontSize: { xs: 22, sm: 22, md: 30, lg: 30 } }} />}
                 sx={{
                   backgroundColor: '#E8F5E9',
                   color: '#77A787',
-                  fontSize: { xs: 17, sm: 17, md: 18, lg: 22 },
+                  fontSize: { xs: 22, sm: 22, md: 36, lg: 30 },
                   fontWeight: 600,
-                  height: { xs: 34, sm: 34, md: 36 },
+                  height: { xs: 34, sm: 34, md: 50, lg: 36 },
                   px: { xs: 2, md: 2 },
                 }}
               />
             </Box>
           </Box>
-
+        <Card
+        sx={{
+            mb: { xs: 5.1, sm: 5.1 },
+            borderRadius: { xs: 4, md: 4 },
+            boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
+            p: { xs: 3, sm: 3, md: 4 , lg: 2},
+          }}>
           {/* Contact Information */}
           <Box
             sx={{
@@ -172,20 +157,20 @@ const CommerceDetailDialog: React.FC = () => {
             }}
           >
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
-              <LocationOn sx={{ fontSize: { xs: 26, sm: 26, md: 28, lg: 30 }, color: '#757575' }} />
-              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 18, md: 19, lg: 23 } }}>
+              <LocationOn sx={{ fontSize: { xs: 26, sm: 32, md: 40, lg: 35 }, color: '#757575' }} />
+              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
                 {restaurantInfo.location}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
-              <Schedule sx={{ fontSize: { xs: 26, sm: 26, md: 28, lg: 30 }, color: '#757575' }} />
-              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 18, md: 19, lg: 23 } }}>
+              <Schedule sx={{ fontSize: { xs: 26, sm: 32, md: 28, lg: 30 }, color: '#757575' }} />
+              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
                 {restaurantInfo.schedule}
               </Typography>
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
               <Phone sx={{ fontSize: { xs: 26, sm: 26, md: 28, lg: 30 }, color: '#757575' }} />
-              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 18, md: 19, lg: 23 } }}>
+              <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
                 {restaurantInfo.phoneNumber}
               </Typography>
             </Box>
@@ -198,7 +183,7 @@ const CommerceDetailDialog: React.FC = () => {
             display: 'flex',
             justifyContent: 'space-between',
             alignItems: 'center',
-            mb: { xs: 3, sm: 3, md: 3.5 },
+            mb: { xs: 3, sm: 3, md: 5 },
             px: { xs: 0, sm: 0.5 },
           }}
         >
@@ -206,18 +191,18 @@ const CommerceDetailDialog: React.FC = () => {
             variant="h4"
             sx={{
               fontWeight: 700,
-              fontSize: { xs: 24, sm: 24, md: 26, lg: 30 },
+              fontSize: { xs: 36, sm: 40, md: 62, lg: 55 },
               color: '#2D2D2D',
             }}
           >
             Catálogo
           </Typography>
-          <FormControl size="small" sx={{ minWidth: { xs: 200, sm: 200, md: 210 } }}>
+          <FormControl size="medium" sx={{ minWidth: { xs: 200, sm: 200, md: 240 } }}>
             <Select
               value={sortBy}
               onChange={handleSortChange}
               sx={{
-                fontSize: { xs: 16, sm: 18, md: 18, lg: 20 },
+                fontSize: { xs: 22, sm: 20, md: 25, lg: 25 },
                 backgroundColor: 'white',
                 borderRadius: 2,
                 height: { xs: 50, sm: 50, md: 54 },
@@ -226,10 +211,10 @@ const CommerceDetailDialog: React.FC = () => {
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#77A787' },
               }}
             >
-              <MenuItem value="Más nuevo" sx={{ fontSize: { xs: 14, sm: 14, md: 15 } }}>Sort by: Newest</MenuItem>
-              <MenuItem value="Precio más bajo" sx={{ fontSize: { xs: 14, sm: 14, md: 15 } }}>Price: Low to High</MenuItem>
-              <MenuItem value="Precio más alto" sx={{ fontSize: { xs: 14, sm: 14, md: 15 } }}>Price: High to Low</MenuItem>
-              <MenuItem value="Nombre A-Z" sx={{ fontSize: { xs: 14, sm: 14, md: 15 } }}>Name: A-Z</MenuItem>
+              <MenuItem value="newest" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>Ordenar por: Más nuevo</MenuItem>
+              <MenuItem value="price-low" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>Precio: De menor a mayor</MenuItem>
+              <MenuItem value="price-high" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>Precio: De mayor a menor</MenuItem>
+              <MenuItem value="name" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>Nombre: A-Z</MenuItem>
             </Select>
           </FormControl>
         </Box>
@@ -239,14 +224,14 @@ const CommerceDetailDialog: React.FC = () => {
           sx={{
             display: 'grid',
             gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr', lg: 'repeat(2, 1fr)' },
-            gap: { xs: 3, sm: 3, md: 3.5 },
+            gap: { xs: 3, sm: 3, md: 5 },
           }}
         >
           {menuItems.map((item: Product) => (
             <Card
               key={item.productId}
               sx={{
-                borderRadius: { xs: 4, md: 4 },
+                borderRadius: { xs: 4, md: 10 },
                 boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
                 overflow: 'visible',
                 transition: 'transform 0.2s, box-shadow 0.2s',
@@ -262,14 +247,15 @@ const CommerceDetailDialog: React.FC = () => {
                   <Box
                     sx={{
                       position: 'relative',
-                      width: { xs: 175, sm: 175, md: 175, lg: 200 },
-                      height: { xs: 175, sm: 175, md: 175, lg: 200 },
+                      width: { xs: 200, sm: 200, md: 280, lg: 200 },
+                      height: { xs: 200, sm: 200, md: 300, lg: 200 },
                       flexShrink: 0,
+                      overflow: 'hidden',
                     }}
                   >
                     <CardMedia
                       component="img"
-                      sx={{ width: '100%', height: '100%', borderRadius: 2, objectFit: 'cover' }}
+                      sx={{ width: '100%', height: '100%', borderRadius: 5, objectFit: 'cover', objectPosition: '70%' }}
                       image={item.imageUrls[0]}
                       alt={item.name}
                     />
@@ -278,14 +264,14 @@ const CommerceDetailDialog: React.FC = () => {
                       size="small"
                       sx={{
                         position: 'absolute',
-                        top: -10,
-                        left: -10,
-                        backgroundColor: '#d32f2f',
+                        top: 10,
+                        left: 10,
+                        backgroundColor: '#d9905a',
                         color: 'white',
-                        fontWeight: 700,
-                        fontSize: { xs: 24, sm: 24, md: 24, lg: 30 },
-                        height: { xs: 30, sm: 30, md: 32 },
-                        minWidth: { xs: 46, sm: 46, md: 48 },
+                        fontWeight: 800,
+                        fontSize: { xs: 24, sm: 26, md: 36, lg: 30 },
+                        height: { xs: 30, sm: 32, md: 40, lg: 32 },
+                        minWidth: { xs: 44, sm: 48, md: 48 },
                       }}
                     />
                   </Box>
@@ -297,10 +283,10 @@ const CommerceDetailDialog: React.FC = () => {
                       variant="h6"
                       sx={{
                         fontWeight: 700,
-                        fontSize: { xs: 24, sm: 24, md: 24, lg: 30 },
-                        mb: { xs: 2.5, sm: 2.5, md: 2.5 },
+                        fontSize: { xs: 28, sm: 35, md: 55, lg: 50 },
+                        mb: { xs: 2.5, sm: 1.5, md: 1.5 },
                         color: '#2D2D2D',
-                        lineHeight: 1.2,
+                        lineHeight: 1.3,
                       }}
                     >
                       {item.name}
@@ -309,28 +295,28 @@ const CommerceDetailDialog: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mb: { xs: 2.5, sm: 2.5, md: 2.5 } }}>
                       <Typography
                         variant="h6"
-                        sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 24, md: 24, lg: 30 }, color: '#77A787' }}
+                        sx={{ fontWeight: 700, fontSize: { xs: 24, sm: 30, md: 46, lg: 30 }, color: '#77A787' }}
                       >
                         ${item.discountedPrice.toFixed(2)}
                       </Typography>
                       <Typography
                         variant="body2"
-                        sx={{ textDecoration: 'line-through', color: '#999', fontSize: { xs: 22, sm: 22, md: 22, lg: 26 } }}
+                        sx={{ textDecoration: 'line-through', color: '#999', fontSize: { xs: 18, sm: 22, md: 34, lg: 26 } }}
                       >
                         ${item.originalPrice.toFixed(2)}
                       </Typography>
                     </Box>
 
                     {/* Status Chips */}
-                    <Box sx={{ display: 'flex', gap: { xs: 1.7, sm: 1.7, md: 1.7 }, flexWrap: 'wrap' }}>
+                    <Box sx={{ display: 'flex', gap: { xs: 1.7, sm: 3, md: 3 }, flexWrap: 'wrap' }}>
                       <Chip
                         label={`Expires in ${item.expirationDate} days`}
                         size="small"
                         sx={{
                           backgroundColor: '#ffebee',
                           color: '#c62828',
-                          fontSize: { xs: 16, sm: 16, md: 16, lg: 20 },
-                          height: { xs: 32, sm: 32, md: 32, lg: 36 },
+                          fontSize: { xs: 22, sm: 24, md: 35, lg: 20 },
+                          height: { xs: 32, sm: 32, md: 50, lg: 36 },
                           fontWeight: 600,
                           '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
                         }}
@@ -340,14 +326,14 @@ const CommerceDetailDialog: React.FC = () => {
                         size="small"
                         sx={{
                           backgroundColor: '#fff3e0',
-                          color: '#e65100',
-                          fontSize: { xs: 13, sm: 13, md: 13, lg: 14 },
-                          height: { xs: 28, sm: 28, md: 28 },
-                          fontWeight: 600,
+                          color: '#bc544b',
+                          fontSize: { xs: 13, sm: 16, md: 30, lg: 14 },
+                          height: { xs: 28, sm: 28, md: 38, lg: 30 },
+                          fontWeight: 700,
                           '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
                         }}
                       />
-                      {item.tags?.map((tag: string) => ( //ver acaa ----------------------------------------
+                      {item.tags?.map((tag: string) => ( 
                         <Chip
                           key={tag}
                           label={tag}
@@ -355,8 +341,8 @@ const CommerceDetailDialog: React.FC = () => {
                           sx={{
                             backgroundColor: '#E8F5E9',
                             color: '#77A787',
-                            fontSize: { xs: 12, sm: 12, md: 12, lg: 14 },
-                            height: { xs: 26, sm: 26, md: 28 },
+                            fontSize: { xs: 12, sm: 16, md: 30, lg: 14 },
+                            height: { xs: 26, sm: 26, md: 38, lg: 30 },
                             fontWeight: 600,
                             '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
                           }}
