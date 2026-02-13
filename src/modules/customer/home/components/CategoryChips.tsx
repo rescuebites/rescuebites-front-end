@@ -96,6 +96,8 @@ export default function CategoryChips() {
   );
 }
 
+
+
 function CategoryTile({ 
   category,
   active,
@@ -106,7 +108,7 @@ function CategoryTile({
   onClick: () => void;
 }) {
   const data = categoryData[category];
-  
+
   return (
     <Stack
       onClick={onClick}

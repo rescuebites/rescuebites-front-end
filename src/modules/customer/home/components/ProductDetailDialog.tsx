@@ -8,27 +8,23 @@ import {
   Chip,
   Divider,
   Button,
-  Alert,
   CircularProgress,
 } from "@mui/material";
 import {
   MdClose,
-  MdStorefront,
-  MdSchedule,
-  MdLocationOn,
-  MdPhone,
   MdAdd,
   MdRemove,
+  MdShoppingCart,
 } from "react-icons/md";
-import { FaCheckCircle } from "react-icons/fa";
 import { useState } from "react";
-import type { ProductResponse } from "../interfaces/responses";
+import type { CommerceResponse, ProductResponse } from "../interfaces/responses";
 import { useProductDetail } from "../hooks/useProductDetail";
 
 interface ProductDetailDialogProps {
   open: boolean;
   onClose: () => void;
   product: ProductResponse | null;
+  commerce: CommerceResponse | null;
 }
 
 // Helper para calcular días hasta vencimiento
@@ -40,20 +36,6 @@ function getDaysUntilExpiration(expirationDate: string): number {
   const ms = exp.getTime() - today.getTime();
   const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
   return Math.max(0, days);
-}
-
-// Helper para obtener color según condición
-function getConditionColor(condition: string): string {
-  if (["EXCELLENT", "GOOD", "FRESHLY_BAKED", "READY_TO_SERVE"].includes(condition)) {
-    return "#4caf50";
-  }
-  if (["ALMOST_RIPE", "RIPE", "NEAR_EXPIRY", "PREVIOUS_DAY"].includes(condition)) {
-    return "#ff9800";
-  }
-  if (["OVERRIPE", "EXPIRED_TODAY", "SAME_DAY"].includes(condition)) {
-    return "#ff5252";
-  }
-  return "#9e9e9e";
 }
 
 export default function ProductDetailDialog({
@@ -82,22 +64,14 @@ export default function ProductDetailDialog({
         fullWidth
         PaperProps={{
           sx: {
-            borderRadius: 3,
-            bgcolor: "#FDFBF6",
-          },
-        }}
-        slotProps={{
-          backdrop: {
-            sx: {
-              backdropFilter: "blur(4px)",
-              backgroundColor: "rgba(0, 0, 0, 0.5)",
-            },
+            borderRadius: 4,
+            bgcolor: "#FFFFFF",
           },
         }}
       >
         <DialogContent>
           <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-            <CircularProgress sx={{ color: "#77A787" }} />
+            <CircularProgress sx={{ color: "#5FB574" }} />
           </Box>
         </DialogContent>
       </Dialog>
@@ -107,7 +81,6 @@ export default function ProductDetailDialog({
   const daysUntilExpiration = productDetail.expirationDate
     ? getDaysUntilExpiration(productDetail.expirationDate)
     : null;
-  const isExpiringSoon = daysUntilExpiration !== null && daysUntilExpiration <= 2;
 
   const handleIncrement = () => {
     if (quantity < productDetail.stock) {
@@ -131,9 +104,10 @@ export default function ProductDetailDialog({
       fullWidth
       PaperProps={{
         sx: {
-          borderRadius: 3,
-          maxHeight: "90vh",
-          bgcolor: "#FDFBF6",
+          borderRadius: 4,
+          maxHeight: "95vh",
+          bgcolor: "#FFFFFF",
+          overflow: "hidden",
         },
       }}
       slotProps={{
@@ -145,231 +119,265 @@ export default function ProductDetailDialog({
         },
       }}
     >
-      <Box sx={{ position: "absolute", top: 8, right: 8, zIndex: 1 }}>
+      {/* Botón cerrar */}
+      <Box sx={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
         <IconButton
           onClick={onClose}
           sx={{
             bgcolor: "rgba(255, 255, 255, 0.95)",
+            boxShadow: "0 2px 8px rgba(0,0,0,0.1)",
             "&:hover": { bgcolor: "rgba(255, 255, 255, 1)" },
           }}
         >
-          <MdClose />
+          <MdClose size={24} />
         </IconButton>
       </Box>
 
       <DialogContent sx={{ p: 0 }}>
+        {/* Imagen del producto */}
         <Box
           sx={{
             position: "relative",
             width: "100%",
-            height: 280,
-            backgroundImage: `url(${productDetail.imageUrls[0] || "/placeholder.jpg"})`,
+            height: 320,
+            backgroundImage: `url(${product.images[0]?.url || "/placeholder.jpg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
+            borderRadius: "0 0 24px 24px",
           }}
         >
+          {/* Badge de descuento */}
           {Number(productDetail.discountPercentage) > 0 && (
             <Box
               sx={{
                 position: "absolute",
-                top: 16,
-                left: 16,
-                px: 2.5,
-                py: 1,
-                borderRadius: "50px",
-                bgcolor: "#77A787",
-                fontSize: 18,
+                top: 20,
+                left: 20,
+                px: 2,
+                py: 0.75,
+                borderRadius: "8px",
+                bgcolor: "rgba(255, 138, 101, 0.95)",
+                fontSize: 16,
                 fontWeight: 700,
                 color: "#fff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.2)",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
               }}
             >
               {Math.round(Number(productDetail.discountPercentage))}%
             </Box>
           )}
+
+          {/* Badge del comercio */}
+          {productDetail.commerce?.name && (
+            <Box
+              sx={{
+                position: "absolute",
+                bottom: 20,
+                right: 20,
+                px: 2,
+                py: 0.75,
+                borderRadius: "8px",
+                bgcolor: "rgba(95, 181, 116, 0.95)",
+                fontSize: 13,
+                fontWeight: 600,
+                color: "#fff",
+                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
+              }}
+            >
+              {productDetail.commerce.name}
+            </Box>
+          )}
         </Box>
 
-        <Box sx={{ p: 3 }}>
+        {/* Contenido del producto */}
+        <Box sx={{ px: 3, py: 3 }}>
           <Stack spacing={2.5}>
+            {/* Título y precio */}
             <Box>
               <Typography
                 variant="h5"
-                sx={{ fontWeight: 700, color: "#0e1b0e", mb: 1.5 }}
+                sx={{
+                  fontWeight: 700,
+                  color: "#2D2D2D",
+                  mb: 1,
+                  fontSize: 24,
+                }}
               >
                 {productDetail.name}
               </Typography>
 
-              <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap>
-                <Chip
-                  label={productDetail.categoryDisplayName}
-                  size="small"
+              <Stack direction="row" spacing={2} alignItems="baseline" mb={1.5}>
+                <Typography
+                  variant="h4"
                   sx={{
-                    bgcolor: "#77A787",
-                    color: "#fff",
-                    fontWeight: 600,
+                    fontWeight: 700,
+                    color: "#5FB574",
+                    fontSize: 32,
                   }}
-                />
+                >
+                  ${totalPrice}
+                </Typography>
 
-                {daysUntilExpiration !== null && (
-                  <Chip
-                    icon={<MdSchedule />}
-                    label={`Vence en ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "día" : "días"}`}
-                    size="small"
+                {productDetail.originalPrice && quantity === 1 && (
+                  <Typography
                     sx={{
-                      bgcolor: isExpiringSoon ? "#ff525220" : "#ff980020",
-                      color: isExpiringSoon ? "#d32f2f" : "#ff9800",
-                      fontWeight: 600,
-                      "& .MuiChip-icon": {
-                        color: isExpiringSoon ? "#d32f2f" : "#ff9800",
-                      },
+                      textDecoration: "line-through",
+                      color: "#BDBDBD",
+                      fontSize: 18,
+                      fontWeight: 500,
                     }}
-                  />
+                  >
+                    ${Number(productDetail.originalPrice).toFixed(2)}
+                  </Typography>
                 )}
-
-                <Chip
-                  label={`${productDetail.stock} unid. disponibles`}
-                  size="small"
-                  sx={{
-                    bgcolor: productDetail.stock < 5 ? "#ff980020" : "#4caf5020",
-                    color: productDetail.stock < 5 ? "#ff9800" : "#4caf50",
-                    fontWeight: 600,
-                  }}
-                />
               </Stack>
+
+              {/* Descripción */}
+              {productDetail.description && (
+                <Typography
+                  sx={{
+                    color: "#666666",
+                    lineHeight: 1.6,
+                    fontSize: 15,
+                    mb: 2,
+                  }}
+                >
+                  {productDetail.description}
+                </Typography>
+              )}
             </Box>
 
-            {productDetail.description && (
-              <Typography sx={{ color: "#0e1b0e", lineHeight: 1.6, fontSize: 15 }}>
-                {productDetail.description}
-              </Typography>
-            )}
+            {/* Badges de información */}
+            <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
+              {/* Días para vencer */}
+              {daysUntilExpiration !== null && (
+                <Chip
+                  label={`Expires in ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "day" : "days"}`}
+                  size="small"
+                  sx={{
+                    bgcolor: "#ffebee",
+                    color: "#c62828",
+                    fontSize: 13,
+                    height: 32,
+                    fontWeight: 600,
+                    "& .MuiChip-label": { px: 2.5 },
+                  }}
+                />
+              )}
 
-            {isExpiringSoon && (
-              <Alert
-                severity="warning"
+              {/* Stock disponible */}
+              <Chip
+                label={`${productDetail.stock} Left`}
+                size="small"
                 sx={{
-                  borderRadius: 2,
                   bgcolor: "#fff3e0",
-                  "& .MuiAlert-icon": { color: "#ff9800" },
+                  color: "#bc544b",
+                  fontSize: 14,
+                  height: 30,
+                  fontWeight: 700,
+                  "& .MuiChip-label": { px: 2.5 },
                 }}
-              >
-                Este producto vence en {daysUntilExpiration}{" "}
-                {daysUntilExpiration === 1 ? "día" : "días"}. Se recomienda consumo
-                inmediato.
-              </Alert>
-            )}
+              />
 
-            {productDetail.conditionDisplayName && (
-              <Box>
-                <Stack direction="row" spacing={1} alignItems="center">
-                  <FaCheckCircle
-                    size={18}
-                    color={getConditionColor(productDetail.condition)}
-                  />
-                  <Typography
-                    sx={{
-                      color: getConditionColor(productDetail.condition),
-                      fontWeight: 600,
-                      fontSize: 15,
-                    }}
-                  >
-                    {productDetail.conditionDisplayName}
-                  </Typography>
-                </Stack>
-              </Box>
-            )}
+              {/* Tags dinámicos del producto -------- agregar si se agrega enback*/}
+              {/* {productDetail.tags?.map((tag: string) => (
+                <Chip
+                  key={tag}
+                  label={tag}
+                  size="small"
+                  sx={{
+                    bgcolor: "#E8F5E9",
+                    color: "#77A787",
+                    fontSize: 14,
+                    height: 30,
+                    fontWeight: 600,
+                    "& .MuiChip-label": { px: 2.5 },
+                  }}
+                />
+              ))}*/}
+            </Box> 
 
-            <Divider />
+            <Divider sx={{ my: 1 }} />
 
+            {/* Store Details */}
             {productDetail.commerce && (
               <Box>
-                <Stack direction="row" spacing={1.5} alignItems="center" mb={2}>
-                  <MdStorefront size={22} color="#77A787" />
-                  <Typography
-                    variant="h6"
-                    sx={{ fontWeight: 700, color: "#0e1b0e", fontSize: 17 }}
-                  >
-                    Información del comercio
-                  </Typography>
-                </Stack>
+                <Typography
+                  sx={{
+                    fontWeight: 700,
+                    color: "#2D2D2D",
+                    fontSize: 16,
+                    mb: 2,
+                  }}
+                >
+                  Información del comercio
+                </Typography>
 
                 <Stack spacing={2}>
+                  {/* Logo y nombre del comercio */}
                   <Stack direction="row" spacing={2} alignItems="center">
                     <Box
                       sx={{
                         width: 56,
                         height: 56,
                         borderRadius: 2,
-                        backgroundImage: `url(${productDetail.commerce.images?.[0]?.imageUrl || "/placeholder-store.jpg"})`,
+                        backgroundImage: `url(${productDetail.commerce.images?.[0]?.url || "/placeholder-store.jpg"})`,
+                        backgroundColor: "#5FB574",
                         backgroundSize: "cover",
                         backgroundPosition: "center",
-                        border: "2px solid #77A787",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        color: "#fff",
+                        fontWeight: 700,
+                        fontSize: 20,
                       }}
-                    />
+                    >
+                      {!productDetail.commerce.images?.[0]?.url &&
+                        productDetail.commerce.name.substring(0, 2).toUpperCase()}
+                    </Box>
                     <Box flex={1}>
-                      <Typography sx={{ fontWeight: 600, color: "#0e1b0e" }}>
+                      <Typography
+                        sx={{
+                          fontWeight: 700,
+                          color: "#2D2D2D",
+                          fontSize: 16,
+                        }}
+                      >
                         {productDetail.commerce.name}
                       </Typography>
-                      {productDetail.commerce.description && (
+                      {productDetail.commerce.openingHours && (
                         <Typography
                           sx={{
-                            color: "#77A787",
+                            color: "#666666",
                             fontSize: 13,
                             lineHeight: 1.4,
                           }}
                         >
-                          {productDetail.commerce.description}
+                          {productDetail.commerce.openingHours}
                         </Typography>
                       )}
                     </Box>
                   </Stack>
-
-                  {productDetail.commerce.address && (
-                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                      <MdLocationOn
-                        size={20}
-                        color="#77A787"
-                        style={{ marginTop: 2 }}
-                      />
-                      <Typography sx={{ color: "#0e1b0e", flex: 1, fontSize: 14 }}>
-                        {productDetail.commerce.address}, {productDetail.commerce.locality}
-                      </Typography>
-                    </Stack>
-                  )}
-
-                  {productDetail.commerce.openingHours && (
-                    <Stack direction="row" spacing={1.5} alignItems="flex-start">
-                      <MdSchedule
-                        size={20}
-                        color="#77A787"
-                        style={{ marginTop: 2 }}
-                      />
-                      <Typography sx={{ color: "#0e1b0e", flex: 1, fontSize: 14 }}>
-                        {productDetail.commerce.openingHours}
-                      </Typography>
-                    </Stack>
-                  )}
-
-                  {productDetail.commerce.phone && (
-                    <Stack direction="row" spacing={1.5} alignItems="center">
-                      <MdPhone size={20} color="#77A787" />
-                      <Typography sx={{ color: "#0e1b0e", fontSize: 14 }}>
-                        {productDetail.commerce.phone}
-                      </Typography>
-                    </Stack>
-                  )}
                 </Stack>
               </Box>
             )}
 
-            <Divider />
+            <Divider sx={{ my: 1 }} />
 
+            {/* Quantity selector */}
             <Box>
               <Typography
-                sx={{ color: "#0e1b0e", fontWeight: 600, mb: 1.5, fontSize: 15 }}
+                sx={{
+                  color: "#2D2D2D",
+                  fontWeight: 700,
+                  mb: 2,
+                  fontSize: 16,
+                }}
               >
-                Cantidad
+                Quantity
               </Typography>
+
               <Stack
                 direction="row"
                 spacing={2}
@@ -381,9 +389,10 @@ export default function ProductDetailDialog({
                   spacing={0}
                   alignItems="center"
                   sx={{
-                    border: "2px solid #77A787",
+                    border: "2px solid #E0E0E0",
                     borderRadius: 2,
                     overflow: "hidden",
+                    bgcolor: "#FAFAFA",
                   }}
                 >
                   <IconButton
@@ -391,82 +400,68 @@ export default function ProductDetailDialog({
                     disabled={quantity <= 1}
                     sx={{
                       borderRadius: 0,
-                      px: 2,
-                      py: 1,
-                      color: "#77A787",
-                      "&:hover": { bgcolor: "#77A78710" },
-                      "&:disabled": { color: "#ccc" },
+                      px: 2.5,
+                      py: 1.5,
+                      color: "#2D2D2D",
+                      "&:hover": { bgcolor: "#F5F5F5" },
+                      "&:disabled": { color: "#BDBDBD" },
                     }}
                   >
                     <MdRemove size={20} />
                   </IconButton>
+
                   <Typography
                     sx={{
-                      px: 3,
+                      px: 4,
                       fontWeight: 700,
                       fontSize: 18,
-                      color: "#0e1b0e",
-                      minWidth: 40,
+                      color: "#2D2D2D",
+                      minWidth: 50,
                       textAlign: "center",
                     }}
                   >
                     {quantity}
                   </Typography>
+
                   <IconButton
                     onClick={handleIncrement}
                     disabled={quantity >= productDetail.stock}
                     sx={{
                       borderRadius: 0,
-                      px: 2,
-                      py: 1,
-                      color: "#77A787",
-                      "&:hover": { bgcolor: "#77A78710" },
-                      "&:disabled": { color: "#ccc" },
+                      px: 2.5,
+                      py: 1.5,
+                      color: "#2D2D2D",
+                      "&:hover": { bgcolor: "#F5F5F5" },
+                      "&:disabled": { color: "#BDBDBD" },
                     }}
                   >
                     <MdAdd size={20} />
                   </IconButton>
                 </Stack>
-
-                <Stack alignItems="flex-end">
-                  <Typography
-                    variant="h5"
-                    sx={{ fontWeight: 700, color: "#77A787" }}
-                  >
-                    ${totalPrice}
-                  </Typography>
-                  {productDetail.originalPrice && quantity === 1 && (
-                    <Typography
-                      sx={{
-                        textDecoration: "line-through",
-                        color: "#999",
-                        fontSize: 14,
-                      }}
-                    >
-                      ${Number(productDetail.originalPrice).toFixed(2)}
-                    </Typography>
-                  )}
-                </Stack>
               </Stack>
             </Box>
 
+            {/* Add to Cart Button */}
             <Button
               fullWidth
               variant="contained"
               size="large"
-              startIcon={<MdAdd size={24} />}
+              startIcon={<MdShoppingCart size={22} />}
               sx={{
-                bgcolor: "#77A787",
+                bgcolor: "#5FB574",
                 color: "#fff",
                 fontWeight: 700,
-                py: 1.8,
-                borderRadius: 2,
+                py: 2,
+                borderRadius: 3,
                 textTransform: "none",
                 fontSize: 16,
-                boxShadow: "0 4px 12px rgba(119, 167, 135, 0.3)",
+                boxShadow: "0 4px 12px rgba(95, 181, 116, 0.3)",
                 "&:hover": {
-                  bgcolor: "#5d8a6d",
-                  boxShadow: "0 6px 16px rgba(119, 167, 135, 0.4)",
+                  bgcolor: "#4E9A5F",
+                  boxShadow: "0 6px 16px rgba(95, 181, 116, 0.4)",
+                },
+                "&:active": {
+                  transform: "scale(0.98)",
                 },
               }}
               onClick={() => {
@@ -477,7 +472,7 @@ export default function ProductDetailDialog({
                 });
               }}
             >
-              Agregar al carrito
+              Agregar a carrito
             </Button>
           </Stack>
         </Box>
