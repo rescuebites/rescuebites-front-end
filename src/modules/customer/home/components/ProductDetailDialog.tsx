@@ -17,14 +17,13 @@ import {
   MdShoppingCart,
 } from "react-icons/md";
 import { useState } from "react";
-import type { CommerceResponse, ProductResponse } from "../interfaces/responses";
-import { useProductDetail } from "../hooks/useProductDetail";
+import type { ProductResponse } from "../interfaces/responses";
+import { useProductDetail } from "../hooks/useProducts";
 
 interface ProductDetailDialogProps {
   open: boolean;
   onClose: () => void;
   product: ProductResponse | null;
-  commerce: CommerceResponse | null;
 }
 
 // Helper para calcular días hasta vencimiento

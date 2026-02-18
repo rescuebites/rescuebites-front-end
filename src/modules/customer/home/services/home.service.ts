@@ -1,6 +1,8 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { 
   ProductResponse, 
+  ProductDetailResponse,
+  CommerceResponse,
   CommercePublicResponse, 
   PaginatedResponse 
 } from "../interfaces/responses";
@@ -39,7 +41,7 @@ export const getCommercesByType = async (
       `/api/v1/public/commerces/type/${commerceType}`,
       { params: { page, size } }
     );
-    // Si la respuesta es null/undefined, devolver estructura vacía
+    // Si la respuesta es null/undefined, devuelve estructura vacía
       return data ?? { 
         content: [], 
         totalElements: 0, 
@@ -57,4 +59,33 @@ export const getCommercesByType = async (
       number: 0 
     };
   }
+};
+
+//Productos de un comercio específico
+export const getProductsByCommerce = async (
+  commerceId: string,
+  page = 0,
+  size = 20
+): Promise<PaginatedResponse<ProductResponse>> => {
+  const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+    `/api/v1/public/products/commerce/${commerceId}`,
+    { params: { page, size } }
+  );
+  return data;
+};
+
+//Detalle de un producto específico
+export const getProductDetail = async (productId: string): Promise<ProductDetailResponse> => {
+  const { data } = await httpClient.get<ProductDetailResponse>(
+    `/api/v1/public/products/${productId}`
+  );
+  return data;
+};
+
+//Detalle de un comercio específico
+export const getCommerceDetail = async (commerceId: string): Promise<CommerceResponse> => {
+  const { data } = await httpClient.get<CommerceResponse>(
+    `/api/v1/public/commerces/${commerceId}`
+  );
+  return data;
 };

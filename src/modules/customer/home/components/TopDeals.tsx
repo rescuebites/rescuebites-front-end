@@ -8,11 +8,6 @@ export default function TopDeals() {
   const [selectedDeal, setSelectedDeal] = useState<ProductResponse | null>(null);
 
   const { data: products, isLoading, error } = useTopDeals(12);
-
-  // 🔍 DEBUGGING - AGREGAR ESTO
-  console.log('RAW DATA:', products);
-  console.log('IS LOADING:', isLoading);
-  console.log('ERROR:', error);
   
 
 // Manejo de loading
@@ -67,7 +62,6 @@ if (!products || products.length === 0) {
       lg: "repeat(5, 1fr)",
       xl: "repeat(6, 1fr)",
     },
-    // 👇 Previene expansión excesiva en pantallas muy grandes
     maxWidth: '100%',
   }}
 >

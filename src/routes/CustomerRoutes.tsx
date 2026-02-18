@@ -7,8 +7,9 @@ export function CustomerRoutes() {
   return (
     <Routes>
       <Route index element={<HomePage />} />
-      <Route path="/stores" element={<StoresPage />} />
+      <Route path="/stores/:commerceId" element={<StoresPage />} />
       <Route path="/allProducts" element={<ProductsDealsPage />} />
+
     </Routes>
   );
 }

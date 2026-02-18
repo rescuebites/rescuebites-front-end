@@ -49,6 +49,8 @@ export default function FeaturedStores() {
       ))}
     </Box>
   );
+
+  
 }
 
 function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
