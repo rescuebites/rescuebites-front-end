@@ -1,7 +1,6 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { 
-  ProductResponse, 
-  ProductDetailResponse,
+  ProductResponse,
   CommerceResponse,
   CommercePublicResponse, 
   PaginatedResponse 
@@ -75,8 +74,8 @@ export const getProductsByCommerce = async (
 };
 
 //Detalle de un producto específico
-export const getProductDetail = async (productId: string): Promise<ProductDetailResponse> => {
-  const { data } = await httpClient.get<ProductDetailResponse>(
+export const getProductDetail = async (productId: string): Promise<ProductResponse> => {
+  const { data } = await httpClient.get<ProductResponse>(
     `/api/v1/public/products/${productId}`
   );
   return data;

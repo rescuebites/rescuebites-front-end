@@ -49,9 +49,9 @@ export default function SearchBar({
         bgcolor: '#F5F5F5',
         borderRadius: 3,
         '& .MuiOutlinedInput-root': {
-          fontSize: { xs: 30, sm: 18 },
+          fontSize: { xs: 18, sm: 18 },
           '& .MuiOutlinedInput-input': {
-            py: { xs: 10, sm: 2.5 },
+            py: { xs: 2, sm: 2.5 },
           },    
           '& fieldset': {
             border: 'none',

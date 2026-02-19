@@ -5,7 +5,7 @@ import type { ProductResponse} from "./../interfaces/responses";
 import ProductDetailDialog from "./ProductDetailDialog";
 
 export default function TopDeals() {
-  const [selectedDeal, setSelectedDeal] = useState<ProductResponse | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const { data: products, isLoading, error } = useTopDeals(12);
   
@@ -41,12 +41,12 @@ if (!products || products.length === 0) {
   );
 }
 
-  const handleDealClick = (product: ProductResponse) => {
-    setSelectedDeal(product);
+  const handleDealClick = (productId: string) => {
+    setSelectedProductId(productId);
   };
 
   const handleCloseDialog = () => {
-    setSelectedDeal(null);
+    setSelectedProductId(null);
   };
 
   return (
@@ -57,7 +57,7 @@ if (!products || products.length === 0) {
     display: "grid",
     gap: { xs: 2, sm: 2.5, md: 3 },
     gridTemplateColumns: {
-      xs: "repeat(3, 1fr)",
+      xs: "repeat(2, 1fr)",
       md: "repeat(3, 1fr)",
       lg: "repeat(5, 1fr)",
       xl: "repeat(6, 1fr)",
@@ -66,14 +66,14 @@ if (!products || products.length === 0) {
   }}
 >
   {products?.map((product: ProductResponse) => (
-    <DealCard key={product.productId} product={product} onClick={() => handleDealClick(product)} />
+    <DealCard key={product.productId} product={product} onClick={() => handleDealClick(product.productId)} />
   ))}
 </Box>
 
       <ProductDetailDialog
-        open={selectedDeal !== null}
+        open={selectedProductId !== null}
         onClose={handleCloseDialog}
-        product={selectedDeal}
+        productId={selectedProductId}
       /> 
     </>
   );

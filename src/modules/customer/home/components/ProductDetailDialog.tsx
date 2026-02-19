@@ -1,6 +1,5 @@
 import {
   Dialog,
-  DialogContent,
   IconButton,
   Box,
   Typography,
@@ -9,21 +8,23 @@ import {
   Divider,
   Button,
   CircularProgress,
+  Paper,
 } from "@mui/material";
 import {
   MdClose,
   MdAdd,
   MdRemove,
   MdShoppingCart,
+  MdStorefront,
 } from "react-icons/md";
 import { useState } from "react";
-import type { ProductResponse } from "../interfaces/responses";
 import { useProductDetail } from "../hooks/useProducts";
+import { useNavigate } from "react-router-dom";
 
 interface ProductDetailDialogProps {
   open: boolean;
   onClose: () => void;
-  product: ProductResponse | null;
+  productId: string | null;
 }
 
 // Helper para calcular días hasta vencimiento
@@ -40,16 +41,14 @@ function getDaysUntilExpiration(expirationDate: string): number {
 export default function ProductDetailDialog({
   open,
   onClose,
-  product,
+  productId,
 }: ProductDetailDialogProps) {
   const [quantity, setQuantity] = useState(1);
+  const navigate = useNavigate();
 
-  // Fetch del detalle completo del producto cuando se abre el dialog
-  const { data: productDetail, isLoading } = useProductDetail(
-    product?.productId.toString() || null
-  );
+  const { data: productDetail, isLoading } = useProductDetail(productId);
 
-  if (!open || !product) {
+  if (!open || !productId) {
     return null;
   }
 
@@ -68,11 +67,9 @@ export default function ProductDetailDialog({
           },
         }}
       >
-        <DialogContent>
-          <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-            <CircularProgress sx={{ color: "#5FB574" }} />
-          </Box>
-        </DialogContent>
+        <Box display="flex" justifyContent="center" alignItems="center" py={8}>
+          <CircularProgress sx={{ color: "#5FB574" }} />
+        </Box>
       </Dialog>
     );
   }
@@ -93,7 +90,10 @@ export default function ProductDetailDialog({
     }
   };
 
-  const totalPrice = (Number(productDetail.discountedPrice) * quantity).toFixed(2);
+  const handleGoToCommerce = () => {
+    onClose();
+    navigate(`/home/stores/${productDetail.commerceId}`);
+  };
 
   return (
     <Dialog
@@ -107,6 +107,9 @@ export default function ProductDetailDialog({
           maxHeight: "95vh",
           bgcolor: "#FFFFFF",
           overflow: "hidden",
+          display: "flex",
+          flexDirection: "column",
+          position: "relative",
         },
       }}
       slotProps={{
@@ -132,20 +135,40 @@ export default function ProductDetailDialog({
         </IconButton>
       </Box>
 
-      <DialogContent sx={{ p: 0 }}>
+      {/* Contenedor scrolleable*/}
+    <Box
+      sx={{
+        flex: 1,
+        overflow: "auto",
+        paddingBottom: "88px",  
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-track": {
+          background: "#f1f1f1",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          background: "#888",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          background: "#555",
+        },
+      }}
+    >
         {/* Imagen del producto */}
         <Box
           sx={{
             position: "relative",
             width: "100%",
-            height: 320,
-            backgroundImage: `url(${product.images[0]?.url || "/placeholder.jpg"})`,
+            height: 220,
+            backgroundImage: `url(${productDetail.images?.[0]?.url || "/placeholder.jpg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderRadius: "0 0 24px 24px",
           }}
         >
-          {/* Badge de descuento */}
+          {/* Badge de descuento en imagen del producto */}
           {Number(productDetail.discountPercentage) > 0 && (
             <Box
               sx={{
@@ -165,31 +188,10 @@ export default function ProductDetailDialog({
               {Math.round(Number(productDetail.discountPercentage))}%
             </Box>
           )}
-
-          {/* Badge del comercio */}
-          {productDetail.commerce?.name && (
-            <Box
-              sx={{
-                position: "absolute",
-                bottom: 20,
-                right: 20,
-                px: 2,
-                py: 0.75,
-                borderRadius: "8px",
-                bgcolor: "rgba(95, 181, 116, 0.95)",
-                fontSize: 13,
-                fontWeight: 600,
-                color: "#fff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              }}
-            >
-              {productDetail.commerce.name}
-            </Box>
-          )}
         </Box>
 
         {/* Contenido del producto */}
-        <Box sx={{ px: 3, py: 3 }}>
+        <Box sx={{ px: 3, py: 3, pb: 3 }}>
           <Stack spacing={2.5}>
             {/* Título y precio */}
             <Box>
@@ -214,10 +216,10 @@ export default function ProductDetailDialog({
                     fontSize: 32,
                   }}
                 >
-                  ${totalPrice}
+                  ${Number(productDetail.discountedPrice).toFixed(2)}
                 </Typography>
 
-                {productDetail.originalPrice && quantity === 1 && (
+                {productDetail.originalPrice && (
                   <Typography
                     sx={{
                       textDecoration: "line-through",
@@ -231,7 +233,7 @@ export default function ProductDetailDialog({
                 )}
               </Stack>
 
-              {/* Descripción */}
+              {/* Descripción del producto */}
               {productDetail.description && (
                 <Typography
                   sx={{
@@ -246,12 +248,13 @@ export default function ProductDetailDialog({
               )}
             </Box>
 
-            {/* Badges de información */}
-            <Box sx={{ display: 'flex', gap: 1.5, flexWrap: 'wrap' }}>
-              {/* Días para vencer */}
+            {/* etiquetas de información de producto (vencimiento/stock/condición)*/}
+            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
               {daysUntilExpiration !== null && (
                 <Chip
-                  label={`Expires in ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "day" : "days"}`}
+                  label={`Vence en ${daysUntilExpiration} ${
+                    daysUntilExpiration === 1 ? "día" : "días"
+                  }`}
                   size="small"
                   sx={{
                     bgcolor: "#ffebee",
@@ -264,9 +267,8 @@ export default function ProductDetailDialog({
                 />
               )}
 
-              {/* Stock disponible */}
               <Chip
-                label={`${productDetail.stock} Left`}
+                label={`Stock disponible ${productDetail.stock}`}
                 size="small"
                 sx={{
                   bgcolor: "#fff3e0",
@@ -278,111 +280,106 @@ export default function ProductDetailDialog({
                 }}
               />
 
-              {/* Tags dinámicos del producto -------- agregar si se agrega enback*/}
-              {/* {productDetail.tags?.map((tag: string) => (
+              {productDetail.conditionDisplayName && (
                 <Chip
-                  key={tag}
-                  label={tag}
+                  label={productDetail.conditionDisplayName}
                   size="small"
                   sx={{
-                    bgcolor: "#E8F5E9",
-                    color: "#77A787",
+                    bgcolor: "#E3F2FD",
+                    color: "#1976D2",
                     fontSize: 14,
                     height: 30,
                     fontWeight: 600,
                     "& .MuiChip-label": { px: 2.5 },
                   }}
                 />
-              ))}*/}
-            </Box> 
+              )}
+            </Box>
 
             <Divider sx={{ my: 1 }} />
 
-            {/* Store Details */}
-            {productDetail.commerce && (
-              <Box>
-                <Typography
-                  sx={{
-                    fontWeight: 700,
-                    color: "#2D2D2D",
-                    fontSize: 16,
-                    mb: 2,
-                  }}
-                >
-                  Información del comercio
-                </Typography>
+            {/* Detalles del comercio */}
+            {productDetail.commerceName && (
+              <Paper
+                elevation={0}
+                sx={{
+                  bgcolor: "#F5F5F5",
+                  p: 2,
+                  borderRadius: 3,
+                  cursor: "pointer",
+                  transition: "all 0.2s ease",
+                  "&:hover": {
+                    bgcolor: "#EEEEEE",
+                    transform: "translateY(-2px)",
+                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                  },
+                  "&:active": {
+                    transform: "scale(0.98)",
+                  },
+                }}
+              >
+                <Stack direction="row" spacing={2} alignItems="center">
+                  <Box
+                    sx={{
+                      width: 48,
+                      height: 48,
+                      borderRadius: 2,
+                      backgroundColor: "#5FB574",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      color: "#fff",
+                      fontWeight: 700,
+                      fontSize: 18,
+                    }}
+                  >
+                    {productDetail.commerceName.substring(0, 2).toUpperCase()}
+                  </Box>
 
-                <Stack spacing={2}>
-                  {/* Logo y nombre del comercio */}
-                  <Stack direction="row" spacing={2} alignItems="center">
-                    <Box
+                  <Box flex={1}>
+                    <Typography
                       sx={{
-                        width: 56,
-                        height: 56,
-                        borderRadius: 2,
-                        backgroundImage: `url(${productDetail.commerce.images?.[0]?.url || "/placeholder-store.jpg"})`,
-                        backgroundColor: "#5FB574",
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#fff",
                         fontWeight: 700,
-                        fontSize: 20,
+                        color: "#2D2D2D",
+                        fontSize: 15,
+                        mb: 0.5,
                       }}
                     >
-                      {!productDetail.commerce.images?.[0]?.url &&
-                        productDetail.commerce.name.substring(0, 2).toUpperCase()}
-                    </Box>
-                    <Box flex={1}>
+                      {productDetail.commerceName}
+                    </Typography>
+                    <Stack direction="row" spacing={1} alignItems="center">
+                      <MdStorefront size={14} color="#666666" />
                       <Typography
+                        onClick={handleGoToCommerce}
                         sx={{
-                          fontWeight: 700,
-                          color: "#2D2D2D",
-                          fontSize: 16,
+                          color: "#666666",
+                          fontSize: 13,
+                          fontWeight: 500,
                         }}
                       >
-                        {productDetail.commerce.name}
+                        Ver comercio
                       </Typography>
-                      {productDetail.commerce.openingHours && (
-                        <Typography
-                          sx={{
-                            color: "#666666",
-                            fontSize: 13,
-                            lineHeight: 1.4,
-                          }}
-                        >
-                          {productDetail.commerce.openingHours}
-                        </Typography>
-                      )}
-                    </Box>
-                  </Stack>
+                    </Stack>
+                  </Box>
                 </Stack>
-              </Box>
+              </Paper>
             )}
 
             <Divider sx={{ my: 1 }} />
 
-            {/* Quantity selector */}
+            {/* Selector de cantidad de productos para agregar al carrito */}
             <Box>
-              <Typography
-                sx={{
-                  color: "#2D2D2D",
-                  fontWeight: 700,
-                  mb: 2,
-                  fontSize: 16,
-                }}
-              >
-                Quantity
-              </Typography>
+              <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+                <Typography
+                  sx={{
+                    color: "#2D2D2D",
+                    fontWeight: 700,
+                    fontSize: 16,
+                  }}
+                >
+                  Cantidad
+                </Typography>
 
-              <Stack
-                direction="row"
-                spacing={2}
-                alignItems="center"
-                justifyContent="space-between"
-              >
                 <Stack
                   direction="row"
                   spacing={0}
@@ -399,8 +396,8 @@ export default function ProductDetailDialog({
                     disabled={quantity <= 1}
                     sx={{
                       borderRadius: 0,
-                      px: 2.5,
-                      py: 1.5,
+                      px: 2,
+                      py: 1,
                       color: "#2D2D2D",
                       "&:hover": { bgcolor: "#F5F5F5" },
                       "&:disabled": { color: "#BDBDBD" },
@@ -411,7 +408,7 @@ export default function ProductDetailDialog({
 
                   <Typography
                     sx={{
-                      px: 4,
+                      px: 3,
                       fontWeight: 700,
                       fontSize: 18,
                       color: "#2D2D2D",
@@ -427,55 +424,70 @@ export default function ProductDetailDialog({
                     disabled={quantity >= productDetail.stock}
                     sx={{
                       borderRadius: 0,
-                      px: 2.5,
-                      py: 1.5,
+                      px: 2,
+                      py: 1,
                       color: "#2D2D2D",
                       "&:hover": { bgcolor: "#F5F5F5" },
                       "&:disabled": { color: "#BDBDBD" },
                     }}
                   >
                     <MdAdd size={20} />
-                  </IconButton>
-                </Stack>
+                </IconButton>
               </Stack>
+            </Stack>
             </Box>
-
-            {/* Add to Cart Button */}
-            <Button
-              fullWidth
-              variant="contained"
-              size="large"
-              startIcon={<MdShoppingCart size={22} />}
-              sx={{
-                bgcolor: "#5FB574",
-                color: "#fff",
-                fontWeight: 700,
-                py: 2,
-                borderRadius: 3,
-                textTransform: "none",
-                fontSize: 16,
-                boxShadow: "0 4px 12px rgba(95, 181, 116, 0.3)",
-                "&:hover": {
-                  bgcolor: "#4E9A5F",
-                  boxShadow: "0 6px 16px rgba(95, 181, 116, 0.4)",
-                },
-                "&:active": {
-                  transform: "scale(0.98)",
-                },
-              }}
-              onClick={() => {
-                console.log("Agregar al carrito:", {
-                  productId: productDetail.productId,
-                  quantity,
-                  price: productDetail.discountedPrice,
-                });
-              }}
-            >
-              Agregar a carrito
-            </Button>
           </Stack>
         </Box>
-      </DialogContent>
+      </Box>
+
+      {/* Botón fijo agregar a carrito */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 0,
+          left: 0,
+          right: 0,
+          bgcolor: "#FFFFFF",
+          borderTop: "1px solid #E0E0E0",
+          px: 3,
+          py: 2,
+          boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.08)",
+          zIndex: 10,
+        }}
+      >
+        <Button
+          fullWidth
+          variant="contained"
+          size="large"
+          startIcon={<MdShoppingCart size={22} />}
+          sx={{
+            bgcolor: "#5FB574",
+            color: "#fff",
+            fontWeight: 700,
+            py: 2,
+            borderRadius: 3,
+            textTransform: "none",
+            fontSize: 16,
+            boxShadow: "0 4px 12px rgba(95, 181, 116, 0.3)",
+            "&:hover": {
+              bgcolor: "#4E9A5F",
+              boxShadow: "0 6px 16px rgba(95, 181, 116, 0.4)",
+            },
+            "&:active": {
+              transform: "scale(0.98)",
+            },
+          }}
+          onClick={() => {
+            console.log("Agregar al carrito:", {
+              productId: productDetail.productId,
+              quantity,
+              price: productDetail.discountedPrice,
+            });
+          }}
+        >
+          Agregar a carrito
+        </Button>
+      </Box>
     </Dialog>
   );
 }

@@ -15,40 +15,13 @@ export interface ProductResponse {
   discountedPrice: number;
   category: string;
   condition: string;
-  expirationDate: string | null;
-  images: ImageResponse[];
-  active: boolean;
-}
-
-//interface limitada para los datos que se muestran enel front-end
-export interface ProductPublicResponse {
-  productId: string;
-  name: string;
-  stock: number;
-  originalPrice: number;
-  discountPercentage: number;
-  discountedPrice: number;
-  expirationDate: string | null;
-  images: ImageResponse[];
-}
-export interface ProductDetailResponse {
-  productId: string;
-  commerce: CommerceResponse; 
-  name: string;
-  description: string;  
-  stock: number;
-  originalPrice: number;
-  discountPercentage: number;
-  discountedPrice: number;
-  savings: number;
-  category: string;
-  categoryDisplayName: string;
-  condition: string;
   conditionDisplayName: string;
   expirationDate: string | null;
-  imageUrls: string[];
+  images: ImageResponse[];
   active: boolean;
+  preferences: string[] | null;  
 }
+
 
 export interface CommercePublicResponse {
   commerceId: string;
