@@ -87,13 +87,13 @@ export default function FilterDrawer() {
         },
       }}
     >
-      <Box sx={{ display: 'flex', flexDirection: 'column', height: isMobile ? '100%' : 'auto', maxHeight: isMobile ? '100vh' : '90vh' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: isMobile ? '80%' : 'auto', maxHeight: isMobile ? '70vh' : '90vh' }}>
         {/* Header Fixed */}
         <Box
           sx={{
             position: 'sticky',
             top: 0,
-            zIndex: 10,
+            zIndex: 7,
             bgcolor: '#FFF',
             borderBottom: '2px solid #E0E0E0',
             boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
@@ -101,7 +101,7 @@ export default function FilterDrawer() {
         >
           <Box
             sx={{
-              p: isMobile ? 5 : 3,
+              p: isMobile ? 2 : 3,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'space-between',
@@ -111,7 +111,7 @@ export default function FilterDrawer() {
               variant="h2"
               sx={{ 
                 fontWeight: 700, 
-                fontSize: isMobile ? 48 : 28,
+                fontSize: isMobile ? 28 : 28,
                 color: '#2D2D2D',
               }}
             >
@@ -121,10 +121,10 @@ export default function FilterDrawer() {
               onClick={closeFilterDrawer} 
               size="large"
               sx={{
-                width: isMobile ? 72 : 48,
-                height: isMobile ? 72 : 48,
+                width: isMobile ? 40 : 48,
+                height: isMobile ? 40 : 48,
                 '& .MuiSvgIcon-root': {
-                  fontSize: isMobile ? 56 : 32,
+                  fontSize: isMobile ? 24 : 32,
                 },
               }}
             >
@@ -134,7 +134,7 @@ export default function FilterDrawer() {
 
           {/* Botón limpiar filtros cuando hay activos */}
           {activeFiltersCount > 0 && (
-            <Box sx={{ px: isMobile ? 5 : 3, pb: isMobile ? 5 : 3 }}>
+            <Box sx={{ px: isMobile ? 2 : 3, pb: isMobile ? 2 : 3 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -143,15 +143,15 @@ export default function FilterDrawer() {
                   color: '#77A787',
                   borderColor: '#77A787',
                   textTransform: 'none',
-                  fontSize: isMobile ? 28 : 16,
+                  fontSize: isMobile ? 14 : 16,
                   fontWeight: 600,
-                  py: isMobile ? 3.5 : 1.5,
+                  py: isMobile ? 1 : 1.5,
                   borderRadius: 2,
-                  borderWidth: isMobile ? 3 : 2,
+                  borderWidth: isMobile ? 1 : 2,
                   '&:hover': {
                     backgroundColor: 'rgba(119, 167, 135, 0.08)',
                     borderColor: '#6B9677',
-                    borderWidth: isMobile ? 3 : 2,
+                    borderWidth: isMobile ? 1 : 2,
                   },
                 }}
               >
@@ -166,35 +166,35 @@ export default function FilterDrawer() {
           sx={{ 
             flex: 1, 
             overflowY: 'auto',
-            px: isMobile ? 5 : 3,
-            pt: isMobile ? 5 : 3,
-            pb: isMobile ? 20 : 3,
+            px: isMobile ? 2 : 3,
+            pt: isMobile ? 2 : 3,
+            pb: isMobile ? 2 : 3,
           }}
         >
-          <Stack spacing={isMobile ? 6 : 3}>
+          <Stack spacing={isMobile ? 2 : 3}>
             {/* Preferencias Alimenticias Permanentes */}
             {permanentPreferences.length > 0 && (
               <Box
                 sx={{
                   bgcolor: '#FFF',
-                  borderRadius: isMobile ? 6 : 3,
-                  p: isMobile ? 5 : 3,
-                  border: isMobile ? '3px solid #E0E0E0' : '1px solid #E0E0E0',
+                  borderRadius: isMobile ? 2 : 3,
+                  p: isMobile ? 2 : 3,
+                  border: isMobile ? '1px solid #E0E0E0' : '1px solid #E0E0E0',
                 }}
               >
                 <Stack
                   direction="row"
                   alignItems="center"
-                  spacing={isMobile ? 2.5 : 1.5}
-                  sx={{ mb: isMobile ? 4 : 2 }}
+                  spacing={isMobile ? 1 : 1.5}
+                  sx={{ mb: isMobile ? 2 : 2 }}
                 >
                   <Typography
                     variant="h4"
                     sx={{ 
                       fontWeight: 700, 
-                      fontSize: isMobile ? 34 : 18,
+                      fontSize: isMobile ? 19 : 18,
                       color: '#2D2D2D',
-                      lineHeight: 1.3,
+                      lineHeight: 1,
                     }}
                   >
                     Tus preferencias alimenticias
@@ -204,8 +204,8 @@ export default function FilterDrawer() {
                       display: 'inline-flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      width: isMobile ? 44 : 24,
-                      height: isMobile ? 44 : 24,
+                      width: isMobile ? 20 : 24,
+                      height: isMobile ? 20 : 24,
                       borderRadius: '50%',
                       bgcolor: '#E8F5E9',
                       border: isMobile ? '3px solid #77A787' : '2px solid #77A787',
@@ -214,7 +214,7 @@ export default function FilterDrawer() {
                   >
                     <Typography
                       sx={{
-                        fontSize: isMobile ? 24 : 13,
+                        fontSize: isMobile ? 12 : 13,
                         fontWeight: 700,
                         color: '#77A787',
                       }}
@@ -227,32 +227,32 @@ export default function FilterDrawer() {
                   variant="body1"
                   sx={{ 
                     color: '#757575', 
-                    mb: isMobile ? 4.5 : 2.5, 
-                    fontSize: isMobile ? 26 : 15,
+                    mb: isMobile ? 2 : 2.5, 
+                    fontSize: isMobile ? 16 : 15,
                     lineHeight: 1.6,
                   }}
                 >
                   Configuradas en tu perfil y siempre activas.
                 </Typography>
-                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 4 : 1.5 }}>
+                <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 1 : 1.5 }}>
                   {permanentPreferences.map((pref) => (
                     <Chip
                       key={pref}
-                      icon={<LockIcon sx={{ fontSize: isMobile ? 38 : 18 }} />}
+                      icon={<LockIcon sx={{ fontSize: isMobile ? 16 : 18 }} />}
                       label={PREFERENCE_LABELS[pref]}
                       sx={{
                         bgcolor: '#E8F5E9',
                         color: '#2D6A4F',
                         fontWeight: 600,
-                        fontSize: isMobile ? 28 : 15,
+                        fontSize: isMobile ? 14 : 15,
                         border: isMobile ? '3px solid #77A787' : '2px solid #77A787',
-                        height: isMobile ? 80 : 40,
+                        height: isMobile ? 35 : 40,
                         '& .MuiChip-icon': {
                           color: '#77A787',
-                          ml: isMobile ? 3 : 1,
+                          ml: isMobile ? 1 : 1,
                         },
                         '& .MuiChip-label': {
-                          px: isMobile ? 5 : 2,
+                          px: isMobile ? 1.5 : 2,
                         },
                       }}
                     />
@@ -267,8 +267,8 @@ export default function FilterDrawer() {
                 variant="h3"
                 sx={{ 
                   fontWeight: 700, 
-                  fontSize: isMobile ? 38 : 20,
-                  mb: isMobile ? 5 : 3,
+                  fontSize: isMobile ? 22 : 20,
+                  mb: isMobile ? 2 : 3,
                   color: '#2D2D2D',
                 }}
               >
@@ -283,27 +283,27 @@ export default function FilterDrawer() {
                   '&:before': { display: 'none' },
                   bgcolor: '#FFF',
                   border: isMobile ? '3px solid #E0E0E0' : '1px solid #E0E0E0',
-                  borderRadius: isMobile ? '28px !important' : '12px !important',
-                  mb: isMobile ? 5 : 2,
+                  borderRadius: isMobile ? '12px !important' : '12px !important',
+                  mb: isMobile ? 2 : 2,
                   overflow: 'hidden',
                 }}
               >
                 <AccordionSummary
-                  expandIcon={<ExpandMoreIcon sx={{ fontSize: isMobile ? 60 : 28 }} />}
+                  expandIcon={<ExpandMoreIcon sx={{ fontSize: isMobile ? 16 : 28 }} />}
                   sx={{
-                    minHeight: isMobile ? 110 : 56,
+                    minHeight: isMobile ? 35 : 56,
                     '& .MuiAccordionSummary-content': {
-                      my: isMobile ? 3.5 : 1.5,
+                      my: isMobile ? 1 : 1.5,
                     },
-                    px: isMobile ? 5 : 2,
+                    px: isMobile ? 1.5 : 2,
                   }}
                 >
-                  <Stack direction="row" alignItems="center" spacing={isMobile ? 3 : 1.5}>
+                  <Stack direction="row" alignItems="center" spacing={isMobile ? 1 : 1.5}>
                     <Typography 
                       variant="h4"
                       sx={{ 
                         fontWeight: 600, 
-                        fontSize: isMobile ? 30 : 16,
+                        fontSize: isMobile ? 19 : 16,
                         color: '#2D2D2D',
                       }}
                     >
@@ -314,12 +314,12 @@ export default function FilterDrawer() {
                         sx={{
                           bgcolor: '#77A787',
                           color: '#FFF',
-                          borderRadius: isMobile ? '24px' : '12px',
-                          px: isMobile ? 3.5 : 1.5,
-                          py: isMobile ? 1.5 : 0.5,
-                          fontSize: isMobile ? 26 : 13,
+                          borderRadius: isMobile ? '14px' : '12px',
+                          px: isMobile ? 1 : 1.5,
+                          py: isMobile ? 1 : 0.5,
+                          fontSize: isMobile ? 16 : 13,
                           fontWeight: 700,
-                          minWidth: isMobile ? 52 : 24,
+                          minWidth: isMobile ? 20 : 24,
                           textAlign: 'center',
                         }}
                       >
@@ -330,10 +330,10 @@ export default function FilterDrawer() {
                 </AccordionSummary>
                 <AccordionDetails sx={{ 
                   pt: 0, 
-                  pb: isMobile ? 5 : 2,
-                  px: isMobile ? 5 : 2,
+                  pb: isMobile ? 2 : 2,
+                  px: isMobile ? 2 : 2,
                 }}>
-                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 4 : 1.5 }}>
+                  <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 2 : 1.5 }}>
                     {Object.values(PreferenceType).map((pref) => {
                       const isPermanent = permanentPreferences.includes(pref);
                       const isActive = temporaryPreferences.includes(pref);
@@ -348,16 +348,16 @@ export default function FilterDrawer() {
                             bgcolor: isActive ? '#77A787' : '#F5F5F5',
                             color: isActive ? '#FFF' : '#2D2D2D',
                             fontWeight: 600,
-                            fontSize: isMobile ? 28 : 15,
-                            height: isMobile ? 80 : 40,
+                            fontSize: isMobile ? 14 : 15,
+                            height: isMobile ? 35 : 40,
                             border: isActive 
-                              ? (isMobile ? '3px solid #77A787' : '2px solid #77A787')
-                              : (isMobile ? '3px solid #E0E0E0' : '2px solid #E0E0E0'),
+                              ? (isMobile ? '1px solid #77A787' : '2px solid #77A787')
+                              : (isMobile ? '1px solid #E0E0E0' : '2px solid #E0E0E0'),
                             cursor: isPermanent ? 'not-allowed' : 'pointer',
                             opacity: isPermanent ? 0.5 : 1,
                             transition: 'all 0.2s ease',
                             '& .MuiChip-label': {
-                              px: isMobile ? 5 : 2,
+                              px: isMobile ? 1.5 : 2,
                             },
                             '&:hover': !isPermanent
                               ? {
@@ -386,28 +386,28 @@ export default function FilterDrawer() {
                     boxShadow: 'none',
                     '&:before': { display: 'none' },
                     bgcolor: '#FFF',
-                    border: isMobile ? '3px solid #E0E0E0' : '1px solid #E0E0E0',
-                    borderRadius: isMobile ? '28px !important' : '12px !important',
-                    mb: isMobile ? 5 : 2,
+                    border: isMobile ? '1px solid #E0E0E0' : '1px solid #E0E0E0',
+                    borderRadius: isMobile ? '10px !important' : '12px !important',
+                    mb: isMobile ? 1 : 2,
                     overflow: 'hidden',
                   }}
                 >
                   <AccordionSummary
-                    expandIcon={<ExpandMoreIcon sx={{ fontSize: isMobile ? 60 : 28 }} />}
+                    expandIcon={<ExpandMoreIcon sx={{ fontSize: isMobile ? 20 : 28 }} />}
                     sx={{
-                      minHeight: isMobile ? 110 : 56,
+                      minHeight: isMobile ? 40 : 56,
                       '& .MuiAccordionSummary-content': {
-                        my: isMobile ? 3.5 : 1.5,
+                        my: isMobile ? 1 : 1.5,
                       },
-                      px: isMobile ? 5 : 2,
+                      px: isMobile ? 1.5 : 2,
                     }}
                   >
-                    <Stack direction="row" alignItems="center" spacing={isMobile ? 3 : 1.5}>
+                    <Stack direction="row" alignItems="center" spacing={isMobile ? 1 : 1.5}>
                       <Typography 
                         variant="h4"
                         sx={{ 
                           fontWeight: 600, 
-                          fontSize: isMobile ? 30 : 16,
+                          fontSize: isMobile ? 19 : 16,
                           color: '#2D2D2D',
                         }}
                       >
@@ -418,12 +418,12 @@ export default function FilterDrawer() {
                           sx={{
                             bgcolor: '#77A787',
                             color: '#FFF',
-                            borderRadius: isMobile ? '24px' : '12px',
-                            px: isMobile ? 3.5 : 1.5,
-                            py: isMobile ? 1.5 : 0.5,
-                            fontSize: isMobile ? 26 : 13,
+                            borderRadius: isMobile ? '10px' : '12px',
+                            px: isMobile ? 1 : 1.5,
+                            py: isMobile ? 0.7 : 0.5,
+                            fontSize: isMobile ? 18 : 13,
                             fontWeight: 700,
-                            minWidth: isMobile ? 52 : 24,
+                            minWidth: isMobile ? 16 : 24,
                             textAlign: 'center',
                           }}
                         >
@@ -434,10 +434,10 @@ export default function FilterDrawer() {
                   </AccordionSummary>
                   <AccordionDetails sx={{ 
                     pt: 0, 
-                    pb: isMobile ? 5 : 2,
-                    px: isMobile ? 5 : 2,
+                    pb: isMobile ? 2 : 2,
+                    px: isMobile ? 1.5 : 2,
                   }}>
-                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 4 : 1.5 }}>
+                    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: isMobile ? 1 : 1.5 }}>
                       {group.categories.map((category) => {
                         const isActive = categories.includes(category);
                         return (
@@ -449,15 +449,15 @@ export default function FilterDrawer() {
                               bgcolor: isActive ? '#77A787' : '#F5F5F5',
                               color: isActive ? '#FFF' : '#2D2D2D',
                               fontWeight: 600,
-                              fontSize: isMobile ? 28 : 15,
-                              height: isMobile ? 80 : 40,
+                              fontSize: isMobile ? 14 : 15,
+                              height: isMobile ? 35 : 40,
                               border: isActive
-                                ? (isMobile ? '3px solid #77A787' : '2px solid #77A787')
-                                : (isMobile ? '3px solid #E0E0E0' : '2px solid #E0E0E0'),
+                                ? (isMobile ? '1px solid #77A787' : '2px solid #77A787')
+                                : (isMobile ? '1px solid #E0E0E0' : '2px solid #E0E0E0'),
                               cursor: 'pointer',
                               transition: 'all 0.2s ease',
                               '& .MuiChip-label': {
-                                px: isMobile ? 5 : 2,
+                                px: isMobile ? 1.5 : 2,
                               },
                               '&:hover': {
                                 bgcolor: isActive ? '#6B9677' : '#EEEEEE',
@@ -485,7 +485,7 @@ export default function FilterDrawer() {
             bottom: 0,
             left: 0,
             right: 0,
-            p: isMobile ? 5 : 3,
+            p: isMobile ? 2 : 3,
             bgcolor: '#FFF',
             borderTop: isMobile ? '3px solid #E0E0E0' : '2px solid #E0E0E0',
             boxShadow: '0 -2px 8px rgba(0,0,0,0.08)',
@@ -501,9 +501,9 @@ export default function FilterDrawer() {
               color: '#FFF',
               textTransform: 'none',
               fontWeight: 700,
-              fontSize: isMobile ? 30 : 17,
-              py: isMobile ? 4 : 2,
-              borderRadius: isMobile ? 4 : 2,
+              fontSize: isMobile ? 18 : 17,
+              py: isMobile ? 2 : 2,
+              borderRadius: isMobile ? 2 : 2,
               boxShadow: '0 2px 8px rgba(119, 167, 135, 0.3)',
               '&:hover': {
                 bgcolor: '#6B9677',
