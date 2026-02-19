@@ -15,7 +15,7 @@ export default function RoutesProvider() {
       <Route path="/api/users/*" element={<UserRoutes />} />
 
       {/* Acá van las rutas de /customer */}
-      <Route path="/home/*" element={<CustomerRoutes />} />
+      <Route path="/customer/*" element={<CustomerRoutes />} />
     </Routes>
   );
 }
