@@ -1,46 +1,46 @@
 export enum PreferenceType {
-  CELIAC = 'CELIAC',
-  VEGAN = 'VEGAN',
-  VEGETARIAN = 'VEGETARIAN',
-  GLUTEN_FREE = 'GLUTEN_FREE',
-  LACTOSE_FREE = 'LACTOSE_FREE',
-  LOW_SODIUM = 'LOW_SODIUM',
-  NUT_FREE = 'NUT_FREE',
+  CELIAC = 'Celiaco',
+  VEGAN = 'Vegano',
+  VEGETARIAN = 'Vegetariano',
+  GLUTEN_FREE = 'Sin Gluten',
+  LACTOSE_FREE = 'Sin Lactosa',
+  LOW_SODIUM = 'Bajo en Sodio',
+  NUT_FREE = 'Sin Frutos Secos',
 }
 
 export enum ProductCategory {
   // VERDULERÍA
-  FRUIT = 'FRUIT',
-  VEGETABLE = 'VEGETABLE',
-  HERBS = 'HERBS',
-  TUBER = 'TUBER',
-  SEEDLING = 'SEEDLING',
+  FRUIT = 'Fruta',
+  VEGETABLE = 'Verdura',
+  HERBS = 'Hierbas',
+  TUBER = 'Tubérculo',
+  SEEDLING = 'Plantín',
   // PANADERÍA
-  BREAD = 'BREAD',
-  PASTRIES = 'PASTRIES',
-  CAKES = 'CAKES',
-  COOKIES = 'COOKIES',
-  DOUGH = 'DOUGH',
-  DESSERTS_BAKERY = 'DESSERTS_BAKERY',
+  BREAD = 'Pan',
+  PASTRIES = 'Facturas',
+  CAKES = 'Tortas',
+  COOKIES = 'Galletas',
+  DOUGH = 'Masas',
+  DESSERTS_BAKERY = 'Postres',
   // RESTAURANTE
-  APPETIZERS = 'APPETIZERS',
-  MAIN_COURSES = 'MAIN_COURSES',
-  DESSERTS_RESTAURANT = 'DESSERTS_RESTAURANT',
-  BEVERAGES_RESTAURANT = 'BEVERAGES_RESTAURANT',
+  APPETIZERS = 'Entradas',
+  MAIN_COURSES = 'Platos Principales',
+  DESSERTS_RESTAURANT = 'Postres',
+  BEVERAGES_RESTAURANT = 'Bebidas',
   // KIOSCO/SUPERMERCADO
-  CLEANING = 'CLEANING',
-  BEVERAGES = 'BEVERAGES',
-  GROCERIES = 'GROCERIES',
-  FRESH_PRODUCTS = 'FRESH_PRODUCTS',
-  FROZEN = 'FROZEN',
-  PERSONAL_HYGIENE = 'PERSONAL_HYGIENE',
-  CANDY = 'CANDY',
-  SNACKS = 'SNACKS',
-  CIGARETTES = 'CIGARETTES',
-  MAGAZINES = 'MAGAZINES',
-  GREENGROCERY_SECTION = 'GREENGROCERY_SECTION',
-  BAKERY_SECTION = 'BAKERY_SECTION',
-  OTHER = 'OTHER',
+  CLEANING = 'Limpieza',
+  BEVERAGES = 'Bebidas',
+  GROCERIES = 'Comestibles',
+  FRESH_PRODUCTS = 'Frescos',
+  FROZEN = 'Congelados',
+  PERSONAL_HYGIENE = 'Higiene Personal',
+  CANDY = 'Golosinas',
+  SNACKS = 'Snacks',
+  CIGARETTES = 'Cigarrillos',
+  MAGAZINES = 'Revistas',
+  GREENGROCERY_SECTION = 'Verdulería',
+  BAKERY_SECTION = 'Panadería',
+  OTHER = 'Otro',
 }
 
 export interface ProductFilters {
@@ -77,10 +77,8 @@ export const CATEGORY_LABELS: FilterLabels = {
   [ProductCategory.DESSERTS_BAKERY]: 'Postres',
   [ProductCategory.APPETIZERS]: 'Entradas',
   [ProductCategory.MAIN_COURSES]: 'Platos Principales',
-  [ProductCategory.DESSERTS_RESTAURANT]: 'Postres',
   [ProductCategory.BEVERAGES_RESTAURANT]: 'Bebidas',
   [ProductCategory.CLEANING]: 'Limpieza',
-  [ProductCategory.BEVERAGES]: 'Bebidas',
   [ProductCategory.GROCERIES]: 'Comestibles',
   [ProductCategory.FRESH_PRODUCTS]: 'Frescos',
   [ProductCategory.FROZEN]: 'Congelados',
@@ -143,3 +141,15 @@ export const CATEGORY_GROUPS = {
     ],
   },
 };
+
+export interface Category {
+  id: string;
+  name: string;
+  type: string; // "panaderia", "frutas-verduras", etc.
+}
+
+export interface FilterParams {
+  category?: string;
+  search?: string;
+  //sortBy?: 'discount' | 'price' | 'expiration';
+}
