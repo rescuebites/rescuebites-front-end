@@ -1,11 +1,11 @@
 import { ProductCategory } from './filter.interface';
 
 export enum ProductCondition {
-  RIPE = 'RIPE',
-  NEAR_EXPIRY = 'NEAR_EXPIRY',
-  DAMAGED = 'DAMAGED',
-  SURPLUS = 'SURPLUS',
-  OTHER = 'OTHER'
+  RIPE = 'Maduro',
+  NEAR_EXPIRY = 'Vencimiento próximo',
+  DAMAGED = 'Dañado',
+  SURPLUS = 'Sobrante',
+  OTHER = 'Otro'
 }
 
 export interface Product {
@@ -26,22 +26,6 @@ export interface Product {
   active?: boolean;
 }
 
-export interface Deal {
-  id: number;
-  title: string;
-  price: number;
-  originalPrice: number;  
-  discount: number;
-  imageUrl: string;
-  expiresIn?: string;
-  description: string;
-  stock: number;
-  expirationDate: string;
-  category: string;
-  productType: string;
-  storeId: number;
-  tags?: ProductTag[];
-}
 
 export type ProductTag =
   | "maduro"
@@ -65,10 +49,44 @@ export interface Store {
   categories?: string[];
 }
 
-export const categories = [
+//constants para categorías de productos (para mostrar en la UI y mapear con el backend)
+export type CategoryDisplay = 
+  | "Panadería"
+  | "Supermercado"
+  | "Verdulería"
+  | "Restaurante"
+  | "Kiosco";
+
+export type CategoryBackend = 
+  | "GREENGROCERY"
+  | "BAKERY"
+  | "RESTAURANT"
+  | "SUPERMARKET"
+  | "KIOSK";
+
+// Mapeo español → inglés
+export const CATEGORY_TO_BACKEND: Record<CategoryDisplay, CategoryBackend> = {
+  "Panadería": "BAKERY",
+  "Supermercado": "SUPERMARKET",
+  "Verdulería": "GREENGROCERY",
+  "Restaurante": "RESTAURANT",
+  "Kiosco": "KIOSK",
+};
+
+// Mapeo inverso (para mostrar nombres en español desde el backend)
+export const BACKEND_TO_CATEGORY: Record<CategoryBackend, CategoryDisplay> = {
+  "BAKERY": "Panadería",
+  "SUPERMARKET": "Supermercado",
+  "GREENGROCERY": "Verdulería",
+  "RESTAURANT": "Restaurante",
+  "KIOSK": "Kiosco",
+};
+
+export const categories: CategoryDisplay[] = [
   "Panadería",
   "Supermercado",
   "Verdulería",
   "Restaurante",
   "Kiosco",
 ];
+

@@ -1,13 +1,23 @@
 import { Box, Card, CardContent, CircularProgress, Stack, Typography } from "@mui/material";
 import { useState } from "react";
-import { useTopDeals } from "../hooks/useProducts";
+import { useProductsByCategory } from "../hooks/useProducts";
+import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
 import type { ProductResponse} from "./../interfaces/responses";
 import ProductDetailDialog from "./ProductDetailDialog";
 
 export default function TopDeals() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
-  const { data: products, isLoading, error } = useTopDeals(12);
+  const selectedCategory = useFilterStore((state) => state.selectedCategory); //lee el estado de la categoría seleccionada
+  const { data: products, isLoading} = useProductsByCategory(selectedCategory, 12); //obtiene los productos filtrados por categoría, si no hay categoría seleccionada, obtiene los top deals
+  
+  const handleDealClick = (product: ProductResponse) => {
+    setSelectedProductId(product.productId);
+  };
+
+  const handleCloseDialog = () => {
+    setSelectedProductId(null);
+  };
   
 
 // Manejo de loading
@@ -19,35 +29,20 @@ if (isLoading) {
   );
 }
 
-// Manejo de error
-if (error) {
-  return (
-    <Box textAlign="center" py={4}>
-      <Typography color="error">
-        Error al cargar productos destacados
-      </Typography>
-    </Box>
-  );
-}
-
-// Manejo de sin datos
+// Manejo de sin productos
 if (!products || products.length === 0) {
+  const isFiltering = !!selectedCategory;
+
   return (
-    <Box textAlign="center" py={4}>
-      <Typography color="text.secondary">
-        No hay productos destacados disponibles
+    <Box sx={{ textAlign: 'center', py: 8 }}>
+      <Typography variant="h6" sx={{ color: '#2D2D2D', mb: 1 }}>
+        {isFiltering
+          ? "No hay productos destacados en la categoría seleccionada"
+          : "No hay productos disponibles"}
       </Typography>
     </Box>
   );
 }
-
-  const handleDealClick = (productId: string) => {
-    setSelectedProductId(productId);
-  };
-
-  const handleCloseDialog = () => {
-    setSelectedProductId(null);
-  };
 
   return (
     <>
@@ -66,7 +61,7 @@ if (!products || products.length === 0) {
   }}
 >
   {products?.map((product: ProductResponse) => (
-    <DealCard key={product.productId} product={product} onClick={() => handleDealClick(product.productId)} />
+    <DealCard key={product.productId} product={product} onClick={() => handleDealClick(product)} />
   ))}
 </Box>
 
@@ -89,21 +84,13 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
         bgcolor: '#FFFFFF',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-        },
-        '&:active': {
-          transform: 'scale(0.98)',
-        },
       }}
     >
       {/* Contenedor de imagen con badge */}
       <Box sx={{ position: 'relative' }}>
         <Box
           component="img"
-          src={product.images[0]?.url || '/placeholder.jpg'}
+          src={product.productImages?.[0]?.url || '/placeholder.jpg'}
           loading="lazy"
           alt={product.name}
           sx={{
@@ -143,14 +130,14 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
         <Typography
           sx={{
             fontWeight: 600,
-            fontSize: { xs: 14, sm: 15 },
+            fontSize: { xs: 18, sm: 22 },
             color: '#2D2D2D',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            minHeight: { xs: 40, sm: 44 },
+            minHeight: { xs: 30, sm: 40 },
             mb: 1,
             lineHeight: 1.4,
           }}
@@ -164,7 +151,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
             sx={{ 
               color: '#2D2D2D', 
               fontWeight: 700,
-              fontSize: { xs: 16, sm: 18 }
+              fontSize: { xs: 20, sm: 24 }
             }}
           >
             ${product.discountedPrice.toFixed(2)}
@@ -189,7 +176,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
           <Typography
             sx={{
               color: '#FF6B6B',
-              fontSize: { xs: 11, sm: 12 },
+              fontSize: { xs: 13, sm: 15 },
               fontWeight: 500,
             }}
           >

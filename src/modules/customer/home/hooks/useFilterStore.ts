@@ -1,5 +1,5 @@
 import { create } from 'zustand';
-import { PreferenceType, ProductCategory, ProductFilters } from '../home/interfaces/filter.interface';
+import { PreferenceType, ProductCategory, ProductFilters } from '../interfaces/filter.interface';
 
 interface FilterStore extends ProductFilters {
   // Estado

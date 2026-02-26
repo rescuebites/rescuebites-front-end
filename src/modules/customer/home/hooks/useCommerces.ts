@@ -1,9 +1,27 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCommerceDetail, getCommercesByType } from "../services/home.service";
+import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../services/home.service";
 import { CommercePublicResponse, PaginatedResponse } from "../interfaces/responses";
 import type { CommerceResponse } from "../interfaces/responses";
+import { CategoryDisplay } from "../interfaces/types";
 
-export function useCommercesByType(commerceType: string, size = 6) {
+//hook para obtener todos los comercios sin importar su tipo, para sección de tiendas
+export function useAllCommerces() {
+  return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
+    queryKey: ['all-commerces'], 
+    queryFn: () => getAllCommerces(0),  
+    staleTime: 5 * 60 * 1000, 
+    retry: 2, 
+    placeholderData: { 
+      content: [], 
+      totalElements: 0,
+      totalPages: 0,
+      size: 0,
+      number: 0
+    },
+  });
+}
+
+export function useCommercesByType(commerceType: CategoryDisplay, size = 6) {
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
     queryKey: ['commerces', commerceType, size], // Identificador único de esta query en cache
     queryFn: () => getCommercesByType(commerceType, 0, size), // Función que trae los datos, en este caso la función que hace la petición a la API

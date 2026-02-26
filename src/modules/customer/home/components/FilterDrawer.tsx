@@ -20,7 +20,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LockIcon from '@mui/icons-material/Lock';
 import { forwardRef } from 'react';
-import { useFilterStore } from '../useFilterStore';
+import { useFilterStore } from '../hooks/useFilterStore';
 import {
   PreferenceType,
   PREFERENCE_LABELS,

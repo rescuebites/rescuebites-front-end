@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useFilterStore } from '../useFilterStore';
+import { useFilterStore } from './useFilterStore';
 import { PreferenceType } from '../interfaces/filter.interface';
 
 /**

@@ -1,12 +1,15 @@
 export interface ImageResponse {
   imageId: string;
   url: string;
+  publicId: string | null;
 }
 
 export interface ProductResponse {
   productId: string;
   commerceId: string;
   commerceName: string;
+  commerceImages: ImageResponse[];  
+  commerceOpeningHours: string;
   name: string;
   description: string;
   stock: number;
@@ -17,7 +20,7 @@ export interface ProductResponse {
   condition: string;
   conditionDisplayName: string;
   expirationDate: string | null;
-  images: ImageResponse[];
+  productImages: ImageResponse[];
   active: boolean;
   preferences: string[] | null;  
 }

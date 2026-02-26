@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail, getProductsByCommerce, getTopDeals } from "../services/home.service";
+import { getProductDetail, getProductsByCategory, getProductsByCommerce, getTopDeals } from "../services/home.service";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
+import { CategoryDisplay } from "../interfaces/types";
 
 interface UseProductsParams {
   commerceId?: string;
@@ -41,3 +42,19 @@ export const useProductDetail = (productId: string | null) => {
     staleTime: 5 * 60 * 1000, // Los datos se consideran frescos por 5 minutos
   });
 };
+
+//hook para obtener los productos filtrados por tipo de coemrcio seleccionado
+export function useProductsByCategory(category: CategoryDisplay | null, size = 12) {
+  return useQuery<ProductResponse[], Error>({
+    queryKey: ['products-by-category', category, size],
+    queryFn: () => {
+      if (!category) {
+        return getTopDeals(size); //si no hay categoría seleccionada, muestra los top deals
+      }
+      return getProductsByCategory(category, 0, size);
+    },
+    staleTime: 2 * 60 * 1000,
+    retry: 2,
+    placeholderData: [],
+  });
+}

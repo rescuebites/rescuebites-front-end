@@ -1,36 +1,43 @@
-import { Box, Stack, Typography, CircularProgress } from "@mui/material";
-import { useCommercesByType } from "../hooks/useCommerces";
+import { Box, Stack, Typography, Skeleton } from "@mui/material";
+import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
+import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
 import { CommercePublicResponse } from "../interfaces/responses";
 import { useNavigate } from "react-router-dom";
 
 export default function FeaturedStores() {
-  const { data, isLoading, error } = useCommercesByType('BAKERY', 6);
 
+  const selectedCategory = useFilterStore((state) => state.selectedCategory); //lee el estado de la categoría seleccionada
+  
+  const categoryToFetch = selectedCategory || "Panadería"; //si no hay categoría seleccionada, se pasa null para obtener todos los comercios;
+
+  const {data: filteredData, isLoading: filteredLoading} = useCommercesByType (categoryToFetch); //obtiene los comercios filtrados por categoría, si no hay categoría seleccionada, obtiene todos los comercios
+  
+  const { data: allData, isLoading: allLoading } = useAllCommerces();
+
+  const isLoading =selectedCategory ? filteredLoading : allLoading; //si hay una categoría seleccionada, muestra el loading de los comercios filtrados, sino muestra el loading de todos los comercios
+  const commerces =selectedCategory ?
+  (filteredData?.content ?? []) //si hay una categoría seleccionada, muestra los comercios filtrados
+  : (allData?.content ?? []); //si no hay una categoría seleccionada, muestra todos los comercios
+
+  const navigate = useNavigate();
+
+  
   if (isLoading) {
+    return <StoresSkeleton />; //muestra el skeleton mientras se cargan los datos
+  }
+
+  if (commerces.length === 0) { //si no hay comercios, muestra un mensaje
     return (
-      <Box display="flex" justifyContent="center" alignItems="center" py={4}>
-        <CircularProgress sx={{ color: '#77A787' }} />
+      <Box sx={{ textAlign: 'center', py: 8 }}>
+      <Typography variant="h6" sx={{ color: '#2D2D2D', mb: 1 }}>
+          {selectedCategory 
+            ? `No hay comercios de tipo "${selectedCategory}"` 
+            : "No hay comercios disponibles"}
+        </Typography>
       </Box>
     );
   }
 
-  if (error || !data) {
-    return (
-      <Box textAlign="center" py={4}>
-        <Typography color="text.secondary">No hay comercios disponibles</Typography>
-      </Box>
-    );
-  }
-
-  const stores = data.content || [];
-
-  if (stores.length === 0) {
-    return (
-      <Box textAlign="center" py={4}>
-        <Typography color="text.secondary">No hay comercios disponibles</Typography>
-      </Box>
-    );
-  }
 
   return (
     <Box
@@ -44,8 +51,9 @@ export default function FeaturedStores() {
         scrollbarWidth: 'none',
       }}
     >
-      {stores.map((commerce) => (
-        <StoreCard key={commerce.commerceId} commerce={commerce} />
+      {commerces.map((commerce) => ( //mapea los comercios y muestra una tarjeta por cada uno
+        <StoreCard key={commerce.commerceId} commerce={commerce}
+        onClick={() => navigate(`/home/stores/${commerce.commerceId}`)} />
       ))}
     </Box>
   );
@@ -53,9 +61,9 @@ export default function FeaturedStores() {
   
 }
 
-function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
+function StoreCard({ commerce, onClick }: { commerce: CommercePublicResponse, onClick: () => void }) {
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleStoreClick = (commerceId:string) => {
     navigate(`/home/stores/${commerceId}`);
@@ -63,6 +71,7 @@ function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
 
   return (
     <Stack
+      onClick={onClick}
       sx={{
         minWidth: { xs: 140, sm: 160 },
         bgcolor: '#FFFFFF',
@@ -112,5 +121,27 @@ function StoreCard({ commerce }: { commerce: CommercePublicResponse }) {
         </Typography>
       </Stack>
     </Stack>
+  );
+}
+
+function StoresSkeleton() {
+  return (
+    <Box sx={{ display: "flex", gap: 2, py: 2 }}>
+      {[1, 2, 3, 4, 5, 6].map((i) => (
+        <Stack key={i} sx={{ minWidth: 160, gap: 1 }}>
+          <Skeleton 
+            variant="rectangular" 
+            sx={{ 
+              width: '100%', 
+              aspectRatio: '3/4', 
+              borderRadius: 2 
+            }} 
+            animation="wave"
+          />
+          <Skeleton width="80%" animation="wave" />
+          <Skeleton width="60%" animation="wave" />
+        </Stack>
+      ))}
+      </Box>
   );
 }

@@ -1,21 +1,8 @@
 import {
-  Dialog,
-  IconButton,
-  Box,
-  Typography,
-  Stack,
-  Chip,
-  Divider,
-  Button,
-  CircularProgress,
-  Paper,
+  Dialog, IconButton, Box, Typography, Stack, Chip, Divider, Button, CircularProgress, Paper,Avatar,
 } from "@mui/material";
 import {
-  MdClose,
-  MdAdd,
-  MdRemove,
-  MdShoppingCart,
-  MdStorefront,
+  MdClose, MdAdd, MdRemove, MdShoppingCart, MdStorefront,
 } from "react-icons/md";
 import { useState } from "react";
 import { useProductDetail } from "../hooks/useProducts";
@@ -91,8 +78,8 @@ export default function ProductDetailDialog({
   };
 
   const handleGoToCommerce = () => {
-    onClose();
-    navigate(`/home/stores/${productDetail.commerceId}`);
+    onClose(); 
+    navigate(`/home/stores/${productDetail.commerceId}`, { replace: true });
   };
 
   return (
@@ -162,7 +149,7 @@ export default function ProductDetailDialog({
             position: "relative",
             width: "100%",
             height: 220,
-            backgroundImage: `url(${productDetail.images?.[0]?.url || "/placeholder.jpg"})`,
+            backgroundImage: `url(${productDetail.productImages?.[0]?.url || "/placeholder.jpg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderRadius: "0 0 24px 24px",
@@ -240,7 +227,7 @@ export default function ProductDetailDialog({
                     color: "#666666",
                     lineHeight: 1.6,
                     fontSize: 15,
-                    mb: 2,
+                    mb: 1,
                   }}
                 >
                   {productDetail.description}
@@ -299,53 +286,53 @@ export default function ProductDetailDialog({
             <Divider sx={{ my: 1 }} />
 
             {/* Detalles del comercio */}
-            {productDetail.commerceName && (
+             {productDetail.commerceName && (
               <Paper
                 elevation={0}
                 sx={{
                   bgcolor: "#F5F5F5",
                   p: 2,
                   borderRadius: 3,
-                  cursor: "pointer",
-                  transition: "all 0.2s ease",
-                  "&:hover": {
-                    bgcolor: "#EEEEEE",
-                    transform: "translateY(-2px)",
-                    boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-                  },
-                  "&:active": {
-                    transform: "scale(0.98)",
-                  },
                 }}
               >
                 <Stack direction="row" spacing={2} alignItems="center">
-                  <Box
+                  <Avatar
+                    src={productDetail.commerceImages?.[0]?.url}
+                    alt={productDetail.commerceName}
                     sx={{
                       width: 48,
                       height: 48,
-                      borderRadius: 2,
-                      backgroundColor: "#5FB574",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#fff",
-                      fontWeight: 700,
+                      bgcolor: "#77A787",
                       fontSize: 18,
+                      fontWeight: 700,
                     }}
                   >
-                    {productDetail.commerceName.substring(0, 2).toUpperCase()}
-                  </Box>
+                    {/* Fallback: primera letra del nombre del comercio si no tiene foto de perfil */}
+                    {!productDetail.commerceImages?.[0]?.url && 
+                      productDetail.commerceName.charAt(0).toUpperCase()
+                    }
+                  </Avatar>
 
                   <Box flex={1}>
                     <Typography
                       sx={{
                         fontWeight: 700,
                         color: "#2D2D2D",
-                        fontSize: 15,
+                        fontSize: 17,
                         mb: 0.5,
                       }}
                     >
                       {productDetail.commerceName}
+                    </Typography>
+                    <Typography
+                      sx={{
+                        fontWeight: 700,
+                        color: "#2D2D2D",
+                        fontSize: 15,
+                        mb: 0.7,
+                      }}
+                    >
+                      {productDetail.commerceOpeningHours}
                     </Typography>
                     <Stack direction="row" spacing={1} alignItems="center">
                       <MdStorefront size={14} color="#666666" />
@@ -355,6 +342,7 @@ export default function ProductDetailDialog({
                           color: "#666666",
                           fontSize: 13,
                           fontWeight: 500,
+                          cursor: "pointer",
                         }}
                       >
                         Ver comercio

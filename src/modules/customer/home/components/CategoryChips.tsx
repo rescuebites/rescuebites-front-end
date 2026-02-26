@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
-import { ReactElement, useState } from "react";
-import { categories } from "../interfaces/types";
+import { ReactElement } from "react";
+import { categories, CategoryDisplay } from "../interfaces/types";
+import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
 
 // Íconos
 import { GiCroissant } from "react-icons/gi";
@@ -36,7 +37,18 @@ const categoryData: Record<string, { icon: ReactElement; color: string }> = {
 };
 
 export default function CategoryChips() {
-  const [active, setActive] = useState<string | null>(null);
+  
+  const selectedCategory = useFilterStore((state) => state.selectedCategory);
+  const setSelectedCategory = useFilterStore((state) => state.setSelectedCategory);
+
+  const handleCategoryClick = (category: CategoryDisplay) => {
+    if (selectedCategory === category) {
+      setSelectedCategory(null); // Deseleccionar si ya está seleccionado
+    } else {
+      setSelectedCategory(category);
+    }
+  };
+
 
   return (
     <Stack spacing={2}>
@@ -56,19 +68,22 @@ export default function CategoryChips() {
         >
           Categorías
         </Typography>
-        <Typography 
-          sx={{ 
-            color: '#757575', 
-            fontSize: 14,
-            cursor: 'pointer',
+        {selectedCategory && (
+          <Typography 
+            onClick={() => setSelectedCategory(null)}
+            sx={{ 
+              color: '#757575', 
+              fontSize: 14,
+              cursor: 'pointer',
             display: 'flex',
             alignItems: 'center',
             gap: 0.5,
             '&:hover': { color: '#77A787' }
           }}
         >
-          <span>→</span>
+            Limpiar filtros
         </Typography>
+        )}
       </Stack>
 
       {/* Scroll horizontal de categorías */}
@@ -87,8 +102,8 @@ export default function CategoryChips() {
           <CategoryTile 
             key={cat} 
             category={cat}
-            active={active === cat}
-            onClick={() => setActive(cat)}
+            active={selectedCategory === cat}
+            onClick={() => handleCategoryClick(cat)}
           />
         ))}
       </Box>
