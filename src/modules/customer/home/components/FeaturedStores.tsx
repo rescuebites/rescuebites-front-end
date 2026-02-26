@@ -53,7 +53,7 @@ export default function FeaturedStores() {
     >
       {commerces.map((commerce) => ( //mapea los comercios y muestra una tarjeta por cada uno
         <StoreCard key={commerce.commerceId} commerce={commerce}
-        onClick={() => navigate(`/home/stores/${commerce.commerceId}`)} />
+        onClick={() => navigate(`/customer/stores/${commerce.commerceId}`)} />
       ))}
     </Box>
   );
@@ -66,7 +66,7 @@ function StoreCard({ commerce, onClick }: { commerce: CommercePublicResponse, on
   const navigate = useNavigate();
 
   const handleStoreClick = (commerceId:string) => {
-    navigate(`/home/stores/${commerceId}`);
+    navigate(`/customer/stores/${commerceId}`);
   };
 
   return (
