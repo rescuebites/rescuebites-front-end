@@ -162,7 +162,7 @@ export default function ProductDetailDialog({
             position: "relative",
             width: "100%",
             height: 220,
-            backgroundImage: `url(${productDetail.images?.[0]?.url || "/placeholder.jpg"})`,
+            backgroundImage: `url(${productDetail.productImages?.[0]?.url || "/placeholder.jpg"})`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             borderRadius: "0 0 24px 24px",

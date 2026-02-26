@@ -23,6 +23,7 @@ import {
 import { ProductResponse } from '../interfaces/responses';
 import { useCommerceDetail } from '../hooks/useCommerces';
 import { useProducts } from '../hooks/useProducts';
+import BackButton from '../../../../shared/components/ui/backButton';
 
 type SortOption = 'newest' | 'price-low' | 'price-high' | 'name';
 
@@ -44,7 +45,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
 
   const handleSortChange = (event: SelectChangeEvent<SortOption>): void => {
     setSortBy(event.target.value as SortOption);
-  };
+  }; //funcón usada en el ordenador de productos (ver si implementar)
 
   // Función para ordenar productos
   const getSortedProducts = (products: ProductResponse[]) => {
@@ -104,14 +105,17 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
       sx={{
         backgroundColor: '#FAFAFA',
         minHeight: '100vh',
-        pb: { xs: 4, md: 4 },
+        pb: { xs: 3, md: 4 },
       }}
     >
+      <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
+      <BackButton />
+    </Box>
       <Box
         sx={{
-          pt: { xs: 5, sm: 7, md: 10, lg: 12 },
-          px: { xs: 3, sm: 3, md: 5 },
-          maxWidth: { xs: '100%', md: '1400px' },
+          pt: { xs: 5, sm: 7, md: 10},
+          px: { xs: 2, sm: 3, md: 5 },
+          maxWidth: { xs: '100%' },
           mx: 'auto',
         }}
       >
@@ -120,18 +124,17 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
           sx={{
             display: 'flex',
             alignItems: 'flex-start',
-            gap: { xs: 3, sm: 3, md: 5 },
-            mb: { xs: 3, sm: 3, md: 10 },
+            gap: { xs: 1.5, sm: 3, md: 5 },
+            mb: { xs: 3, sm: 3, md: 5 },
           }}
         >
           <Avatar
             src={commerce.images?.[0]?.url || ''}
             sx={{
-              width: { xs: 150, sm: 200, md: 270, lg: 250 },
-              height: { xs: 150, sm: 200, md: 270, lg: 250 },
+              width: { xs: 95, sm: 160, md: 200},
+              height: { xs: 95, sm: 160, md: 200},
               backgroundColor: '#77A787',
               flexShrink: 0,
-              fontSize: { xs: 55, sm: 55, md: 100, lg: 65 },
             }}
           >
             {!commerce.images?.[0]?.url && (
@@ -144,9 +147,9 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
               variant="h4"
               sx={{
                 fontWeight: 700,
-                fontSize: { xs: 34, sm: 60, md: 80, lg: 70 },
-                mb: { xs: 1.2, sm: 1.2, md: 3, lg: 3 },
-                lineHeight: 1.2,
+                fontSize: { xs: 30, sm: 55, md: 65},
+                mb: { xs: 1.5, sm: 1.5, md: 2},
+                lineHeight: 1,
                 color: '#2D2D2D',
               }}
             >
@@ -158,8 +161,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
                 variant="body1"
                 sx={{
                   color: '#757575',
-                  fontSize: { xs: 22, sm: 26, md: 35, lg: 30 },
-                  mb: 4,
+                  fontSize: { xs: 20, sm: 26, md: 28},
+                  mb: { xs: 1.5, sm: 2, md: 2.5},
                   lineHeight: 1,
                 }}
               >
@@ -170,14 +173,14 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
             <Chip
               label={commerce.commerceTypes?.[0] || 'Comercio'}
               size="medium"
-              icon={<RestaurantIcon sx={{ fontSize: { xs: 22, sm: 22, md: 30, lg: 30 } }} />}
+              icon={<RestaurantIcon sx={{ fontSize: { xs: 15, sm: 22, md: 28} }} />}
               sx={{
                 backgroundColor: '#E8F5E9',
                 color: '#77A787',
-                fontSize: { xs: 22, sm: 22, md: 36, lg: 30 },
+                fontSize: { xs: 14, sm: 20, md: 26},
                 fontWeight: 600,
-                height: { xs: 34, sm: 34, md: 50, lg: 36 },
-                px: { xs: 2, md: 2 },
+                height: { xs: 20, sm: 27, md: 30},
+                px: { xs: 0.5},
               }}
             />
           </Box>
@@ -186,24 +189,24 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
         {/* Contact Information Card */}
         <Card
           sx={{
-            mb: { xs: 5.1, sm: 5.1 },
-            borderRadius: { xs: 4, md: 4 },
+            mb: { xs: 4},
+            borderRadius: { xs: 8 },
             boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
-            p: { xs: 3, sm: 3, md: 4, lg: 2 },
+            p: { xs: 2, sm: 3, md: 3.5},
           }}
         >
           <Box
             sx={{
               display: 'flex',
               flexDirection: 'column',
-              gap: { xs: 2, sm: 2, md: 2 },
+              gap: { xs: 1, sm: 2, md: 2 },
             }}
           >
             {/* Dirección */}
             {commerce.address && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
-                <LocationOn sx={{ fontSize: { xs: 26, sm: 32, md: 40, lg: 35 }, color: '#757575' }} />
-                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
+                <LocationOn sx={{ fontSize: { xs: 22, sm: 25, md: 30}, color: '#757575' }} />
+                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 17, sm: 20, md: 24} }}>
                   {commerce.address}
                   {commerce.locality && `, ${commerce.locality}`}
                 </Typography>
@@ -212,9 +215,9 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
 
             {/* Horario */}
             {commerce.openingHours && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
-                <Schedule sx={{ fontSize: { xs: 26, sm: 32, md: 28, lg: 30 }, color: '#757575' }} />
-                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
+                <Schedule sx={{ fontSize: { xs: 22, sm: 25, md: 30}, color: '#757575' }} />
+                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 17, sm: 20, md: 24} }}>
                   {commerce.openingHours}
                 </Typography>
               </Box>
@@ -222,9 +225,9 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
 
             {/* Teléfono */}
             {commerce.phone && (
-              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 2, md: 2 } }}>
-                <Phone sx={{ fontSize: { xs: 26, sm: 26, md: 28, lg: 30 }, color: '#757575' }} />
-                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 18, sm: 26, md: 34, lg: 30 } }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: { xs: 1, md: 2 } }}>
+                <Phone sx={{ fontSize: { xs: 22, sm: 25, md: 30}, color: '#757575' }} />
+                <Typography variant="body2" sx={{ color: '#757575', fontSize: { xs: 17, sm: 20, md: 24} }}>
                   {commerce.phone}
                 </Typography>
               </Box>
@@ -246,40 +249,42 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
             variant="h4"
             sx={{
               fontWeight: 700,
-              fontSize: { xs: 36, sm: 40, md: 62, lg: 55 },
+              fontSize: { xs: 24, sm: 30, md: 35 },
               color: '#2D2D2D',
             }}
           >
             Catálogo
           </Typography>
-          <FormControl size="medium" sx={{ minWidth: { xs: 200, sm: 200, md: 240 } }}>
+          {/* ----Filtrador de productos (opcional, se puede implementar más adelante)----------------- */}
+
+          {/* <FormControl size="small" >
             <Select
               value={sortBy}
               onChange={handleSortChange}
               sx={{
-                fontSize: { xs: 22, sm: 20, md: 25, lg: 25 },
+                fontSize: { xs: 15, sm: 20, md: 25},
                 backgroundColor: 'white',
                 borderRadius: 2,
-                height: { xs: 50, sm: 50, md: 54 },
+                height: { xs: 30, sm: 35, md: 40 },
                 '& .MuiOutlinedInput-notchedOutline': { border: '1px solid #E0E0E0' },
                 '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#77A787' },
                 '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#77A787' },
               }}
             >
-              <MenuItem value="newest" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>
+              <MenuItem value="newest" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
                 Ordenar por: Más nuevo
               </MenuItem>
-              <MenuItem value="price-low" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>
+              <MenuItem value="price-low" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
                 Precio: De menor a mayor
               </MenuItem>
-              <MenuItem value="price-high" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>
+              <MenuItem value="price-high" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
                 Precio: De mayor a menor
               </MenuItem>
-              <MenuItem value="name" sx={{ fontSize: { xs: 18, sm: 18, md: 22, lg: 20 } }}>
+              <MenuItem value="name" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
                 Nombre: A-Z
               </MenuItem>
             </Select>
-          </FormControl>
+          </FormControl> */}
         </Box>
 
         {/* Menu Items */}
@@ -293,8 +298,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
           <Box
             sx={{
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: '1fr', md: '1fr', lg: 'repeat(2, 1fr)' },
-              gap: { xs: 3, sm: 3, md: 5 },
+              gridTemplateColumns: { xs: '1fr', sm: '1fr', md: 'repeat(2, 1fr)' },
+              gap: { xs: 1, sm: 2, md: 3 },
             }}
           >
             {products.map((item: ProductResponse) => (
@@ -327,7 +332,7 @@ function ProductCard({ product }: { product: ProductResponse }) {
   return (
     <Card
       sx={{
-        borderRadius: { xs: 4, md: 10 },
+        borderRadius: { xs: 8, md: 10 },
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         overflow: 'visible',
         transition: 'transform 0.2s, box-shadow 0.2s',
@@ -338,16 +343,17 @@ function ProductCard({ product }: { product: ProductResponse }) {
         },
       }}
     >
-      <CardContent sx={{ p: { xs: 3, sm: 3, md: 3.5 } }}>
-        <Box sx={{ display: 'flex', gap: { xs: 3, sm: 3, md: 3.5 } }}>
+      <CardContent sx={{ p: { xs: 1, sm: 2, md: 3 } }}>
+        <Box sx={{ display: 'flex', gap: { xs: 1, sm: 2, md: 3 } }}>
           {/* Product Image */}
           <Box
             sx={{
               position: 'relative',
-              width: { xs: 200, sm: 200, md: 280, lg: 200 },
-              height: { xs: 200, sm: 200, md: 300, lg: 200 },
+              width: { xs: 130, sm: 160, md: 200},
+              height: { xs: 130, sm: 160, md: 200},
               flexShrink: 0,
               overflow: 'hidden',
+              alignSelf: 'center',
             }}
           >
             <CardMedia
@@ -355,11 +361,11 @@ function ProductCard({ product }: { product: ProductResponse }) {
               sx={{
                 width: '100%',
                 height: '100%',
-                borderRadius: 5,
+                borderRadius: 7,
                 objectFit: 'cover',
                 objectPosition: '70%',
               }}
-              image={product.images?.[0]?.url || '/placeholder.jpg'}
+              image={product.productImages?.[0]?.url || '/placeholder.jpg'}
               alt={product.name}
             />
             {product.discountPercentage > 0 && (
@@ -373,9 +379,8 @@ function ProductCard({ product }: { product: ProductResponse }) {
                   backgroundColor: '#d9905a',
                   color: 'white',
                   fontWeight: 800,
-                  fontSize: { xs: 24, sm: 26, md: 36, lg: 30 },
-                  height: { xs: 30, sm: 32, md: 40, lg: 32 },
-                  minWidth: { xs: 44, sm: 48, md: 48 },
+                  fontSize: { xs: 14, sm: 20, md: 26 },
+                  height: { xs: 20, sm: 26, md: 30},
                 }}
               />
             )}
@@ -387,8 +392,8 @@ function ProductCard({ product }: { product: ProductResponse }) {
               variant="h6"
               sx={{
                 fontWeight: 700,
-                fontSize: { xs: 28, sm: 35, md: 55, lg: 50 },
-                mb: { xs: 2.5, sm: 1.5, md: 1.5 },
+                fontSize: { xs: 26, sm: 30, md: 36},
+                mb: { xs: 1.5, sm: 1.7, md: 2 },
                 color: '#2D2D2D',
                 lineHeight: 1.3,
               }}
@@ -397,12 +402,12 @@ function ProductCard({ product }: { product: ProductResponse }) {
             </Typography>
 
             {/* Prices */}
-            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mb: { xs: 2.5, sm: 2.5, md: 2.5 } }}>
+            <Box sx={{ display: 'flex', alignItems: 'baseline', gap: 1.5, mb: { xs: 1.5, sm: 1.7, md: 2 } }}>
               <Typography
                 variant="h6"
                 sx={{
                   fontWeight: 700,
-                  fontSize: { xs: 24, sm: 30, md: 46, lg: 30 },
+                  fontSize: { xs: 24, sm: 28, md: 34 },
                   color: '#77A787',
                 }}
               >
@@ -423,7 +428,7 @@ function ProductCard({ product }: { product: ProductResponse }) {
             </Box>
 
             {/* Status Chips */}
-            <Box sx={{ display: 'flex', gap: { xs: 1.7, sm: 3, md: 3 }, flexWrap: 'wrap' }}>
+            <Box sx={{ display: 'flex', gap: { xs: 1.3, sm: 2, md: 2.5 }, flexWrap: 'wrap' }}>
               {daysUntilExpiration !== null && (
                 <Chip
                   label={`Expires in ${daysUntilExpiration} ${daysUntilExpiration === 1 ? 'day' : 'days'}`}
@@ -431,10 +436,10 @@ function ProductCard({ product }: { product: ProductResponse }) {
                   sx={{
                     backgroundColor: '#ffebee',
                     color: '#c62828',
-                    fontSize: { xs: 22, sm: 24, md: 35, lg: 20 },
-                    height: { xs: 32, sm: 32, md: 50, lg: 36 },
+                    fontSize: { xs: 14, sm: 20, md: 26 },
+                    height: { xs: 20, sm: 26, md: 30},
                     fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
+                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
                   }}
                 />
               )}
@@ -444,10 +449,10 @@ function ProductCard({ product }: { product: ProductResponse }) {
                 sx={{
                   backgroundColor: '#fff3e0',
                   color: '#bc544b',
-                  fontSize: { xs: 13, sm: 16, md: 30, lg: 14 },
-                  height: { xs: 28, sm: 28, md: 38, lg: 30 },
-                  fontWeight: 700,
-                  '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
+                  fontSize: { xs: 14, sm: 20, md: 26 },
+                  height: { xs: 20, sm: 26, md: 30},
+                  fontWeight: 600,
+                  '& .MuiChip-label': { px: { xs: 1, md: 2 } },
                 }}
               />
               {/* Chip de categoría */}
@@ -458,10 +463,10 @@ function ProductCard({ product }: { product: ProductResponse }) {
                   sx={{
                     backgroundColor: '#E8F5E9',
                     color: '#77A787',
-                    fontSize: { xs: 12, sm: 16, md: 30, lg: 14 },
-                    height: { xs: 26, sm: 26, md: 38, lg: 30 },
+                    fontSize: { xs: 14, sm: 20, md: 26 },
+                    height: { xs: 20, sm: 26, md: 30},
                     fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
+                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
                   }}
                 />
               )}
@@ -473,10 +478,10 @@ function ProductCard({ product }: { product: ProductResponse }) {
                   sx={{
                     backgroundColor: '#E3F2FD',
                     color: '#1976D2',
-                    fontSize: { xs: 12, sm: 16, md: 30, lg: 14 },
-                    height: { xs: 26, sm: 26, md: 38, lg: 30 },
+                    fontSize: { xs: 14, sm: 20, md: 26 },
+                    height: { xs: 20, sm: 26, md: 30},
                     fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 2.5, md: 2.5 } },
+                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
                   }}
                 />
               )}

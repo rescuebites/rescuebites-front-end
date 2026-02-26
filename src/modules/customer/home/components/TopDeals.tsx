@@ -98,7 +98,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
       <Box sx={{ position: 'relative' }}>
         <Box
           component="img"
-          src={product.images[0]?.url || '/placeholder.jpg'}
+          src={product.productImages?.[0]?.url || '/placeholder.jpg'}
           loading="lazy"
           alt={product.name}
           sx={{
