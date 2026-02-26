@@ -84,14 +84,6 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
         bgcolor: '#FFFFFF',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         cursor: 'pointer',
-        transition: 'all 0.2s ease',
-        '&:hover': {
-          transform: 'translateY(-4px)',
-          boxShadow: '0 4px 12px rgba(0,0,0,0.12)',
-        },
-        '&:active': {
-          transform: 'scale(0.98)',
-        },
       }}
     >
       {/* Contenedor de imagen con badge */}
@@ -138,14 +130,14 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
         <Typography
           sx={{
             fontWeight: 600,
-            fontSize: { xs: 14, sm: 15 },
+            fontSize: { xs: 18, sm: 22 },
             color: '#2D2D2D',
             overflow: 'hidden',
             textOverflow: 'ellipsis',
             display: '-webkit-box',
             WebkitLineClamp: 2,
             WebkitBoxOrient: 'vertical',
-            minHeight: { xs: 40, sm: 44 },
+            minHeight: { xs: 30, sm: 40 },
             mb: 1,
             lineHeight: 1.4,
           }}
@@ -159,7 +151,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
             sx={{ 
               color: '#2D2D2D', 
               fontWeight: 700,
-              fontSize: { xs: 16, sm: 18 }
+              fontSize: { xs: 20, sm: 24 }
             }}
           >
             ${product.discountedPrice.toFixed(2)}
@@ -184,7 +176,7 @@ function DealCard({ product, onClick }: { product: ProductResponse; onClick: () 
           <Typography
             sx={{
               color: '#FF6B6B',
-              fontSize: { xs: 11, sm: 12 },
+              fontSize: { xs: 13, sm: 15 },
               fontWeight: 500,
             }}
           >

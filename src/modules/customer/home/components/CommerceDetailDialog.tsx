@@ -23,7 +23,8 @@ import {
 import { ProductResponse } from '../interfaces/responses';
 import { useCommerceDetail } from '../hooks/useCommerces';
 import { useProducts } from '../hooks/useProducts';
-import BackButton from '../../../../shared/components/ui/backButton';
+import BackButton from '../../../../shared/components/ui/BackButton';
+import { useNavigate } from 'react-router-dom';
 
 type SortOption = 'newest' | 'price-low' | 'price-high' | 'name';
 
@@ -33,6 +34,8 @@ interface CommerceDetailDialogProps {
 
 const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId }) => {
   const [sortBy, setSortBy] = useState<SortOption>('newest');
+
+  const navigate = useNavigate();
 
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } = useCommerceDetail(commerceId);
@@ -109,7 +112,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
       }}
     >
       <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
-      <BackButton />
+      <BackButton onClick={() => navigate('/home', { replace: true })}/>
     </Box>
       <Box
         sx={{

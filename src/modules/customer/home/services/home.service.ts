@@ -124,7 +124,15 @@ export const getProductsByCategory = async (
       `/api/v1/public/products/type/${category}/ordered-by-price`,
       { params: { page, size } }
     );
-    return data?.content ?? [];
+
+    //Normalizar respuesta de imagenes de backend (puede venir como 'images' o 'productImages')
+    const normalizedContent = (data?.content ?? []).map(product => ({
+      ...product,
+      // Si viene 'images', se copia a 'productImages'
+      productImages: (product as any).images || product.productImages || []
+    }));
+    
+    return normalizedContent;
   } catch (error) {
     console.error("Error fetching products by category:", error);
     return [];
