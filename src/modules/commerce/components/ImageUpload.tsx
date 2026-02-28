@@ -2,15 +2,16 @@ import { Box, Avatar, IconButton } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 import { useState } from "react";
 import Typography from "@mui/material/Typography";
-import type { UseFormSetValue } from "react-hook-form";
-import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
+import type { UseFormSetValue, UseFormTrigger } from "react-hook-form";
+import type { Inputs } from "@/modules/commerce/interfaces/createCommerce.interface";
 
 type Props = {
   setValue: UseFormSetValue<Inputs>;
+  trigger: UseFormTrigger<Inputs>;
   error?: string;
 };
 
-export default function ImageUpload({ setValue, error }: Props) {
+export default function ImageUpload({ setValue, trigger, error }: Props) {
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   return (
@@ -30,7 +31,7 @@ export default function ImageUpload({ setValue, error }: Props) {
             hidden
             accept="image/png, image/jpeg"
             type="file"
-            onChange={(e) => {
+            onChange={async (e) => {
               const file = e.target.files?.[0];
               if (!file) return;
               if (!["image/jpeg", "image/png"].includes(file.type)) {
@@ -39,21 +40,31 @@ export default function ImageUpload({ setValue, error }: Props) {
               }
               setProfilePicture(file);
               setValue("profilePhoto", file);
+              await trigger("profilePhoto"); //dispara la validación manualmente
+              
+              //guardar imagen en localStorage para mostrarla en ActivateAccountPage después de la redirección
+              const reader = new FileReader();
+              reader.onloadend = () =>
+                localStorage.setItem(
+                  "commerceProfilePictureBase64",
+                  reader.result as string
+                );
+              reader.readAsDataURL(file);
             }}
           />
         </IconButton>
 
         {profilePicture && (
           <IconButton
-            onClick={() => {
+            onClick={async () => {
               setProfilePicture(null);
-              setValue("profilePhoto", null as any); //En typeScript no permite null en File, por eso el any (hace una excepción)
+              setValue("profilePhoto", null as any);
+              await trigger("profilePhoto");
+              localStorage.removeItem("commerceProfilePictureBase64");
             }}
             sx={{ ml: -4, color: "#77A787", width: 30, height: 30 }}
           >
-            <span
-              style={{ fontWeight: "bold", fontSize: "22px", lineHeight: 1 }}
-            >
+            <span style={{ fontWeight: "bold", fontSize: "22px", lineHeight: 1 }}>
               ×
             </span>
           </IconButton>

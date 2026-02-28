@@ -1,12 +1,11 @@
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
-import type { Inputs } from "@/modules/commerce/components/CommerceRegisterForm";
+import type { Inputs } from "@/modules/commerce/interfaces/createCommerce.interface";
 import { registerUser } from "@/modules/auth/api/auth.api";
 import { usePendingRegistrationStore } from "@/modules/users/hooks/usePendingRegistrationStore";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 import { useNavigate } from "react-router-dom";
 import { Role } from "@/shared/enums/role.enum";
-import type { CreateCommerceParams } from "../interfaces/createCommerce.interface";
 
 export const useRegisterCommerce = () => {
   const { setCommerceData } = usePendingRegistrationStore();
@@ -15,18 +14,9 @@ export const useRegisterCommerce = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: Inputs) => {
-      // Paso 1: registrar el usuario
-      await registerUser({
-        email: data.email,
-        password: data.password,
-        confirmPassword: data.confirmPassword,
-        role: Role.COMMERCE,
-      });
-
-      // Paso 2: guardar datos del comercio en el store para después del login
-      const commerceParams: CreateCommerceParams = {
+      setCommerceData({
         createCommerceRequest: {
-          userId: "",                          // Se va a setear después del login con el userId real
+          userId: "",
           name: data.name,
           description: data.description,
           commerceTypes: data.commerceTypes,
@@ -36,9 +26,14 @@ export const useRegisterCommerce = () => {
           phone: data.phone,
         },
         profilePicture: data.profilePhoto,
-      };
+      });
 
-      setCommerceData(commerceParams);
+      await registerUser({
+        email: data.email,
+        password: data.password,
+        confirmPassword: data.confirmPassword,
+        role: Role.COMMERCE,
+      });
     },
     onSuccess: () => {
       showMessage("Usuario registrado. Confirmá tu email para continuar.", "success");
@@ -46,7 +41,7 @@ export const useRegisterCommerce = () => {
     },
     onError: (error: any) => {
       const message =
-        error.response?.data?.message || "Error al registrar el comercio.";
+        error.response?.data?.message || "Error al registrar el usuario.";
       showMessage(message, "error");
     },
   });
@@ -56,8 +51,11 @@ export const useRegisterCommerce = () => {
     handleSubmit,
     control,
     setValue,
+    watch,
     formState: { errors },
     reset,
+    trigger,
+
   } = useForm<Inputs>({
     defaultValues: {
       commerceTypes: [],
@@ -74,8 +72,10 @@ export const useRegisterCommerce = () => {
     handleSubmit,
     control,
     setValue,
+    watch,
     errors,
     onSubmit,
     isPending,
+    trigger,
   };
 };

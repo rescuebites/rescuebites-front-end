@@ -1,31 +1,17 @@
 import Stack from "@mui/material/Stack";
-import InputsRegisterForm from "./LoginInputsRegisterForm";
-import CommerceInputsRegisterForm from "./CommerceInputsRegisterForm";
+import InputsRegisterForm from "../components/LoginInputsRegisterForm";
+import CommerceInputsRegisterForm from "../components/CommerceInputsRegisterForm";
 import { useRegisterCommerce } from "@/modules/commerce/hooks/useRegisterCommerce";
-import ImageUpload from "./ImageUpload";
+import ImageUpload from "../components/ImageUpload";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
 
-export type Inputs = {
-  // Datos del usuario
-  email: string;
-  password: string;
-  confirmPassword: string;
-
-  // Datos del comercio
-  name: string;
-  description?: string;
-  commerceTypes: string[];
-  openingHours: string;
-  address: string;
-  locality: string;
-  phone: string;       
-  profilePhoto: File; 
-};
 
 export default function RegisterForm() {
-  const { register, handleSubmit, control, errors, onSubmit, isPending, setValue } =
+  const { register, handleSubmit, control, errors, onSubmit, isPending, setValue, watch, trigger } =
     useRegisterCommerce();
+
+    register("profilePhoto", { required: "La imagen del comercio es obligatoria" });
 
   return (
     <>
@@ -35,9 +21,10 @@ export default function RegisterForm() {
         <Stack spacing={2} sx={{ mt: 3 }}>
           <ImageUpload
             setValue={setValue}
+            trigger={trigger}
             error={errors?.profilePhoto?.message}
           />
-          <InputsRegisterForm register={register} errors={errors} />
+          <InputsRegisterForm register={register} errors={errors} watch={watch} />
         </Stack>
         <Stack spacing={2} sx={{ mt: 2 }}>
           <CommerceInputsRegisterForm
