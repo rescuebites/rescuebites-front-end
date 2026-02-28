@@ -42,7 +42,7 @@ export default function ImageUpload({ setValue, trigger, error }: Props) {
               setValue("profilePhoto", file);
               await trigger("profilePhoto"); //dispara la validación manualmente
               
-              //guardar imagen en localStorage para mostrarla en ActivateAccountPage después de la redirección
+              //guardar imagen en localStorage para mostrarla en ActivateAccountPage después de la redirección (los archivos file no sobreviven a recargas ni cambios de pestaña)
               const reader = new FileReader();
               reader.onloadend = () =>
                 localStorage.setItem(
@@ -59,7 +59,7 @@ export default function ImageUpload({ setValue, trigger, error }: Props) {
             onClick={async () => {
               setProfilePicture(null);
               setValue("profilePhoto", null as any);
-              await trigger("profilePhoto");
+              await trigger("profilePhoto"); //dispara la validación manualmente para actualizar el error si el campo es obligatorio
               localStorage.removeItem("commerceProfilePictureBase64");
             }}
             sx={{ ml: -4, color: "#77A787", width: 30, height: 30 }}

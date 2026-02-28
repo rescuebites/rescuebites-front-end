@@ -1,3 +1,4 @@
+//Hook para ejecutar la creación del comercio en el backend.
 import { useMutation } from "@tanstack/react-query";
 import { createCommerce } from "../api/commerce.api";
 import { CreateCommerceParams } from "../interfaces/createCommerce.interface";
@@ -13,7 +14,7 @@ export function useCreateCommerce() {
     },
     mutationKey: [REGISTER_COMMERCE_KEY],
     onSuccess: () => {
-      // Limpiar datos después de crear exitosamente
+      // Limpiar datos temporales después de crear exitosamente
       clearData();
     },
   });

@@ -1,3 +1,5 @@
+//Hook principal del flujo de registro de comercio.
+//Se encarga de guardar datos temporalmente, llamar a registerUser para crear el usuario en el back y disparar el envío del envío del mail de verificación
 import { useForm, SubmitHandler } from "react-hook-form";
 import { useMutation } from "@tanstack/react-query";
 import type { Inputs } from "@/modules/commerce/interfaces/createCommerce.interface";
@@ -46,6 +48,7 @@ export const useRegisterCommerce = () => {
     },
   });
 
+  //Inicialización del formulario con react-hook-form, definiendo los campos y reglas de validación
   const {
     register,
     handleSubmit,
@@ -62,11 +65,13 @@ export const useRegisterCommerce = () => {
     },
   });
 
+  //handler del envío del formulario, que ejecuta la mutación para registrar el usuario y comercio en el backend, y luego resetea el formulario
   const onSubmit: SubmitHandler<Inputs> = async (data) => {
     await mutateAsync(data);
     reset();
   };
 
+  //utilidades del formulario y estado de la mutación para ser usados en los componentes de presentación
   return {
     register,
     handleSubmit,

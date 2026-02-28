@@ -1,3 +1,4 @@
+//funciones para realizar peticiones HTTP relacionadas con comercios
 import { httpClient } from "@/shared/lib/httpClient";
 import { CreateCommerceParams } from "../interfaces/createCommerce.interface";
 

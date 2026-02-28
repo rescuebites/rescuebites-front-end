@@ -6,6 +6,7 @@ import CustomTitle from "@/shared/components/CustomTitle";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
 import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 
+//recibe las funciones de react-hook-form para registrar los campos, controlar su valor y mostrar errores de validación, desde useRegisterCommerce
 type Props = {
   register: any;
   control: any;
