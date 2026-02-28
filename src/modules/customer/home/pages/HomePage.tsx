@@ -1,5 +1,4 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import Header from "../../../../shared/components/layout/Header";
 import SearchBar from "../../../../shared/components/layout/SearchBar";
 import CategoryChips from "../components/CategoryChips";
 import FeaturedStores from "../components/FeaturedStores";
@@ -31,7 +30,6 @@ export default function HomePage() {
 
   return (
     <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh', pb: { xs: 8, md: 10 } }}>
-      <Header />
 
       {/* Sección de búsqueda y categorías */}
       <Container

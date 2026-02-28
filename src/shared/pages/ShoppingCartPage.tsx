@@ -1,4 +1,4 @@
-import ClientNavbar from "../components/layout/ClientNavbar";
+import ClientNavbar from "../components/ui/ClientNavbar";
 import { Typography } from "@mui/material";
 
 export default function ShoppingCartPage() {
