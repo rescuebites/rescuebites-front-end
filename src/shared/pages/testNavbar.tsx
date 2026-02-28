@@ -1,7 +1,7 @@
 // src/pages/TestNavbar.tsx (o donde tengas tus páginas)
 
 import { Box, Typography, Container } from "@mui/material";
-import ClientNavbar from "../../shared/components/layout/ClientNavbar";
+import ClientNavbar from "../components/ui/ClientNavbar";
 
 export default function TestNavbar() {
   return (
