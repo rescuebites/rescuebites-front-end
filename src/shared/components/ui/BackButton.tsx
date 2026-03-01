@@ -21,6 +21,8 @@ const BackButton: React.FC<BackButtonProps> = ({ onClick, sx }) => {
       onClick={handleClick}
       sx={{
         backgroundColor: 'white',
+        alignSelf: 'flex-start',
+        display: 'flex',
         boxShadow: '0 2px 8px rgba(0,0,0,0.08)',
         width: { xs: 40, sm: 48, md: 56 },
         height: { xs: 40, sm: 48, md: 56 },

@@ -112,8 +112,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
       }}
     >
       <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
-      <BackButton onClick={() => navigate('/customer', { replace: true })}/>
-    </Box>
+        <BackButton onClick={() => navigate('/customer', { replace: true })}/>
+      </Box>
       <Box
         sx={{
           pt: { xs: 5, sm: 7, md: 10},

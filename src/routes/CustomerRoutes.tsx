@@ -5,6 +5,8 @@ import ProductsDealsPage from "@/modules/customer/home/pages/DealProductsPage";
 import ShoppingCartPage from "@/shared/pages/ShoppingCartPage";
 import OrdersPage from "@/shared/pages/OrdersPage";
 import CustomerLayout from "@/shared/components/layout/CustomerLayout";
+import NotificationsPage from "@/shared/pages/notifications";
+import ProfilePage from "@/shared/pages/ProfilePage";
 
 export function CustomerRoutes() {
   return (
@@ -15,8 +17,8 @@ export function CustomerRoutes() {
         <Route path="allProducts" element={<ProductsDealsPage />} />
         <Route path="cart" element={<ShoppingCartPage />} />
         <Route path="orders" element={<OrdersPage />} />
-        <Route path="notifications" element={<div>Notifications</div>} />
-        <Route path="profile" element={<div>Profile</div>} />
+        <Route path="notifications" element={<NotificationsPage/>} />
+        <Route path="profile" element={<ProfilePage/>} />
       </Route>
     </Routes>
   );
