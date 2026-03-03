@@ -186,7 +186,7 @@ const CartPage: React.FC = () => {
       }}
     >
       
-      <Container maxWidth="sm" sx={{ py: 2, px: 2 }}>
+      <Container maxWidth="lg" sx={{ py: { xs: 2, sm:4, md: 4 }, px: { xs: 2.5, sm:5, md: 6 }}}>
         {/* ── YOUR CART ── */}
         <Typography
           variant="h4"
