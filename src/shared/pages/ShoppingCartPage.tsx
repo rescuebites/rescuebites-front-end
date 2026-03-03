@@ -116,42 +116,80 @@ const StockChip: React.FC<{ stock: number }> = ({ stock }) => (
 
 const QuantityControl: React.FC<{
   quantity: number;
+  stock: number;
   onIncrease: () => void;
   onDecrease: () => void;
-}> = ({ quantity, onIncrease, onDecrease }) => (
-  <Stack direction="row" alignItems="center" spacing={0.5}>
-    <IconButton
-      size="small"
-      onClick={onDecrease}
-      sx={{
-        width: 26,
-        height: 26,
-        bgcolor: "#F3F4F6",
-        "&:hover": { bgcolor: "#E5E7EB" },
-      }}
-    >
-      <RemoveIcon sx={{ fontSize: 14 }} />
-    </IconButton>
-    <Typography
-      sx={{ minWidth: 20, textAlign: "center", fontWeight: 600, fontSize: "0.875rem" }}
-    >
-      {quantity}
-    </Typography>
-    <IconButton
-      size="small"
-      onClick={onIncrease}
-      sx={{
-        width: 26,
-        height: 26,
-        bgcolor: "#166534",
-        color: "white",
-        "&:hover": { bgcolor: "#15803D" },
-      }}
-    >
-      <AddIcon sx={{ fontSize: 14 }} />
-    </IconButton>
-  </Stack>
-);
+  onSet: (value: number) => void;
+}> = ({ quantity, stock, onIncrease, onDecrease, onSet }) => {
+  const [inputValue, setInputValue] = useState<string>(String(quantity));
+  const [isEditing, setIsEditing] = useState(false);
+
+  React.useEffect(() => {
+    if (!isEditing) setInputValue(String(quantity));
+  }, [quantity, isEditing]);
+
+  const handleBlur = () => {
+    setIsEditing(false);
+    const parsed = parseInt(inputValue, 10);
+    if (!isNaN(parsed) && parsed > 0 && parsed <= stock) {
+      onSet(parsed);
+    } else if (!isNaN(parsed) && parsed > stock) {
+      onSet(stock);
+    } else {
+      setInputValue(String(quantity));
+    }
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") (e.target as HTMLInputElement).blur();
+    if (e.key === "Escape") {
+      setIsEditing(false);
+      setInputValue(String(quantity));
+    }
+  };
+
+  return (
+    <Stack direction="row" alignItems="center" spacing={0.5}>
+      <IconButton size="small" onClick={onDecrease}
+        sx={{ width: 26, height: 26, bgcolor: "#F3F4F6", "&:hover": { bgcolor: "#E5E7EB" } }}
+      >
+        <RemoveIcon sx={{ fontSize: 14 }} />
+      </IconButton>
+
+      <Box
+        component="input"
+        value={inputValue}
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+          setIsEditing(true);
+          setInputValue(e.target.value);
+        }}
+        onFocus={(e: React.FocusEvent<HTMLInputElement>) => {
+          setIsEditing(true);
+          e.target.select();
+        }}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+        inputMode="numeric"
+        sx={{
+          width: 36, height: 26, textAlign: "center",
+          fontWeight: 700, fontSize: "0.875rem", fontFamily: "inherit",
+          color: "#111827",
+          border: isEditing ? "1.5px solid #166534" : "1.5px solid #E5E7EB",
+          borderRadius: "6px", outline: "none",
+          bgcolor: isEditing ? "#F0FDF4" : "white",
+          transition: "border 0.15s, background 0.15s",
+          cursor: "text",
+        }}
+      />
+
+      <IconButton size="small" onClick={onIncrease}
+        sx={{ width: 26, height: 26, bgcolor: "#166534", color: "white", "&:hover": { bgcolor: "#15803D" } }}
+      >
+        <AddIcon sx={{ fontSize: 14 }} />
+      </IconButton>
+    </Stack>
+  );
+};
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 
@@ -172,6 +210,12 @@ const CartPage: React.FC = () => {
 
   const removeItem = (id: number) => {
     setItems((prev) => prev.filter((item) => item.id !== id));
+  };
+
+  const setQuantity = (id: number, value: number) => {
+    setItems((prev) =>
+      prev.map((item) => (item.id === id ? { ...item, quantity: value } : item))
+    );
   };
 
   const subtotal = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
@@ -301,8 +345,10 @@ const CartPage: React.FC = () => {
                       <StockChip stock={item.stock} />
                       <QuantityControl
                         quantity={item.quantity}
+                        stock={item.stock}
                         onIncrease={() => updateQuantity(item.id, 1)}
                         onDecrease={() => updateQuantity(item.id, -1)}
+                        onSet={(value) => setQuantity(item.id, value)}
                       />
                     </Stack>
                   </Box>
