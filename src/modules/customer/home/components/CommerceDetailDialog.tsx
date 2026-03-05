@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
   Box,
   Card,
@@ -7,10 +6,6 @@ import {
   Typography,
   Chip,
   Avatar,
-  MenuItem,
-  Select,
-  FormControl,
-  SelectChangeEvent,
   CircularProgress,
 } from '@mui/material';
 import {
@@ -25,15 +20,13 @@ import { useCommerceDetail } from '../hooks/useCommerces';
 import { useProducts } from '../hooks/useProducts';
 import BackButton from '../../../../shared/components/ui/BackButton';
 import { useNavigate } from 'react-router-dom';
-
-type SortOption = 'newest' | 'price-low' | 'price-high' | 'name';
+import { ProductChips } from '@/shared/components/layout/ProductChips';
 
 interface CommerceDetailDialogProps {
   commerceId: string;
 }
 
 const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId }) => {
-  const [sortBy, setSortBy] = useState<SortOption>('newest');
 
   const navigate = useNavigate();
 
@@ -46,24 +39,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
     size: 50, // Traer más productos para el catálogo completo
   });
 
-  const handleSortChange = (event: SelectChangeEvent<SortOption>): void => {
-    setSortBy(event.target.value as SortOption);
-  }; //funcón usada en el ordenador de productos (ver si implementar)
 
   // Función para ordenar productos
   const getSortedProducts = (products: ProductResponse[]) => {
     const sorted = [...products];
-    switch (sortBy) {
-      case 'price-low':
-        return sorted.sort((a, b) => a.discountedPrice - b.discountedPrice);
-      case 'price-high':
-        return sorted.sort((a, b) => b.discountedPrice - a.discountedPrice);
-      case 'name':
-        return sorted.sort((a, b) => a.name.localeCompare(b.name));
-      case 'newest':
-      default:
         return sorted; // Ya vienen ordenados por más nuevo desde el backend
-    }
+    
   };
 
   // Loading state
@@ -258,36 +239,6 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
           >
             Catálogo
           </Typography>
-          {/* ----Filtrador de productos (opcional, se puede implementar más adelante)----------------- */}
-
-          {/* <FormControl size="small" >
-            <Select
-              value={sortBy}
-              onChange={handleSortChange}
-              sx={{
-                fontSize: { xs: 15, sm: 20, md: 25},
-                backgroundColor: 'white',
-                borderRadius: 2,
-                height: { xs: 30, sm: 35, md: 40 },
-                '& .MuiOutlinedInput-notchedOutline': { border: '1px solid #E0E0E0' },
-                '&:hover .MuiOutlinedInput-notchedOutline': { borderColor: '#77A787' },
-                '&.Mui-focused .MuiOutlinedInput-notchedOutline': { borderColor: '#77A787' },
-              }}
-            >
-              <MenuItem value="newest" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
-                Ordenar por: Más nuevo
-              </MenuItem>
-              <MenuItem value="price-low" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
-                Precio: De menor a mayor
-              </MenuItem>
-              <MenuItem value="price-high" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
-                Precio: De mayor a menor
-              </MenuItem>
-              <MenuItem value="name" sx={{ fontSize: { xs: 15, sm: 20, md: 25} }}>
-                Nombre: A-Z
-              </MenuItem>
-            </Select>
-          </FormControl> */}
         </Box>
 
         {/* Menu Items */}
@@ -317,21 +268,6 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
 
 // Componente separado para las tarjetas de producto
 function ProductCard({ product }: { product: ProductResponse }) {
-  // Calcular días hasta vencimiento
-  const getDaysUntilExpiration = (expirationDate: string): number => {
-    const exp = new Date(expirationDate);
-    const today = new Date();
-    today.setHours(0, 0, 0, 0);
-    exp.setHours(0, 0, 0, 0);
-    const ms = exp.getTime() - today.getTime();
-    const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
-    return Math.max(0, days);
-  };
-
-  const daysUntilExpiration = product.expirationDate
-    ? getDaysUntilExpiration(product.expirationDate)
-    : null;
-
   return (
     <Card
       sx={{
@@ -371,22 +307,13 @@ function ProductCard({ product }: { product: ProductResponse }) {
               image={product.productImages?.[0]?.url || '/placeholder.jpg'}
               alt={product.name}
             />
-            {product.discountPercentage > 0 && (
-              <Chip
-                label={`${Math.round(product.discountPercentage)}%`}
-                size="small"
-                sx={{
-                  position: 'absolute',
-                  top: 10,
-                  left: 10,
-                  backgroundColor: '#d9905a',
-                  color: 'white',
-                  fontWeight: 800,
-                  fontSize: { xs: 14, sm: 20, md: 26 },
-                  height: { xs: 20, sm: 26, md: 30},
-                }}
-              />
-            )}
+            <ProductChips
+              discountPercentage={product.discountPercentage}
+              discountAsImageBadge
+              showExpiration={false}
+              showStock={false}
+              showCondition={false}
+            />
           </Box>
 
           {/* Product Details */}
@@ -432,62 +359,12 @@ function ProductCard({ product }: { product: ProductResponse }) {
 
             {/* Status Chips */}
             <Box sx={{ display: 'flex', gap: { xs: 1.3, sm: 2, md: 2.5 }, flexWrap: 'wrap' }}>
-              {daysUntilExpiration !== null && (
-                <Chip
-                  label={`Expires in ${daysUntilExpiration} ${daysUntilExpiration === 1 ? 'day' : 'days'}`}
-                  size="small"
-                  sx={{
-                    backgroundColor: '#ffebee',
-                    color: '#c62828',
-                    fontSize: { xs: 14, sm: 20, md: 26 },
-                    height: { xs: 20, sm: 26, md: 30},
-                    fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
-                  }}
-                />
-              )}
-              <Chip
-                label={`${product.stock} Left`}
-                size="small"
-                sx={{
-                  backgroundColor: '#fff3e0',
-                  color: '#bc544b',
-                  fontSize: { xs: 14, sm: 20, md: 26 },
-                  height: { xs: 20, sm: 26, md: 30},
-                  fontWeight: 600,
-                  '& .MuiChip-label': { px: { xs: 1, md: 2 } },
-                }}
+              <ProductChips
+                expirationDate={product.expirationDate}
+                stock={product.stock}
+                conditionDisplayName={product.conditionDisplayName}
+                showDiscount={false}
               />
-              {/* Chip de categoría */}
-              {product.category && (
-                <Chip
-                  label={product.category}
-                  size="small"
-                  sx={{
-                    backgroundColor: '#E8F5E9',
-                    color: '#77A787',
-                    fontSize: { xs: 14, sm: 20, md: 26 },
-                    height: { xs: 20, sm: 26, md: 30},
-                    fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
-                  }}
-                />
-              )}
-              {/* Chip de condición */}
-              {product.condition && (
-                <Chip
-                  label={product.condition}
-                  size="small"
-                  sx={{
-                    backgroundColor: '#E3F2FD',
-                    color: '#1976D2',
-                    fontSize: { xs: 14, sm: 20, md: 26 },
-                    height: { xs: 20, sm: 26, md: 30},
-                    fontWeight: 600,
-                    '& .MuiChip-label': { px: { xs: 1, md: 2 } },
-                  }}
-                />
-              )}
             </Box>
           </Box>
         </Box>
