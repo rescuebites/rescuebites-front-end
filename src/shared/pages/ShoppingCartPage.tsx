@@ -146,7 +146,7 @@ const CartPage: React.FC = () => {
           variant="h4"
               sx={{
                 fontWeight: 700,
-                fontSize: { xs: 20, sm: 25, md: 30},
+                fontSize: { xs: 21, sm: 26, md: 31},
                 mb: { xs: 2.5, sm: 3, md: 4},
                 lineHeight: 1,
                 color: '#2D2D2D',
@@ -196,7 +196,7 @@ const CartPage: React.FC = () => {
                         variant="h6"
                         sx={{
                           fontWeight: 700,
-                          fontSize: { xs: 18, sm: 22, md: 25},
+                          fontSize: { xs: 19, sm: 23, md: 26},
                           color: '#2D2D2D',
                           lineHeight: 1.3,
                         }}
@@ -209,13 +209,13 @@ const CartPage: React.FC = () => {
                         onClick={() => removeItem(item.id)}
                         sx={{ color: "#9CA3AF", p: 0.5, ml: 0.5 }}
                       >
-                        <DeleteOutlineIcon sx={{ fontSize: {xs:18, sm:20, md:22} }} />
+                        <DeleteOutlineIcon sx={{ fontSize: {xs:20, sm:23, md:26} }} />
                       </IconButton>
                     </Stack>
 
                     <Typography
                       sx={{
-                        fontSize: { xs: 14, sm: 15, md: 18},
+                        fontSize: { xs: 16, sm: 19, md: 23},
                         mb: { xs: 0.7, sm: 1, md: 1.2 },
                         color: '#2D2D2D',
                         lineHeight: 1.3,
@@ -233,7 +233,7 @@ const CartPage: React.FC = () => {
                           variant="h6"
                           sx={{
                             fontWeight: 700,
-                            fontSize: { xs: 15, sm: 20, md: 26 },
+                            fontSize: { xs: 18, sm: 20, md: 26 },
                             color: '#77A787',
                           }}
                         >
@@ -244,7 +244,7 @@ const CartPage: React.FC = () => {
                         sx={{
                           textDecoration: 'line-through',
                           color: '#999',
-                          fontSize: { xs: 13, sm: 17, md: 23},
+                          fontSize: { xs: 16, sm: 18, md: 24},
                         }}
                       >
                         ${item.originalPrice.toFixed(2)}
@@ -269,7 +269,7 @@ const CartPage: React.FC = () => {
         {/* ── Comercio ── */}
         <Typography
           variant="subtitle1"
-          sx={{ fontWeight: 700, fontSize: {xs:20, sm:23, md:28 }, mb: 1.2, color: "#111827" }}
+          sx={{ fontWeight: 700, fontSize: {xs:22, sm:24, md:30 }, mb: 1.2, color: "#111827" }}
         >
           Comercio
         </Typography>
@@ -299,13 +299,13 @@ const CartPage: React.FC = () => {
               </Avatar>
               <Box>
                 <Typography
-                  sx={{ fontWeight: 700, fontSize: {xs:15, sm:18, md:21}, color: '#2D2D2D' }}
+                  sx={{ fontWeight: 700, fontSize: {xs:19, sm:22, md:25}, color: '#2D2D2D' }}
                 >
                   {COMMERCE.name}
                 </Typography>
                 <Stack direction="row" alignItems="center" spacing={0.25}>
                   <LocationOnIcon sx={{ fontSize: {xs:13, sm:15, md:17}, color: "#9CA3AF" }} />
-                  <Typography sx={{ fontSize: {xs:13, sm:15, md:20}, color: "#9CA3AF" }}>
+                  <Typography sx={{ fontSize: {xs:16, sm:19, md:22}, color: "#9CA3AF" }}>
                     {COMMERCE.address}
                   </Typography>
                 </Stack>
@@ -317,7 +317,7 @@ const CartPage: React.FC = () => {
         {/* Método de pago*/}
         <Typography
           variant="subtitle1"
-          sx={{ fontWeight: 600, fontSize:{xs:20, sm:23, md:28}, mb: 1.5, color: "#111827" }}
+          sx={{ fontWeight: 600, fontSize:{xs:22, sm:24, md:30}, mb: 1.5, color: "#111827" }}
         >
           Método de pago
         </Typography>
@@ -350,10 +350,10 @@ const CartPage: React.FC = () => {
                   <SwapHorizIcon sx={{ color: "#2563EB", fontSize: 22 }} /> 
                 </Box>
                 <Box>
-                  <Typography sx={{ fontWeight: 600, fontSize: {xs:16, sm:19, md:23}, fontFamily: "inherit", color: "#111827" }}>
+                  <Typography sx={{ fontWeight: 600, fontSize: {xs:18, sm:21, md:25}, fontFamily: "inherit", color: "#111827" }}>
                     {PAYMENT.name}
                   </Typography>
-                  <Typography sx={{ fontSize: {xs:14, sm:16, md:19}, color: "#9CA3AF", fontFamily: "inherit" }}>
+                  <Typography sx={{ fontSize: {xs:16, sm:18, md:21}, color: "#9CA3AF", fontFamily: "inherit" }}>
                     {PAYMENT.detail}
                   </Typography>
                 </Box>
@@ -363,7 +363,7 @@ const CartPage: React.FC = () => {
                 sx={{
                   color: "#166534",
                   fontWeight: 600,
-                  fontSize: {xs:13, sm:15, md:17},
+                  fontSize: {xs:14.5, sm:16.5, md:19},
                   textTransform: "none",
                   fontFamily: "inherit",
                   minWidth: "auto",
@@ -380,18 +380,18 @@ const CartPage: React.FC = () => {
             {/* Summary rows */}
             <Stack spacing={1}>
               <Stack direction="row" justifyContent="space-between">
-                <Typography sx={{ fontSize: {xs:14, sm:18, md:21}, color: "#6B7280", fontFamily: "inherit" }}>
+                <Typography sx={{ fontSize: {xs:15.5, sm:19.5, md:22.5}, color: "#6B7280", fontFamily: "inherit" }}>
                   Subtotal
                 </Typography>
-                <Typography sx={{ fontSize: {xs:16, sm:20, md:22}, fontWeight: 500, fontFamily: "inherit", color: "#374151" }}>
+                <Typography sx={{ fontSize: {xs:17, sm:21, md:23}, fontWeight: 500, fontFamily: "inherit", color: "#374151" }}>
                   ${subtotal.toFixed(2).replace(".", ",")}
                 </Typography>
               </Stack>
               <Stack direction="row" justifyContent="space-between">
-                <Typography sx={{ fontSize: {xs:14, sm:18, md:21}, color: "#6B7280", fontFamily: "inherit" }}>
+                <Typography sx={{ fontSize: {xs:15.5, sm:19.5, md:22.5}, color: "#6B7280", fontFamily: "inherit" }}>
                   Tasa de servicio
                 </Typography>
-                <Typography sx={{ fontSize: {xs:16, sm:20, md:22}, fontWeight: 500, fontFamily: "inherit", color: "#374151" }}>
+                <Typography sx={{ fontSize: {xs:17, sm:21, md:23}, fontWeight: 500, fontFamily: "inherit", color: "#374151" }}>
                   ${SERVICE_FEE.toFixed(2).replace(".", ",")}
                 </Typography>
               </Stack>
@@ -399,10 +399,10 @@ const CartPage: React.FC = () => {
               <Divider sx={{ my: 0.5 }} />
 
               <Stack direction="row" justifyContent="space-between" alignItems="center">
-                <Typography sx={{ fontSize: {xs:15, sm:19, md:22}, fontWeight: 700, fontFamily: "inherit", color: "#111827" }}>
+                <Typography sx={{ fontSize: {xs:16, sm:20, md:23}, fontWeight: 700, fontFamily: "inherit", color: "#111827" }}>
                   Total
                 </Typography>
-                <Typography sx={{ fontSize: {xs:18, sm:23, md:26}, fontWeight: 700, color: "#166534", fontFamily: "inherit" }}>
+                <Typography sx={{ fontSize: {xs:19.5, sm:24.5, md:27.5}, fontWeight: 700, color: "#166534", fontFamily: "inherit" }}>
                   ${total.toFixed(2).replace(".", ",")}
                 </Typography>
               </Stack>
@@ -419,7 +419,7 @@ const CartPage: React.FC = () => {
                 borderRadius: 2.5,
                 textTransform: "none",
                 fontWeight: 600,
-                fontSize: {xs:16, ms: 19, md: 22, },
+                fontSize: {xs:18, ms: 22, md: 25, },
                 fontFamily: "inherit",
                 py: 1.25,
                 boxShadow: "0 4px 14px rgba(22,101,52,0.3)",
