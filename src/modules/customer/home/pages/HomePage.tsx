@@ -21,7 +21,7 @@ export default function HomePage() {
   const navigate = useNavigate();
 
   const handleGoToAllStores = () => {
-    navigate("/home/stores");
+    navigate("/home/allStores");
   };
 
   const handleGoToAllDeals = () => {

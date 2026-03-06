@@ -1,5 +1,5 @@
 import {
-  Dialog, IconButton, Box, Typography, Stack, Chip, Divider, Button, CircularProgress, Paper,Avatar,
+  Dialog, IconButton, Box, Typography, Stack, Divider, Button, CircularProgress, Paper,Avatar,
 } from "@mui/material";
 import {
   MdClose, MdAdd, MdRemove, MdShoppingCart, MdStorefront,
@@ -7,22 +7,12 @@ import {
 import { useState } from "react";
 import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
+import { ProductChips } from "@/shared/components/layout/ProductChips";
 
 interface ProductDetailDialogProps {
   open: boolean;
   onClose: () => void;
   productId: string | null;
-}
-
-// Helper para calcular días hasta vencimiento
-function getDaysUntilExpiration(expirationDate: string): number {
-  const exp = new Date(expirationDate);
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-  exp.setHours(0, 0, 0, 0);
-  const ms = exp.getTime() - today.getTime();
-  const days = Math.ceil(ms / (1000 * 60 * 60 * 24));
-  return Math.max(0, days);
 }
 
 export default function ProductDetailDialog({
@@ -60,10 +50,6 @@ export default function ProductDetailDialog({
       </Dialog>
     );
   }
-
-  const daysUntilExpiration = productDetail.expirationDate
-    ? getDaysUntilExpiration(productDetail.expirationDate)
-    : null;
 
   const handleIncrement = () => {
     if (quantity < productDetail.stock) {
@@ -156,25 +142,13 @@ export default function ProductDetailDialog({
           }}
         >
           {/* Badge de descuento en imagen del producto */}
-          {Number(productDetail.discountPercentage) > 0 && (
-            <Box
-              sx={{
-                position: "absolute",
-                top: 20,
-                left: 20,
-                px: 2,
-                py: 0.75,
-                borderRadius: "8px",
-                bgcolor: "rgba(255, 138, 101, 0.95)",
-                fontSize: 16,
-                fontWeight: 700,
-                color: "#fff",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.15)",
-              }}
-            >
-              {Math.round(Number(productDetail.discountPercentage))}%
-            </Box>
-          )}
+          <ProductChips
+            discountPercentage={productDetail.discountPercentage}
+            discountAsImageBadge
+            showExpiration={false}
+            showStock={false}
+            showCondition={false}
+          />
         </Box>
 
         {/* Contenido del producto */}
@@ -236,52 +210,12 @@ export default function ProductDetailDialog({
             </Box>
 
             {/* etiquetas de información de producto (vencimiento/stock/condición)*/}
-            <Box sx={{ display: "flex", gap: 1.5, flexWrap: "wrap" }}>
-              {daysUntilExpiration !== null && (
-                <Chip
-                  label={`Vence en ${daysUntilExpiration} ${
-                    daysUntilExpiration === 1 ? "día" : "días"
-                  }`}
-                  size="small"
-                  sx={{
-                    bgcolor: "#ffebee",
-                    color: "#c62828",
-                    fontSize: 13,
-                    height: 32,
-                    fontWeight: 600,
-                    "& .MuiChip-label": { px: 2.5 },
-                  }}
-                />
-              )}
-
-              <Chip
-                label={`Stock disponible ${productDetail.stock}`}
-                size="small"
-                sx={{
-                  bgcolor: "#fff3e0",
-                  color: "#bc544b",
-                  fontSize: 14,
-                  height: 30,
-                  fontWeight: 700,
-                  "& .MuiChip-label": { px: 2.5 },
-                }}
-              />
-
-              {productDetail.conditionDisplayName && (
-                <Chip
-                  label={productDetail.conditionDisplayName}
-                  size="small"
-                  sx={{
-                    bgcolor: "#E3F2FD",
-                    color: "#1976D2",
-                    fontSize: 14,
-                    height: 30,
-                    fontWeight: 600,
-                    "& .MuiChip-label": { px: 2.5 },
-                  }}
-                />
-              )}
-            </Box>
+            <ProductChips
+              expirationDate={productDetail.expirationDate}
+              stock={productDetail.stock}
+              conditionDisplayName={productDetail.conditionDisplayName}
+              showDiscount={false}
+            />
 
             <Divider sx={{ my: 1 }} />
 
