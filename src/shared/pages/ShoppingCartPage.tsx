@@ -8,7 +8,6 @@ import {
   Card,
   CardContent,
   Avatar,
-  Chip,
   Stack,
   Container,
 } from "@mui/material";
@@ -16,6 +15,8 @@ import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import { QuantityControl } from "../components/layout/QuantityControl";
+import { ProductChips } from "../components/layout/ProductChips";
+import BackButton from "../components/ui/BackButton";
 
 interface CartItem {
   id: number;
@@ -79,38 +80,8 @@ const PAYMENT: PaymentMethod = {
 
 const SERVICE_FEE = 8.5;
 
-// ─── Sub-components ───────────────────────────────────────────────────────────
 
-const StockChip: React.FC<{ stock: number }> = ({ stock }) => (
-  <Chip
-    icon={
-      <Box
-        component="span"
-        sx={{
-          width: 6,
-          height: 6,
-          borderRadius: "50%",
-          bgcolor: stock <= 1 ? "#F59E0B" : "#22C55E",
-          ml: "6px !important",
-        }}
-      />
-    }
-    label={`${stock} Left`}
-    size="small"
-    sx={{
-      height: 20,
-      fontSize: "0.65rem",
-      fontWeight: 600,
-      bgcolor: stock <= 1 ? "#FEF3C7" : "#DCFCE7",
-      color: stock <= 1 ? "#92400E" : "#166534",
-      border: "none",
-      "& .MuiChip-icon": { mr: 0 },
-    }}
-  />
-);
-
-
-// ─── Main Component ───────────────────────────────────────────────────────────
+//Main Component ───────────────────────────────────────────────────────────
 
 const CartPage: React.FC = () => {
   const [items, setItems] = useState<CartItem[]>(INITIAL_ITEMS);
@@ -136,11 +107,17 @@ const CartPage: React.FC = () => {
       sx={{
         backgroundColor: '#FAFAFA',
         minHeight: '100vh',
-        pb: { xs: 3, md: 4 },
+        //pb: { xs: 3, md: 4 },
+        py: { xs: 0.2, sm:0.4, md: 0.4 }, 
+        px: { xs: 2, sm:5, md: 6 }
       }}
     >
+      {/* Botón volver para atras */}
+      <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, alignSelf: 'flex-start' , mb:3}}>
+        <BackButton />
+      </Box>
       
-      <Container maxWidth="lg" sx={{ py: { xs: 2, sm:4, md: 4 }, px: { xs: 2.5, sm:5, md: 6 }}}>
+      <Container maxWidth="lg" >
         {/* ── YOUR CART ── */}
         <Typography
           variant="h4"
@@ -252,7 +229,13 @@ const CartPage: React.FC = () => {
                     </Box>
 
                     <Stack direction="row" justifyContent="space-between" alignItems="center">
-                      <StockChip stock={item.stock} />
+                      <ProductChips 
+                        showDiscount={false}
+                        discountAsImageBadge
+                        showExpiration={false}
+                        showStock={true}
+                        stock={item.stock}
+                        showCondition={false}/>
                       <QuantityControl
                         stock={item.stock}
                         initialQuantity={item.quantity}

@@ -2,12 +2,13 @@ import {
   Dialog, IconButton, Box, Typography, Stack, Divider, Button, CircularProgress, Paper,Avatar,
 } from "@mui/material";
 import {
-  MdClose, MdAdd, MdRemove, MdShoppingCart, MdStorefront,
+  MdClose, MdShoppingCart, MdStorefront,
 } from "react-icons/md";
 import { useState } from "react";
 import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
+import { QuantityControl } from "@/shared/components/layout/QuantityControl";
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -50,18 +51,6 @@ export default function ProductDetailDialog({
       </Dialog>
     );
   }
-
-  const handleIncrement = () => {
-    if (quantity < productDetail.stock) {
-      setQuantity(quantity + 1);
-    }
-  };
-
-  const handleDecrement = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
-    }
-  };
 
   const handleGoToCommerce = () => {
     onClose(); 
@@ -290,74 +279,16 @@ export default function ProductDetailDialog({
             <Divider sx={{ my: 1 }} />
 
             {/* Selector de cantidad de productos para agregar al carrito */}
-            <Box>
-              <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
-                <Typography
-                  sx={{
-                    color: "#2D2D2D",
-                    fontWeight: 700,
-                    fontSize: 16,
-                  }}
-                >
-                  Cantidad
-                </Typography>
-
-                <Stack
-                  direction="row"
-                  spacing={0}
-                  alignItems="center"
-                  sx={{
-                    border: "2px solid #E0E0E0",
-                    borderRadius: 2,
-                    overflow: "hidden",
-                    bgcolor: "#FAFAFA",
-                  }}
-                >
-                  <IconButton
-                    onClick={handleDecrement}
-                    disabled={quantity <= 1}
-                    sx={{
-                      borderRadius: 0,
-                      px: 2,
-                      py: 1,
-                      color: "#2D2D2D",
-                      "&:hover": { bgcolor: "#F5F5F5" },
-                      "&:disabled": { color: "#BDBDBD" },
-                    }}
-                  >
-                    <MdRemove size={20} />
-                  </IconButton>
-
-                  <Typography
-                    sx={{
-                      px: 3,
-                      fontWeight: 700,
-                      fontSize: 18,
-                      color: "#2D2D2D",
-                      minWidth: 50,
-                      textAlign: "center",
-                    }}
-                  >
-                    {quantity}
-                  </Typography>
-
-                  <IconButton
-                    onClick={handleIncrement}
-                    disabled={quantity >= productDetail.stock}
-                    sx={{
-                      borderRadius: 0,
-                      px: 2,
-                      py: 1,
-                      color: "#2D2D2D",
-                      "&:hover": { bgcolor: "#F5F5F5" },
-                      "&:disabled": { color: "#BDBDBD" },
-                    }}
-                  >
-                    <MdAdd size={20} />
-                </IconButton>
-              </Stack>
+            <Stack direction="row" spacing={2} alignItems="center" justifyContent="space-between">
+              <Typography sx={{ color: "#2D2D2D", fontWeight: 700, fontSize: 16 }}>
+                Cantidad
+              </Typography>
+              <QuantityControl
+                stock={productDetail.stock}
+                initialQuantity={quantity}
+                onQuantityChange={(q) => setQuantity(q)}
+              />
             </Stack>
-            </Box>
           </Stack>
         </Box>
       </Box>
