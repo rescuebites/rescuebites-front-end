@@ -4,7 +4,7 @@ import { useProductsByCategory } from "../hooks/useProducts";
 import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
 import type { ProductResponse} from "./../interfaces/responses";
 import ProductDetailDialog from "./ProductDetailDialog";
-import { ProductCard } from "./ProductCard";
+import { ProductCard } from "../../../catalog/components/ProductCard";
 
 
 export default function TopDeals() {

@@ -1,4 +1,4 @@
-import NotLoggedInScreen from "./customer/NotLoggedInScreen";
+import NotLoggedInScreen from "../../modules/navbar/pages/NotLoggedInScreen";
 
 export default function NotificationsPage() {
     return (

@@ -1,9 +1,13 @@
+//Diseño básico idéntico para todas las pantallas y roles
 import { Box } from "@mui/material";
-import ClientNavbar from "../ui/ClientNavbar"
 import Header from "./Header";
 import { Outlet } from "react-router-dom";
 
-export default function CustomerLayout() {
+interface CustomerLayoutProps {
+  navbar?:React.ReactNode
+}
+
+export default function AppLayout({navbar}:CustomerLayoutProps) {
   return (
      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       
@@ -13,9 +17,9 @@ export default function CustomerLayout() {
         <Outlet />
       </Box>
 
-      {/* Navbar fija abajo */}
+      {/* Navbar fija abajo -> en las rutas se importa la navbar asociada al rol */}
       <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
-        <ClientNavbar />
+        {navbar}
       </Box>
 
     </Box>

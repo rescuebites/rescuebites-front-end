@@ -9,6 +9,7 @@ import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { QuantityControl } from "@/shared/components/layout/QuantityControl";
+import { PRODUCT_CATEGORY_DISPLAY, ProductCategoryBackend } from "@/modules/customer/home/interfaces/types";
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -202,9 +203,12 @@ export default function ProductDetailDialog({
             <ProductChips
               expirationDate={productDetail.expirationDate}
               stock={productDetail.stock}
+              condition={productDetail.condition}
               conditionDisplayName={productDetail.conditionDisplayName}
+              categoryDisplayName={PRODUCT_CATEGORY_DISPLAY[productDetail.category as ProductCategoryBackend]}
               showDiscount={false}
             />
+            
 
             <Divider sx={{ my: 1 }} />
 

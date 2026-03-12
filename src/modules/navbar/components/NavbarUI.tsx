@@ -1,34 +1,33 @@
-import { Paper, Box, IconButton, Badge, useMediaQuery, useTheme } from "@mui/material";
-import { 
-  MdHome, 
-  MdGridView, 
-  MdShoppingCart, 
-  MdNotifications, 
-  MdPerson 
-} from "react-icons/md";
-import { useNavigate, useLocation } from "react-router-dom"; 
+import { Paper, Box, IconButton, Badge } from "@mui/material";
+import { useNavigate, useLocation } from "react-router-dom";
+import { navbarIcons } from "../config/navbarItems";
+import type { NavbarRoutes } from "../types";
 
-export default function ClientNavbar() {
+interface NavbarUIProps {
+  routes: NavbarRoutes;
+  cartCount?: number;
+  notificationCount?: number;
+}
+
+export default function NavbarUI({ 
+  routes, 
+  cartCount = 0, 
+  notificationCount = 0 
+}: NavbarUIProps) {
   const navigate = useNavigate();
   const location = useLocation();
-  const theme = useTheme();
-  const isMobile = useMediaQuery(theme.breakpoints.down('md'));
-
-  const getActiveTab = () => {
-    const path = location.pathname;
-    if (path === '/customer' || path === '/') return 'home';
-    if (path.includes('/orders')) return 'orders';
-    if (path.includes('/cart')) return 'cart';
-    if (path.includes('/notifications')) return 'notifications';
-    if (path.includes('/profile')) return 'profile';
-    return 'home';
+  const isActive = (route: string) => {
+    if (route === location.pathname) return true;
+    if (route !== '/' && location.pathname.startsWith(route)) return true;
+    return false;
   };
-
-  const activeTab = getActiveTab();
 
   const handleNavigation = (route: string) => {
     navigate(route);
   };
+
+  const hasCart = !!routes.cart;
+  const gridColumns = hasCart ? '1fr 1fr auto 1fr 1fr' : 'repeat(4, 1fr)';
 
   return (
     <Paper
@@ -46,7 +45,7 @@ export default function ClientNavbar() {
       <Box
         sx={{
           display: 'grid',
-          gridTemplateColumns: '1fr 1fr auto 1fr 1fr',
+          gridTemplateColumns: gridColumns,
           alignItems: 'center',
           gap: { xs: 2, sm: 4, md: 8, lg: 12, xl: 16 },
           height: { xs: 70, sm: 80, md: 90 },
@@ -56,26 +55,11 @@ export default function ClientNavbar() {
           position: 'relative',
         }}
       >
+        {/* Home */}
         <IconButton
-          onClick={() => handleNavigation('/customer')} //Naviga a home
+          onClick={() => handleNavigation(routes.home)}
           sx={{
-            color: activeTab === 'home' ? '#77A787' : '#757575',
-            transition: 'color 0.2s',
-            width: { xs: 48, md: 56, lg: 64 },
-            height: { xs: 48, md: 56, lg: 64 },
-            justifySelf: 'center', 
-            '&:hover': {
-              bgcolor: 'rgba(119, 167, 135, 0.08)',
-            },
-          }}
-        >
-          <MdHome size={isMobile ? 26 : 32} />
-        </IconButton>
-
-        <IconButton
-          onClick={() => handleNavigation('/customer/orders')} //Navega a pedidos
-          sx={{
-            color: activeTab === 'orders' ? '#77A787' : '#757575',
+            color: isActive(routes.home) ? '#77A787' : '#757575',
             transition: 'color 0.2s',
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -85,56 +69,72 @@ export default function ClientNavbar() {
             },
           }}
         >
-          <MdGridView size={isMobile ? 26 : 32} />
+          {navbarIcons.home}
         </IconButton>
 
-        <Box
+        {/* Orders */}
+        <IconButton
+          onClick={() => handleNavigation(routes.orders)}
           sx={{
-            position: 'relative',
+            color: isActive(routes.orders) ? '#77A787' : '#757575',
+            transition: 'color 0.2s',
+            width: { xs: 48, md: 56, lg: 64 },
+            height: { xs: 48, md: 56, lg: 64 },
             justifySelf: 'center',
+            '&:hover': {
+              bgcolor: 'rgba(119, 167, 135, 0.08)',
+            },
           }}
         >
-          <IconButton
-            onClick={() => handleNavigation('/customer/cart')}
-            sx={{
+          {navbarIcons.orders}
+        </IconButton>
+
+        {/* Cart (solo para roles con carrito) */}
+        {hasCart && (
+          <Box sx={{ position: 'relative', justifySelf: 'center' }}>
+            <IconButton
+              onClick={() => handleNavigation(routes.cart!)}
+              sx={{
                 width: { xs: 64, md: 76, lg: 88 },
                 height: { xs: 64, md: 76, lg: 88 },
-                bgcolor: activeTab === 'cart' ? '#77A787' : '#3E6A53',
+                bgcolor: isActive(routes.cart!) ? '#77A787' : '#3E6A53',
                 color: '#FFFFFF',
-                border: '4px solid #FFFFFF', 
+                border: '4px solid #FFFFFF',
                 boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
                 position: 'relative',
-                top: { xs: -32, md: -38, lg: -44 }, 
+                top: { xs: -32, md: -38, lg: -44 },
                 '&:hover': {
-                bgcolor: '#6B9A7B',
-                boxShadow: '0 6px 16px rgba(119, 167, 135, 0.5)',
+                  bgcolor: '#6B9A7B',
+                  boxShadow: '0 6px 16px rgba(119, 167, 135, 0.5)',
                 },
                 transition: 'all 0.2s',
-            }}
-            >
-            <Badge
-              badgeContent={0}
-              color="error"
-              sx={{
-                '& .MuiBadge-badge': {
-                  top: { xs: 8, md: 10, lg: 12 },
-                  right: { xs: 8, md: 10, lg: 12 },
-                  fontSize: { xs: 11, md: 13, lg: 14 },
-                  fontWeight: 700,
-                  minWidth: { xs: 20, md: 24, lg: 26 },
-                  height: { xs: 20, md: 24, lg: 26 },
-                },
               }}
             >
-              <MdShoppingCart size={isMobile ? 28 : 36} />
-            </Badge>
-          </IconButton>
-        </Box>
+              <Badge
+                badgeContent={cartCount}
+                color="error"
+                sx={{
+                  '& .MuiBadge-badge': {
+                    top: { xs: 8, md: 10, lg: 12 },
+                    right: { xs: 8, md: 10, lg: 12 },
+                    fontSize: { xs: 11, md: 13, lg: 14 },
+                    fontWeight: 700,
+                    minWidth: { xs: 20, md: 24, lg: 26 },
+                    height: { xs: 20, md: 24, lg: 26 },
+                  },
+                }}
+              >
+                {navbarIcons.cart}
+              </Badge>
+            </IconButton>
+          </Box>
+        )}
 
+        {/* Notifications */}
         <IconButton
-          onClick={() => handleNavigation('/customer/notifications')}
+          onClick={() => handleNavigation(routes.notifications)}
           sx={{
-            color: activeTab === 'notifications' ? '#77A787' : '#757575',
+            color: isActive(routes.notifications) ? '#77A787' : '#757575',
             transition: 'color 0.2s',
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -145,7 +145,7 @@ export default function ClientNavbar() {
           }}
         >
           <Badge
-            badgeContent={0}
+            badgeContent={notificationCount}
             color="error"
             sx={{
               '& .MuiBadge-badge': {
@@ -156,14 +156,15 @@ export default function ClientNavbar() {
               },
             }}
           >
-            <MdNotifications size={isMobile ? 26 : 32} />
+            {navbarIcons.notifications}
           </Badge>
         </IconButton>
 
+        {/* Profile */}
         <IconButton
-          onClick={() => handleNavigation('/customer/profile')}
+          onClick={() => handleNavigation(routes.profile)}
           sx={{
-            color: activeTab === 'profile' ? '#77A787' : '#757575',
+            color: isActive(routes.profile) ? '#77A787' : '#757575',
             transition: 'color 0.2s',
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -173,7 +174,7 @@ export default function ClientNavbar() {
             },
           }}
         >
-          <MdPerson size={isMobile ? 26 : 32} />
+          {navbarIcons.profile}
         </IconButton>
       </Box>
     </Paper>

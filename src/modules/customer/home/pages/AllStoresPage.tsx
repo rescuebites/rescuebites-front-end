@@ -2,7 +2,7 @@ import { Box, Typography, Skeleton, Stack } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
-import { StoreCard } from "../components/Storecard";
+import { StoreCard } from "../components/StoreCard";
 import CategoryChips from "../components/CategoryChips";
 import BackButton from "@/shared/components/ui/BackButton";
 
@@ -23,7 +23,7 @@ export default function AllStoresPage() {
   return (
     <Box sx={{ px: { xs: 2, sm: 4, md: 8 }, py: 3, maxWidth: 1800, mx: "auto" }}>
         <Box sx={{ pt: { xs: 0.5, sm: 1, md: 1 }, mb:3 }}>
-            <BackButton onClick={() => navigate('/home', { replace: true })}/>
+            <BackButton onClick={() => navigate('/customer', { replace: true })}/>
         </Box>
       {/* Header */}
       <Typography variant="h5" sx={{ fontWeight: 700, color: "#2D2D2D", mb: 3 }}>
@@ -81,7 +81,6 @@ function GridSkeleton() {
           xs: "repeat(2, 1fr)",
           sm: "repeat(3, 1fr)",
           md: "repeat(4, 1fr)",
-          //lg: "repeat(7, 1fr)",
         },
         gap: 2,
       }}

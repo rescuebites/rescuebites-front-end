@@ -4,7 +4,6 @@ import {
   CardContent,
   CardMedia,
   Typography,
-  Chip,
   Avatar,
   CircularProgress,
 } from '@mui/material';
@@ -21,6 +20,8 @@ import { useProducts } from '../hooks/useProducts';
 import BackButton from '../../../../shared/components/ui/BackButton';
 import { useNavigate } from 'react-router-dom';
 import { ProductChips } from '@/shared/components/layout/ProductChips';
+import { PRODUCT_CATEGORY_DISPLAY, ProductCategoryBackend } from '../interfaces/types';
+import { CategoryChip } from "@/shared/components/layout/ProductChips";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -153,20 +154,11 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({ commerceId 
                 {commerce.description}
               </Typography>
             )}
+            {/* Ícono de tipo de comercio */}
+            {commerce.commerceTypes?.[0] && (
+              <CategoryChip category={commerce.commerceTypes[0]} />
+            )}
 
-            <Chip
-              label={commerce.commerceTypes?.[0] || 'Comercio'}
-              size="medium"
-              icon={<RestaurantIcon sx={{ fontSize: { xs: 15, sm: 22, md: 28} }} />}
-              sx={{
-                backgroundColor: '#E8F5E9',
-                color: '#77A787',
-                fontSize: { xs: 14, sm: 20, md: 26},
-                fontWeight: 600,
-                height: { xs: 20, sm: 27, md: 30},
-                px: { xs: 0.5},
-              }}
-            />
           </Box>
         </Box>
 
@@ -309,10 +301,11 @@ function ProductCard({ product }: { product: ProductResponse }) {
             />
             <ProductChips
               discountPercentage={product.discountPercentage}
-              discountAsImageBadge
+              discountAsImageBadge={true}
               showExpiration={false}
               showStock={false}
               showCondition={false}
+              showProductCategory={false}
             />
           </Box>
 
@@ -362,7 +355,9 @@ function ProductCard({ product }: { product: ProductResponse }) {
               <ProductChips
                 expirationDate={product.expirationDate}
                 stock={product.stock}
+                condition={product.condition}
                 conditionDisplayName={product.conditionDisplayName}
+                categoryDisplayName={PRODUCT_CATEGORY_DISPLAY[product.category as ProductCategoryBackend]}
                 showDiscount={false}
               />
             </Box>
