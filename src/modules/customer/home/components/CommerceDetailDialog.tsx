@@ -6,6 +6,7 @@ import {
   Typography,
   Avatar,
   CircularProgress,
+  IconButton,
 } from '@mui/material';
 import {
   LocationOn,
@@ -13,6 +14,7 @@ import {
   Phone,
   Restaurant as RestaurantIcon,
 } from '@mui/icons-material';
+import AddIcon from '@mui/icons-material/Add';
 
 import { ProductResponse } from '../interfaces/responses';
 import { useCommerceDetail } from '../hooks/useCommerces';
@@ -363,6 +365,26 @@ function ProductCard({ product }: { product: ProductResponse }) {
             </Box>
           </Box>
         </Box>
+        <IconButton
+          // onClick={(e) => {
+          //   e.stopPropagation(); // evita que dispare el click de la card
+          //   handleAddToCart(product);
+          // }}
+          sx={{
+            position: 'absolute',
+            bottom: { xs: 12, md: 16 },
+            right: { xs: 12, md: 16 },
+            width: { xs: 36, md: 42 },
+            height: { xs: 36, md: 42 },
+            backgroundColor: '#77A787',
+            color: 'white',
+            '&:hover': {
+              backgroundColor: '#5a9470',
+            },
+          }}
+        >
+          <AddIcon fontSize="small" />
+        </IconButton>
       </CardContent>
     </Card>
   );
