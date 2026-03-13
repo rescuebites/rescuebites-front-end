@@ -22,4 +22,11 @@ export const navbarRoutes: Record<string, NavbarRoutes> = {
     notifications: '/public/notifications',
     profile: '/public/profile',
   },
+  void:{
+    home: '/public/p',
+    orders: '/public/p',
+    cart:'/public/p',
+    notifications: '/public/p',
+    profile: '/public/p',
+  }
 };

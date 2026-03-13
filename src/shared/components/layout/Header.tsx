@@ -9,7 +9,8 @@ export default function Header() {
       sx={{ 
         bgcolor: 'transparent',
         color: '#2D2D2D',
-        borderBottom: 'none'
+        borderBottom: 'none',
+        backgroundColor: "white"
       }}
     >
       <Toolbar sx={{ px: { xs: 2, sm: 3 }, gap: 1.5, py:{xs:2, sm:1.5} }}>

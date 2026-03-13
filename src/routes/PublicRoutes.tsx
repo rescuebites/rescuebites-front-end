@@ -8,6 +8,7 @@ import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import AppLayout from "@/shared/components/layout/AppLayout";
+import LoadLocalityPage from "@/modules/catalog/pages/LoadLocalityPage";
 
 
 export function PublicRoutes() {
@@ -25,6 +26,7 @@ export function PublicRoutes() {
         <Route path="allStores" element={<AllStoresPage />} />
         <Route path="search" element={<SearchResultsPage />} />
       </Route>
+      <Route path="p" element={<LoadLocalityPage />} />
     </Routes>
   );
 }
