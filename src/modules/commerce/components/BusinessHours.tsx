@@ -296,7 +296,7 @@ const INITIAL_DAYS: Day[] = [
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export default function StoreBusinessHours() {
+export default function CommerceBusinessHours() {
   const [days, setDays] = useState<Day[]>(INITIAL_DAYS);
   const [pickerTarget, setPickerTarget] = useState<TimePickerTarget | null>(null);
 
