@@ -10,23 +10,18 @@ import RadioButtonCheckedIcon from "@mui/icons-material/RadioButtonChecked";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "@/shared/components/CustomButton";
-import { registerSchema } from "@/modules/auth/schemas/registerSchema";
+import { registerClientSchema } from "@/modules/auth/schemas/registerClientSchema";
 import { CreateClientParams } from "@/modules/client/interfaces/requests/createClient.interface";
 import { useRegister } from "@/modules/auth/hooks/useRegister";
 import { usePendingRegistrationStore } from "@/modules/users/hooks/usePendingRegistrationStore";
 import { Role } from "@/shared/enums/role.enum";
 import { getProfileImageFile } from "@/shared/utils/profileImage";
 import CustomTitle from "@/shared/components/CustomTitle";
-import BirthDateField from "@/shared/components/BirthDateField";
+import BirthDateField from "@/shared/components/DateField";
+import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
 
-const dietaryOptions = [
-  { label: "Apto celíaco", value: "CELIAC" },
-  { label: "Apto vegano", value: "VEGAN" },
-  { label: "Apto vegetariano", value: "VEGETARIAN" },
-  { label: "Sin gluten", value: "GLUTEN_FREE" },
-  { label: "Sin lactosa", value: "LACTOSE_FREE" },
-  { label: "Bajo en sodio", value: "LOW_SODIUM" },
-];
+const dietaryOptions = (Object.keys(PreferenceTypeDisplayName) as PreferenceType[])
+  .map((key) => ({ label: PreferenceTypeDisplayName[key], value: key }));
 
 interface RegisterClientFormProps {
   profilePicture: File | null;
@@ -47,17 +42,19 @@ export default function RegisterClientForm({
     getValues,
     formState: { errors },
   } = useForm({
-    resolver: zodResolver(registerSchema),
+    resolver: zodResolver(registerClientSchema),
     mode: "onBlur",
     defaultValues: {
       firstName: "",
       lastName: "",
       birthDate: "",
       address: "",
+      phone: "",
       email: "",
       password: "",
       confirmPassword: "",
       preferences: [] as string[],
+      locality: "",
     },
   });
 
@@ -77,8 +74,10 @@ export default function RegisterClientForm({
         lastName: form.lastName,
         birthDate: form.birthDate,
         address: form.address,
+        phone: form.phone,
         userId: "",
         preferences: form.preferences,
+        locality: form.locality,
       },
       profilePicture: profileFile,
     };
@@ -136,7 +135,40 @@ export default function RegisterClientForm({
         name="address"
         control={control}
         render={({ field }) => (
-          <TextField label="Dirección" fullWidth margin="normal" {...field} />
+          <TextField
+            label="Dirección"
+            required
+            fullWidth
+            margin="normal"
+            error={!!errors.address}
+            helperText={errors.address?.message}
+            {...field}
+          />
+        )}
+      />
+
+      <Controller
+        name="locality"
+        control={control}
+        render={({ field }) => (
+          <TextField
+            label="Localidad"
+            required
+            fullWidth
+            margin="normal"
+            error={!!errors.locality}
+            helperText={errors.locality?.message}
+            {...field}
+          />
+        )}
+      />
+
+      <Controller
+        name="phone"
+        control={control}
+        render={({ field }) => (
+          <TextField label="Teléfono" fullWidth margin="normal" error={!!errors.phone}
+            helperText={errors.phone?.message} {...field} />
         )}
       />
 
