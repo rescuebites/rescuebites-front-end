@@ -15,7 +15,7 @@ export function useLogin() {
     mutationKey: [AUTH_LOGIN_KEY],
     onSuccess: (authResponse) => {
       login(authResponse);
-      navigate("/");
+      navigate("/auth/create-product");
     },
     onError: (error: any) => {
       showMessage(
