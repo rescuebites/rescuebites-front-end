@@ -3,7 +3,6 @@ import SearchBar from "@/shared/components/layout/SearchBar";
 import QuickActions from "./QuickActions";
 import OrdersSection from "./OrdersSection";
 import StatisticsCard from "./StatisticsCard";
-import StatisticsChartCard from "./StatisticsChartCard";
 
 export default function HomeCustomerPage() {
   return (

@@ -1,8 +1,7 @@
 import { Box } from "@mui/material";
 import SectionHeader from "./SectionHeader";
-import StatisticsChartCard from "./StatisticsChartCard";
 import ProductsSection from "./ProductsSection";
-import type { ProductResponse } from "../interfaces/responses";
+import type { ProductResponse } from "../customer/home/interfaces/responses";
 
 const mockProducts: ProductResponse[] = [
   {
