@@ -1,6 +1,7 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
-import { commerceTypes, CommerceTypeDisplay } from "../interfaces/types";
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
+import { getAllCommerceDisplayNames } from "@/shared/utils/commerce.utils";
 import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
 
 // Íconos
@@ -98,7 +99,7 @@ export default function CategoryChips() {
           scrollbarWidth: 'none',
         }}
       >
-        {commerceTypes.map((cat) => (
+        {getAllCommerceDisplayNames().map((cat) => (
           <CategoryTile 
             key={cat} 
             category={cat}

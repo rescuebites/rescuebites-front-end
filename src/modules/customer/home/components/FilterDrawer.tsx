@@ -1,5 +1,5 @@
-import { ProductCategory, ProductCategoryDisplayName } from "@/modules/products/enums/product-category.enum";
-import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 import { getProductCategoryGroups } from "@/shared/utils/product.utils";
 import {
   Box,
@@ -20,6 +20,8 @@ import { CollapsibleSection } from "@/shared/components/CollapsibleSection";
 import { filterChipSx } from "@/shared/styles/chipSx";
 import { forwardRef } from "react";
 import { useFilterStore } from "../hooks/useFilterStore";
+import { ProductCategoryDisplayName } from "@/modules/products/utils/category-mapping";
+import { PreferenceTypeDisplayName } from "@/modules/client/utils/preference-mapping";
 
 
 // Transición para el modal (slide desde abajo en mobile)

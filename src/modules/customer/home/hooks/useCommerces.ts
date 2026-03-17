@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../services/home.service";
 import { CommercePublicResponse, PaginatedResponse } from "../interfaces/responses";
 import type { CommerceResponse } from "../interfaces/responses";
-import { CommerceTypeDisplay } from "../interfaces/types";
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 
 //hook para obtener todos los comercios sin importar su tipo, para sección de tiendas
 export function useAllCommerces() {

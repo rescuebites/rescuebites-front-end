@@ -5,7 +5,8 @@ import {
   CommercePublicResponse, 
   PaginatedResponse 
 } from "../interfaces/responses";
-import { COMMERCE_TYPE_TO_BACKEND, CommerceTypeDisplay } from "../interfaces/types";
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
+import { getCommerceTypeFromDisplay } from "@/shared/utils/commerce.utils";
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {
@@ -57,7 +58,7 @@ export const getCommercesByType = async (
   size = 6
 ): Promise<PaginatedResponse<CommercePublicResponse>> => {
   try {
-    const commerceType = COMMERCE_TYPE_TO_BACKEND[commerceTypeDisplay];
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
     const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
       `/api/v1/public/commerces/type/${commerceType}`,
       { params: { page, size } }
@@ -118,7 +119,7 @@ export const getProductsByCommerceType = async (
   size = 12
 ): Promise<ProductResponse[]> => {
   try {
-    const commerceType = COMMERCE_TYPE_TO_BACKEND[commerceTypeDisplay];
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
       `/api/v1/public/products/type/${commerceType}/ordered-by-price`,
       { params: { page, size } }

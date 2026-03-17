@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals } from "../services/home.service";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
-import { CommerceTypeDisplay } from "../interfaces/types";
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 
 interface UseProductsParams {
   commerceId?: string;
