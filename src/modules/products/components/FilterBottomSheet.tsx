@@ -4,10 +4,10 @@ import {
   Dialog,
 } from "@mui/material";
 import { CollapsibleSection } from "@/shared/components/CollapsibleSection";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
-import { ProductCategory, ProductCategoryDisplayName } from "@/modules/products/enums/product-category.enum";
-import { ProductCondition, ProductConditionDisplayName } from "@/modules/products/enums/product-condition.enum";
-import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
+import { ProductCondition} from "@/modules/products/enums/product-condition.enum";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 import {
   getAllowedProductCategories,
   getAllowedProductConditions,
@@ -15,6 +15,9 @@ import {
 import CustomButton from "@/shared/components/CustomButton";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { filterChipSx } from "@/shared/styles/chipSx";
+import { ProductConditionDisplayName } from "../utils/condition-mapping";
+import { ProductCategoryDisplayName } from "../utils/category-mapping";
+import { PreferenceTypeDisplayName } from "@/modules/client/utils/preference-mapping";
 
 interface FilterValues {
   preferences: PreferenceType[];
@@ -25,7 +28,7 @@ interface FilterValues {
 interface FilterBottomSheetProps {
   open: boolean;
   onClose: () => void;
-  commerceType: CommerceTypeEnum;
+  commerceType: CommerceType;
   currentValues: FilterValues;
   onApply: (values: FilterValues) => void;
 }

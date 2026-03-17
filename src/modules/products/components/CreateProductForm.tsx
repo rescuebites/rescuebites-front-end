@@ -13,7 +13,7 @@ import {
 } from "../schemas/createProductSchema";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { MultiImageUpload } from "@/shared/components/MultiImageUpload";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
@@ -25,7 +25,7 @@ import DateField from "@/shared/components/DateField";
 import { ProductFilterPicker } from "./ProductFilterPicker";
 
 interface CreateProductFormProps {
-  commerceType: CommerceTypeEnum;
+  commerceType: CommerceType;
   isPending: boolean;
   canCreateProduct: boolean;
   onSubmit: (data: CreateProductSchema) => void;
@@ -56,6 +56,8 @@ export const CreateProductForm = ({
       category: "" as ProductCategory,
       conditions: [],
       preferences: [],
+      expirationDate: "",
+      images: [],
     },
   });
 

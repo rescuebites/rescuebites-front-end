@@ -5,7 +5,7 @@ import { CreateProductSchema } from "../schemas/createProductSchema";
 import { useCreateProduct } from "../hooks/useCreateProduct";
 import CustomTitle from "@/shared/components/CustomTitle";
 import BackButton from "@/shared/components/ui/BackButton";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 import { CreateProductForm } from "../components/CreateProductForm";
@@ -38,7 +38,7 @@ export const CreateProductPage = () => {
       />
       <CustomTitle text="Registrar Producto" />
       <CreateProductForm
-        commerceType={commerceType ?? CommerceTypeEnum.GREENGROCERY}
+        commerceType={commerceType as CommerceType}
         isPending={isPending}
         canCreateProduct={canCreateProduct}
         onSubmit={handleSubmit}

@@ -25,7 +25,7 @@ export const useCreateProduct = (commerceId: string | undefined) => {
         category: data.category,
         conditions: data.conditions,
         expirationDate: data.expirationDate,
-        preferences: data.preferences,
+        ...(data.preferences && data.preferences.length > 0 && { preferences: data.preferences }),
       };
 
       return createProduct(commerceId, backendPayload, images);

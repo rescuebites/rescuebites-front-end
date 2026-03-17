@@ -2,23 +2,17 @@ import { useState } from "react";
 import { Box, Typography, Chip } from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
 import { FilterBottomSheet } from "@/modules/products/components/FilterBottomSheet";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
-import {
-  ProductCategory,
-  ProductCategoryDisplayName,
-} from "@/modules/products/enums/product-category.enum";
-import {
-  ProductCondition,
-  ProductConditionDisplayName,
-} from "@/modules/products/enums/product-condition.enum";
-import {
-  PreferenceType,
-  PreferenceTypeDisplayName,
-} from "@/modules/client/enums/preference-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
+import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
+import { ProductConditionDisplayName } from "@/modules/products/utils/condition-mapping";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 import { chipSx } from "@/shared/styles/chipSx";
+import { ProductCategoryDisplayName } from "../utils/category-mapping";
+import { PreferenceTypeDisplayName } from "@/modules/client/utils/preference-mapping";
 
 interface ProductFilterPickerProps {
-  commerceType: CommerceTypeEnum;
+  commerceType: CommerceType;
   categoryValue: ProductCategory | "";
   conditionsValue: ProductCondition[];
   preferencesValue: PreferenceType[];
@@ -43,9 +37,7 @@ export const ProductFilterPicker = ({
   const [open, setOpen] = useState(false);
 
   const activeFilterCount =
-    conditionsValue.length +
-    preferencesValue.length +
-    (categoryValue ? 1 : 0);
+    conditionsValue.length + preferencesValue.length + (categoryValue ? 1 : 0);
 
   return (
     <>
@@ -67,7 +59,10 @@ export const ProductFilterPicker = ({
           "&:hover": { borderColor: "#A6C9B0" },
         }}
       >
-        <Typography color={activeFilterCount > 0 ? "#333" : "#999"} fontSize={14}>
+        <Typography
+          color={activeFilterCount > 0 ? "#333" : "#999"}
+          fontSize={14}
+        >
           {activeFilterCount > 0
             ? `${activeFilterCount} filtro${activeFilterCount > 1 ? "s" : ""} seleccionado${activeFilterCount > 1 ? "s" : ""}`
             : "Seleccione los filtros del producto"}

@@ -12,6 +12,7 @@ export const createProduct = async (
   const jsonBlob = new Blob([JSON.stringify(data)], { type: 'application/json' });
   formData.append('product', jsonBlob);
   images.forEach((file) => formData.append('images', file));
+  
   const response = await httpClient.post(
     `${PRODUCT_URL}/commerces/${commerceId}/products`,
     formData,
