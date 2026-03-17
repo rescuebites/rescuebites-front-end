@@ -1,4 +1,4 @@
-export enum CommerceTypeEnum {
+export enum CommerceType {
   GREENGROCERY = "GREENGROCERY",
   BAKERY = "BAKERY",
   RESTAURANT = "RESTAURANT",

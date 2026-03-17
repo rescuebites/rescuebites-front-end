@@ -1,6 +1,6 @@
-import { CommerceTypeEnum } from "../enums/commerce-type.enum";
 import { ProductCategory } from "../../modules/products/enums/product-category.enum";
 import { ProductCondition } from "../../modules/products/enums/product-condition.enum";
+import { CommerceType } from "../enums/commerce-type.enum";
 
 export function getProductCategoryGroups(): Array<{ key: string; title: string; categories: ProductCategory[] }> {
   return [
@@ -64,9 +64,9 @@ export function getProductCategoryGroups(): Array<{ key: string; title: string; 
     },
   ];
 }
-export function getAllowedProductCategories(commerceType: CommerceTypeEnum): ProductCategory[] {
+export function getAllowedProductCategories(commerceType: CommerceType): ProductCategory[] {
   switch (commerceType) {
-    case CommerceTypeEnum.GREENGROCERY:
+    case CommerceType.GREENGROCERY:
       return [
         ProductCategory.FRUIT,
         ProductCategory.VEGETABLE,
@@ -75,7 +75,7 @@ export function getAllowedProductCategories(commerceType: CommerceTypeEnum): Pro
         ProductCategory.SEEDLING,
         ProductCategory.OTHER,
       ];
-    case CommerceTypeEnum.BAKERY:
+    case CommerceType.BAKERY:
       return [
         ProductCategory.BREAD,
         ProductCategory.PASTRIES,
@@ -85,7 +85,7 @@ export function getAllowedProductCategories(commerceType: CommerceTypeEnum): Pro
         ProductCategory.DESSERTS_BAKERY,
         ProductCategory.OTHER,
       ];
-    case CommerceTypeEnum.RESTAURANT:
+    case CommerceType.RESTAURANT:
       return [
         ProductCategory.APPETIZERS,
         ProductCategory.MAIN_COURSES,
@@ -93,7 +93,7 @@ export function getAllowedProductCategories(commerceType: CommerceTypeEnum): Pro
         ProductCategory.BEVERAGES_RESTAURANT,
         ProductCategory.OTHER,
       ];
-    case CommerceTypeEnum.KIOSK:
+    case CommerceType.KIOSK:
       return [
         ProductCategory.CLEANING,
         ProductCategory.BEVERAGES,
@@ -107,7 +107,7 @@ export function getAllowedProductCategories(commerceType: CommerceTypeEnum): Pro
         ProductCategory.MAGAZINES,
         ProductCategory.OTHER,
       ];
-    case CommerceTypeEnum.SUPERMARKET:
+    case CommerceType.SUPERMARKET:
       return [
         ProductCategory.GREENGROCERY_SECTION,
         ProductCategory.BAKERY_SECTION,
@@ -128,9 +128,9 @@ export function getAllowedProductCategories(commerceType: CommerceTypeEnum): Pro
   }
 }
 
-export function getAllowedProductConditions(commerceType: CommerceTypeEnum): ProductCondition[] {
+export function getAllowedProductConditions(commerceType: CommerceType): ProductCondition[] {
   switch (commerceType) {
-    case CommerceTypeEnum.GREENGROCERY:
+    case CommerceType.GREENGROCERY:
       return [
         ProductCondition.EXCELLENT,
         ProductCondition.GOOD,
@@ -139,7 +139,7 @@ export function getAllowedProductConditions(commerceType: CommerceTypeEnum): Pro
         ProductCondition.OVERRIPE,
         ProductCondition.OTHER,
       ];
-    case CommerceTypeEnum.BAKERY:
+    case CommerceType.BAKERY:
       return [
         ProductCondition.EXCELLENT,
         ProductCondition.GOOD,
@@ -148,7 +148,7 @@ export function getAllowedProductConditions(commerceType: CommerceTypeEnum): Pro
         ProductCondition.PREVIOUS_DAY,
         ProductCondition.OTHER,
       ];
-    case CommerceTypeEnum.RESTAURANT:
+    case CommerceType.RESTAURANT:
       return [
         ProductCondition.EXCELLENT,
         ProductCondition.GOOD,
@@ -156,8 +156,8 @@ export function getAllowedProductConditions(commerceType: CommerceTypeEnum): Pro
         ProductCondition.NEEDS_REHEATING,
         ProductCondition.OTHER,
       ];
-    case CommerceTypeEnum.KIOSK:
-    case CommerceTypeEnum.SUPERMARKET:
+    case CommerceType.KIOSK:
+    case CommerceType.SUPERMARKET:
       return [
         ProductCondition.EXCELLENT,
         ProductCondition.GOOD,

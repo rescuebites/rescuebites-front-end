@@ -1,6 +1,6 @@
-import { CommerceTypeDisplay, BACKEND_TO_COMMERCE_TYPE } from "@/modules/customer/home/interfaces/types";
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceTypeDisplay, CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
 import { Box, Chip } from "@mui/material";
 import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag, Utensils, LucideShoppingBasket, Popsicle, Cookie } from "lucide-react";
 
@@ -70,7 +70,7 @@ export function getDaysUntilExpiration(expirationDate: string): number {
 /** Chip de tipo de comercio — acepta key backend ("KIOSK") o display ("Kiosco") */
 export function CommerceTypeChip({ commerceType }: { commerceType: string }) {
   const display =
-    BACKEND_TO_COMMERCE_TYPE[commerceType as CommerceTypeEnum] ??
+    CommerceTypeDisplayName[commerceType as CommerceType] ??
     (commerceType as CommerceTypeDisplay);
 
   const style = COMMERCE_TYPE_STYLES[display as CommerceTypeDisplay];

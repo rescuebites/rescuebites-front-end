@@ -1,11 +1,11 @@
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
 
 export interface JwtPayload {
   sub?: string;
   role?: string;
   clientId?: string;
   commerceId?: string;
-  commerceType?: CommerceTypeEnum;
+  commerceType?: CommerceType;
   iat?: number;
   exp?: number;
 }
