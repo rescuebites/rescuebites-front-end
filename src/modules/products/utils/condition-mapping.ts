@@ -1,0 +1,45 @@
+export enum ProductCondition {
+  // Generales
+  EXCELLENT = "EXCELLENT",
+  GOOD = "GOOD",
+
+  // Verdulería
+  RIPE = "RIPE",
+  ALMOST_RIPE = "ALMOST_RIPE",
+  OVERRIPE = "OVERRIPE",
+
+  // Panadería
+  FRESHLY_BAKED = "FRESHLY_BAKED",
+  SAME_DAY = "SAME_DAY",
+  PREVIOUS_DAY = "PREVIOUS_DAY",
+
+  // Restaurante
+  READY_TO_SERVE = "READY_TO_SERVE",
+  NEEDS_REHEATING = "NEEDS_REHEATING",
+
+  // Supermercado/Kiosco
+  DENTED_PACKAGING = "DENTED_PACKAGING",
+  NEAR_EXPIRY = "NEAR_EXPIRY",
+  EXPIRED_TODAY = "EXPIRED_TODAY",
+  DAMAGED_LABEL = "DAMAGED_LABEL",
+
+  OTHER = "OTHER"
+}
+
+export const ProductConditionDisplayName: Record<ProductCondition, string> = {
+  [ProductCondition.EXCELLENT]: "Excelente estado",
+  [ProductCondition.GOOD]: "Buen estado",
+  [ProductCondition.RIPE]: "Maduro",
+  [ProductCondition.ALMOST_RIPE]: "Casi maduro",
+  [ProductCondition.OVERRIPE]: "Pasado de madurez",
+  [ProductCondition.FRESHLY_BAKED]: "Recién horneado",
+  [ProductCondition.SAME_DAY]: "Del día",
+  [ProductCondition.PREVIOUS_DAY]: "Día anterior",
+  [ProductCondition.READY_TO_SERVE]: "Listo para servir",
+  [ProductCondition.NEEDS_REHEATING]: "Requiere recalentar",
+  [ProductCondition.DENTED_PACKAGING]: "Envase abollado",
+  [ProductCondition.NEAR_EXPIRY]: "Próximo a vencer",
+  [ProductCondition.EXPIRED_TODAY]: "Vence hoy",
+  [ProductCondition.DAMAGED_LABEL]: "Etiqueta dañada",
+  [ProductCondition.OTHER]: "Otro",
+};
