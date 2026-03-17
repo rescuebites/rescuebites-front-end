@@ -1,26 +1,29 @@
-import { Button, CircularProgress, SxProps, Theme } from "@mui/material";
+import { Button, CircularProgress } from "@mui/material";
+import React from "react";
 
-interface CustomButtonProps {
+interface ImagesButtonProps {
   type?: "button" | "submit" | "reset";
-  text: string;
+  text?: string;
   isLoading?: boolean;
   fullWidth?: boolean;
   disabled?: boolean;
   onClick?: () => void;
   backgroundColor?: string;
-  sx?: SxProps<Theme>;
+  children?: React.ReactNode;
+  [key: string]: any; 
 }
 
-export default function CustomButton({
+export default function ImagesButton({
   type = "button",
   text,
   isLoading = false,
   fullWidth = false,
   disabled = false,
   onClick,
-  backgroundColor = "#5A9A6E",
-  sx,
-}: CustomButtonProps) {
+  backgroundColor = "#77A787",
+  children,
+  ...rest
+}: ImagesButtonProps) {
   return (
     <Button
       type={type}
@@ -30,15 +33,15 @@ export default function CustomButton({
       disabled={disabled || isLoading}
       sx={{
         mt: 2,
-        borderRadius: 2,
         backgroundColor,
         fontWeight: "bold",
+        textTransform: "none", 
         ...(fullWidth ? {} : { width: "80%", mx: "auto", display: "block" }),
-        "&:hover": { backgroundColor: "#77A787" },
-        ...sx,
+        "&:hover": { backgroundColor: "#7fbf7f" },
       }}
+      {...rest}
     >
-      {isLoading ? <CircularProgress size={24} color="inherit" /> : text}
+      {isLoading ? <CircularProgress size={24} color="inherit" /> : children ?? text}
     </Button>
   );
 }
