@@ -6,7 +6,6 @@ import {
   PaginatedResponse 
 } from "../interfaces/responses";
 import { CATEGORY_TO_BACKEND, CategoryDisplay } from "../interfaces/types";
-import { Category } from "../interfaces/filter.interface";
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {

@@ -1,4 +1,6 @@
-import { ProductCategory, PreferenceType, CommerceTypeEnum } from "@/shared/enums/product.enums";
+import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 
 export interface ProductFilters {
   permanentPreferences: PreferenceType[];

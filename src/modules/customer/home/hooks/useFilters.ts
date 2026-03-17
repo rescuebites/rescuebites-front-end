@@ -1,8 +1,6 @@
 import { useEffect } from 'react';
 import { useFilterStore } from './useFilterStore';
-import {
-  PreferenceType,
-} from "@/shared/enums/product.enums";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 
 
 /**

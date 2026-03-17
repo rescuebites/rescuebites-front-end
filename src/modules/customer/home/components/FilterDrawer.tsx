@@ -1,7 +1,6 @@
-import { PreferenceType, PreferenceTypeDisplayName, ProductCategoryDisplayName } from "@/shared/enums/product.enums";
+import { ProductCategoryDisplayName } from "@/modules/products/enums/product-category.enum";
+import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
 import { getProductCategoryGroups } from "@/shared/utils/product.utils";
-// src/modules/customer/components/FilterDrawer.tsx
-
 import {
   Box,
   Button,
@@ -10,17 +9,15 @@ import {
   IconButton,
   Stack,
   Typography,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Slide,
   useMediaQuery,
   useTheme,
 } from "@mui/material";
 import { TransitionProps } from "@mui/material/transitions";
 import CloseIcon from "@mui/icons-material/Close";
-import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import LockIcon from "@mui/icons-material/Lock";
+import { CollapsibleSection } from "@/shared/components/CollapsibleSection";
+import { filterChipSx } from "@/shared/styles/chipSx";
 import { forwardRef } from "react";
 import { useFilterStore } from "../hooks/useFilterStore";
 
@@ -59,7 +56,6 @@ export default function FilterDrawer() {
 
   const handleApply = () => {
     closeFilterDrawer();
-    // Aquí puedes llamar a la API para filtrar productos
   };
 
   return (
@@ -292,80 +288,33 @@ export default function FilterDrawer() {
               </Typography>
 
               {/* Preferencias temporales */}
-              <Accordion
-                defaultExpanded
+              <CollapsibleSection
+                title="Preferencias alimenticias"
+                count={temporaryPreferences.length}
+                defaultOpen
+                showDivider={false}
                 sx={{
-                  boxShadow: "none",
-                  "&:before": { display: "none" },
                   bgcolor: "#FFF",
                   border: isMobile ? "3px solid #E0E0E0" : "1px solid #E0E0E0",
-                  borderRadius: isMobile
-                    ? "12px !important"
-                    : "12px !important",
-                  mb: isMobile ? 2 : 2,
+                  borderRadius: "12px",
+                  mb: 2,
                   overflow: "hidden",
+                  px: isMobile ? 1.5 : 2,
                 }}
+                titleSx={{ fontWeight: 600, fontSize: isMobile ? 19 : 16, color: "#2D2D2D" }}
+                contentSx={{ gap: isMobile ? 2 : 1.5, pb: 2 }}
+                iconSize={isMobile ? 16 : 28}
+                badgeSx={{
+                  borderRadius: isMobile ? "14px" : "12px",
+                  width: "auto",
+                  height: "auto",
+                  px: isMobile ? 1 : 1.5,
+                  py: isMobile ? 1 : 0.5,
+                  fontSize: isMobile ? 16 : 13,
+                  minWidth: isMobile ? 20 : 24,
+                }}
+                headerSx={{ minHeight: isMobile ? 35 : 56 }}
               >
-                <AccordionSummary
-                  expandIcon={
-                    <ExpandMoreIcon sx={{ fontSize: isMobile ? 16 : 28 }} />
-                  }
-                  sx={{
-                    minHeight: isMobile ? 35 : 56,
-                    "& .MuiAccordionSummary-content": {
-                      my: isMobile ? 1 : 1.5,
-                    },
-                    px: isMobile ? 1.5 : 2,
-                  }}
-                >
-                  <Stack
-                    direction="row"
-                    alignItems="center"
-                    spacing={isMobile ? 1 : 1.5}
-                  >
-                    <Typography
-                      variant="h4"
-                      sx={{
-                        fontWeight: 600,
-                        fontSize: isMobile ? 19 : 16,
-                        color: "#2D2D2D",
-                      }}
-                    >
-                      Preferencias alimenticias
-                    </Typography>
-                    {temporaryPreferences.length > 0 && (
-                      <Box
-                        sx={{
-                          bgcolor: "#77A787",
-                          color: "#FFF",
-                          borderRadius: isMobile ? "14px" : "12px",
-                          px: isMobile ? 1 : 1.5,
-                          py: isMobile ? 1 : 0.5,
-                          fontSize: isMobile ? 16 : 13,
-                          fontWeight: 700,
-                          minWidth: isMobile ? 20 : 24,
-                          textAlign: "center",
-                        }}
-                      >
-                        {temporaryPreferences.length}
-                      </Box>
-                    )}
-                  </Stack>
-                </AccordionSummary>
-                <AccordionDetails
-                  sx={{
-                    pt: 0,
-                    pb: isMobile ? 2 : 2,
-                    px: isMobile ? 2 : 2,
-                  }}
-                >
-                  <Box
-                    sx={{
-                      display: "flex",
-                      flexWrap: "wrap",
-                      gap: isMobile ? 2 : 1.5,
-                    }}
-                  >
                     {Object.values(PreferenceType).map((pref) => {
                       const isPermanent = permanentPreferences.includes(pref);
                       const isActive = temporaryPreferences.includes(pref);
@@ -378,128 +327,46 @@ export default function FilterDrawer() {
                             !isPermanent && toggleTemporaryPreference(pref)
                           }
                           disabled={isPermanent}
-                          sx={{
-                            bgcolor: isActive ? "#77A787" : "#F5F5F5",
-                            color: isActive ? "#FFF" : "#2D2D2D",
-                            fontWeight: 600,
-                            fontSize: isMobile ? 14 : 15,
-                            height: isMobile ? 35 : 40,
-                            border: isActive
-                              ? isMobile
-                                ? "1px solid #77A787"
-                                : "2px solid #77A787"
-                              : isMobile
-                                ? "1px solid #E0E0E0"
-                                : "2px solid #E0E0E0",
-                            cursor: isPermanent ? "not-allowed" : "pointer",
-                            opacity: isPermanent ? 0.5 : 1,
-                            transition: "all 0.2s ease",
-                            "& .MuiChip-label": {
-                              px: isMobile ? 1.5 : 2,
-                            },
-                            "&:hover": !isPermanent
-                              ? {
-                                  bgcolor: isActive ? "#6B9677" : "#EEEEEE",
-                                  transform: "scale(1.02)",
-                                }
-                              : {},
-                            "&:active": !isPermanent
-                              ? {
-                                  transform: "scale(0.98)",
-                                }
-                              : {},
-                          }}
+                          sx={filterChipSx(isActive, { isMobile, isPermanent })}
                         />
                       );
                     })}
-                  </Box>
-                </AccordionDetails>
-              </Accordion>
+              </CollapsibleSection>
 
               {/* Categorías por grupo */}
-              {getProductCategoryGroups().map((group) => (
-                <Accordion
-                  key={group.key}
-                  sx={{
-                    boxShadow: "none",
-                    "&:before": { display: "none" },
-                    bgcolor: "#FFF",
-                    border: isMobile
-                      ? "1px solid #E0E0E0"
-                      : "1px solid #E0E0E0",
-                    borderRadius: isMobile
-                      ? "10px !important"
-                      : "12px !important",
-                    mb: isMobile ? 1 : 2,
-                    overflow: "hidden",
-                  }}
-                >
-                  <AccordionSummary
-                    expandIcon={
-                      <ExpandMoreIcon sx={{ fontSize: isMobile ? 20 : 28 }} />
-                    }
+              {getProductCategoryGroups().map((group) => {
+                const groupCount = group.categories.filter((cat) =>
+                  categories.includes(cat)
+                ).length;
+                return (
+                  <CollapsibleSection
+                    key={group.key}
+                    title={group.title}
+                    count={groupCount}
+                    defaultOpen={false}
+                    showDivider={false}
                     sx={{
-                      minHeight: isMobile ? 40 : 56,
-                      "& .MuiAccordionSummary-content": {
-                        my: isMobile ? 1 : 1.5,
-                      },
+                      bgcolor: "#FFF",
+                      border: "1px solid #E0E0E0",
+                      borderRadius: "12px",
+                      mb: isMobile ? 1 : 2,
+                      overflow: "hidden",
                       px: isMobile ? 1.5 : 2,
                     }}
-                  >
-                    <Stack
-                      direction="row"
-                      alignItems="center"
-                      spacing={isMobile ? 1 : 1.5}
-                    >
-                      <Typography
-                        variant="h4"
-                        sx={{
-                          fontWeight: 600,
-                          fontSize: isMobile ? 19 : 16,
-                          color: "#2D2D2D",
-                        }}
-                      >
-                        {group.title}
-                      </Typography>
-                      {group.categories.some((cat) =>
-                        categories.includes(cat),
-                      ) && (
-                        <Box
-                          sx={{
-                            bgcolor: "#77A787",
-                            color: "#FFF",
-                            borderRadius: isMobile ? "10px" : "12px",
-                            px: isMobile ? 1 : 1.5,
-                            py: isMobile ? 0.7 : 0.5,
-                            fontSize: isMobile ? 18 : 13,
-                            fontWeight: 700,
-                            minWidth: isMobile ? 16 : 24,
-                            textAlign: "center",
-                          }}
-                        >
-                          {
-                            group.categories.filter((cat) =>
-                              categories.includes(cat),
-                            ).length
-                          }
-                        </Box>
-                      )}
-                    </Stack>
-                  </AccordionSummary>
-                  <AccordionDetails
-                    sx={{
-                      pt: 0,
-                      pb: isMobile ? 2 : 2,
-                      px: isMobile ? 1.5 : 2,
+                    titleSx={{ fontWeight: 600, fontSize: isMobile ? 19 : 16, color: "#2D2D2D" }}
+                    contentSx={{ gap: isMobile ? 1 : 1.5, pb: 2 }}
+                    iconSize={isMobile ? 20 : 28}
+                    badgeSx={{
+                      borderRadius: isMobile ? "10px" : "12px",
+                      width: "auto",
+                      height: "auto",
+                      px: isMobile ? 1 : 1.5,
+                      py: isMobile ? 0.7 : 0.5,
+                      fontSize: isMobile ? 18 : 13,
+                      minWidth: isMobile ? 16 : 24,
                     }}
+                    headerSx={{ minHeight: isMobile ? 40 : 56 }}
                   >
-                    <Box
-                      sx={{
-                        display: "flex",
-                        flexWrap: "wrap",
-                        gap: isMobile ? 1 : 1.5,
-                      }}
-                    >
                       {group.categories.map((category) => {
                         const isActive = categories.includes(category);
                         return (
@@ -507,39 +374,13 @@ export default function FilterDrawer() {
                             key={category}
                             label={ProductCategoryDisplayName[category]}
                             onClick={() => toggleCategory(category)}
-                            sx={{
-                              bgcolor: isActive ? "#77A787" : "#F5F5F5",
-                              color: isActive ? "#FFF" : "#2D2D2D",
-                              fontWeight: 600,
-                              fontSize: isMobile ? 14 : 15,
-                              height: isMobile ? 35 : 40,
-                              border: isActive
-                                ? isMobile
-                                  ? "1px solid #77A787"
-                                  : "2px solid #77A787"
-                                : isMobile
-                                  ? "1px solid #E0E0E0"
-                                  : "2px solid #E0E0E0",
-                              cursor: "pointer",
-                              transition: "all 0.2s ease",
-                              "& .MuiChip-label": {
-                                px: isMobile ? 1.5 : 2,
-                              },
-                              "&:hover": {
-                                bgcolor: isActive ? "#6B9677" : "#EEEEEE",
-                                transform: "scale(1.02)",
-                              },
-                              "&:active": {
-                                transform: "scale(0.98)",
-                              },
-                            }}
+                            sx={filterChipSx(isActive, { isMobile })}
                           />
                         );
                       })}
-                    </Box>
-                  </AccordionDetails>
-                </Accordion>
-              ))}
+                  </CollapsibleSection>
+                );
+              })}
             </Box>
           </Stack>
         </Box>

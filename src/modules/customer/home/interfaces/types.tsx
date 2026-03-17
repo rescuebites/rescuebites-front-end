@@ -1,4 +1,4 @@
-import { ProductCategory } from "@/shared/enums/product.enums";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 
 export enum ProductCondition {
   RIPE = 'Maduro',
