@@ -1,6 +1,6 @@
 import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useState } from "react";
-import { useProductsByCategory } from "../hooks/useProducts";
+import { useProductsByCommerceType } from "../hooks/useProducts";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
 import CategoryChips from "../components/CategoryChips";
 import ProductDetailDialog from "../components/ProductDetailDialog";
@@ -43,7 +43,7 @@ export default function AllProductsPage() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const { data: products, isLoading } = useProductsByCategory(selectedCategory, 100); // trae más productos que en home
+  const { data: products, isLoading } = useProductsByCommerceType(selectedCategory, 100); // trae más productos que en home
 
   const navigate= useNavigate();
 
@@ -117,4 +117,3 @@ export default function AllProductsPage() {
     </Box>
   );
 }
-

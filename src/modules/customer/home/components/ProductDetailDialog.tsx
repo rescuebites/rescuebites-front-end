@@ -9,7 +9,8 @@ import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { QuantityControl } from "@/shared/components/layout/QuantityControl";
-import { PRODUCT_CATEGORY_DISPLAY, ProductCategoryBackend } from "@/modules/customer/home/interfaces/types";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
+import { ProductCategoryDisplayName } from "@/modules/products/utils/category-mapping";
 
 interface ProductDetailDialogProps {
   open: boolean;
@@ -205,7 +206,7 @@ export default function ProductDetailDialog({
               stock={productDetail.stock}
               condition={productDetail.condition}
               conditionDisplayName={productDetail.conditionDisplayName}
-              categoryDisplayName={PRODUCT_CATEGORY_DISPLAY[productDetail.category as ProductCategoryBackend]}
+              categoryDisplayName={ProductCategoryDisplayName[productDetail.category as ProductCategory]}
               showDiscount={false}
             />
             
