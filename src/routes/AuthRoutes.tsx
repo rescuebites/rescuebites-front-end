@@ -4,6 +4,7 @@ import { RegisterClientPage } from '@/modules/client/pages/RegisterClientPage';
 import { AuthLayout } from '@/shared/pages/layouts/AuthLayout';
 import { EmailPage } from '@/shared/pages/auth/EmailPage';
 import { ActivateAccountPage } from '@/shared/pages/auth/ActivateAccountPage';
+import { CreateProductPage } from '@/modules/products/pages/CreateProductPage';
 
 export function AuthRoutes(){
     return(
@@ -14,6 +15,7 @@ export function AuthRoutes(){
                 <Route path={"register-client"} element={<RegisterClientPage/>} />
                 <Route path={"register/email-confirm"} element={<EmailPage/>} />
                 <Route path={"activate"} element={<ActivateAccountPage/>} />
+                <Route path={"create-product"} element={<CreateProductPage/>} />
             </Route>
         </Routes>
     )
