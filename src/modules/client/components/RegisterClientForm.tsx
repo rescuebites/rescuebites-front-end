@@ -18,7 +18,8 @@ import { Role } from "@/shared/enums/role.enum";
 import { getProfileImageFile } from "@/shared/utils/profileImage";
 import CustomTitle from "@/shared/components/CustomTitle";
 import BirthDateField from "@/shared/components/DateField";
-import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
+import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
+import { PreferenceTypeDisplayName } from "../utils/preference-mapping";
 
 const dietaryOptions = (Object.keys(PreferenceTypeDisplayName) as PreferenceType[])
   .map((key) => ({ label: PreferenceTypeDisplayName[key], value: key }));
