@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AuthResponse } from "@/modules/auth/interfaces/responses/auth.interface";
-import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { decodeJwtPayload } from "@/shared/utils/jwt.utils";
 
 interface AuthStore {
@@ -9,7 +9,7 @@ interface AuthStore {
   isAuthenticated: boolean;
   clientId?: string;
   commerceId?: string;
-  commerceType?: CommerceTypeEnum;
+  commerceType?: CommerceType;
   setAuthResponse: (authResponse: AuthResponse) => void;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   login: (authResponse: AuthResponse) => void;
