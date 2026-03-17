@@ -4,7 +4,7 @@ import type { CreateClientParams } from "@/modules/client/interfaces/requests/cr
 
 interface PendingRegistrationState {
   clientData?: CreateClientParams;
-  profilePicture?: File | null; // <-- campo temporal (no persistido)
+  profilePicture?: File | null; 
   commerceData?: any;
   setClientData: (data: CreateClientParams) => void;
   setProfilePicture: (file: File | null) => void;
@@ -28,7 +28,7 @@ export const usePendingRegistrationStore = create<PendingRegistrationState>()(
     {
       name: "pending-registration-store",
       partialize: (state) => ({
-        // 🔹 Solo persistimos lo que NO tiene File
+        // Solo persistimos lo que NO tiene File
         clientData: state.clientData
           ? { ...state.clientData, profilePicture: undefined }
           : undefined,
