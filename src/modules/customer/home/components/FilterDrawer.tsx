@@ -1,4 +1,4 @@
-import { ProductCategoryDisplayName } from "@/modules/products/enums/product-category.enum";
+import { ProductCategory, ProductCategoryDisplayName } from "@/modules/products/enums/product-category.enum";
 import { PreferenceType, PreferenceTypeDisplayName } from "@/modules/client/enums/preference-type.enum";
 import { getProductCategoryGroups } from "@/shared/utils/product.utils";
 import {
@@ -315,7 +315,7 @@ export default function FilterDrawer() {
                 }}
                 headerSx={{ minHeight: isMobile ? 35 : 56 }}
               >
-                    {Object.values(PreferenceType).map((pref) => {
+                    {(Object.values(PreferenceType) as PreferenceType[]).map((pref) => {
                       const isPermanent = permanentPreferences.includes(pref);
                       const isActive = temporaryPreferences.includes(pref);
 
@@ -368,12 +368,12 @@ export default function FilterDrawer() {
                     headerSx={{ minHeight: isMobile ? 40 : 56 }}
                   >
                       {group.categories.map((category) => {
-                        const isActive = categories.includes(category);
+                        const isActive = categories.includes(category as ProductCategory);
                         return (
                           <Chip
                             key={category}
-                            label={ProductCategoryDisplayName[category]}
-                            onClick={() => toggleCategory(category)}
+                            label={ProductCategoryDisplayName[category as ProductCategory]}
+                            onClick={() => toggleCategory(category as ProductCategory)}
                             sx={filterChipSx(isActive, { isMobile })}
                           />
                         );

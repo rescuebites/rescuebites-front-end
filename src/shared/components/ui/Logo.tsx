@@ -1,10 +1,10 @@
 import { Paper, SxProps, Theme } from "@mui/material";
 
 interface LogoProps {
-    width?: number | string | { xs?: number; sm?: number; md?: number };
-    height?: number | string | { xs?: number; sm?: number; md?: number };
+    width?: number | string;
+    height?: number | string;
     elevation?: number;
-    sx?: SxProps<Theme>; 
+    sx?: SxProps<Theme>;
 }   
 
 export function Logo({ width, height, elevation = 3, sx }: LogoProps) {
@@ -21,7 +21,6 @@ export function Logo({ width, height, elevation = 3, sx }: LogoProps) {
                 display: "block",
                 borderRadius: 2,
                 mx: "auto",
-                ...sx, 
             }}
         />
     );

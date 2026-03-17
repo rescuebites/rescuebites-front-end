@@ -1,6 +1,5 @@
 import { create } from 'zustand';
-import { ProductFilters } from '../interfaces/filter.interface';
-import { PreferenceType, ProductCategory } from '@/shared/enums/product.enums';
+import { PreferenceType, ProductCategory, ProductFilters } from '../interfaces/filter.interface';
 
 interface FilterStore extends ProductFilters {
   // Estado

@@ -5,7 +5,7 @@ import {
   CommercePublicResponse, 
   PaginatedResponse 
 } from "../interfaces/responses";
-import { CATEGORY_TO_BACKEND, CategoryDisplay } from "../interfaces/types";
+import { COMMERCE_TYPE_TO_BACKEND, CommerceTypeDisplay } from "../interfaces/types";
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {
@@ -52,12 +52,12 @@ export const getAllCommerces = async (page = 0): Promise<PaginatedResponse<Comme
 
 // Comercios por tipo (para stores)
 export const getCommercesByType = async (
-  categoryDisplay: CategoryDisplay, 
+  commerceTypeDisplay: CommerceTypeDisplay, 
   page = 0, 
   size = 6
 ): Promise<PaginatedResponse<CommercePublicResponse>> => {
   try {
-    const commerceType = CATEGORY_TO_BACKEND[categoryDisplay];
+    const commerceType = COMMERCE_TYPE_TO_BACKEND[commerceTypeDisplay];
     const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
       `/api/v1/public/commerces/type/${commerceType}`,
       { params: { page, size } }
@@ -112,15 +112,15 @@ export const getCommerceDetail = async (commerceId: string): Promise<CommerceRes
 };
 
 //Obtener productos por tipo de comercio seleccionado
-export const getProductsByCategory = async (
-  categoryDisplay: CategoryDisplay,
+export const getProductsByCommerceType = async (
+  commerceTypeDisplay: CommerceTypeDisplay,
   page = 0,
   size = 12
 ): Promise<ProductResponse[]> => {
   try {
-    const category = CATEGORY_TO_BACKEND[categoryDisplay];
+    const commerceType = COMMERCE_TYPE_TO_BACKEND[commerceTypeDisplay];
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
-      `/api/v1/public/products/type/${category}/ordered-by-price`,
+      `/api/v1/public/products/type/${commerceType}/ordered-by-price`,
       { params: { page, size } }
     );
 

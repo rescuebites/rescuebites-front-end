@@ -41,7 +41,7 @@ const BackButton: React.FC<BackButtonProps> = ({ onClick, sx }) => {
       <ArrowBack 
         sx={{ 
           fontSize: { xs: 20, sm: 24, md: 28 }, 
-          color: '#5A9A6E',
+          color: '#77A787',
           transition: 'color 0.2s',
         }} 
       />

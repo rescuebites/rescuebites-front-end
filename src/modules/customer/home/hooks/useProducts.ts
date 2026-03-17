@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail, getProductsByCategory, getProductsByCommerce, getTopDeals } from "../services/home.service";
+import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals } from "../services/home.service";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
-import { CategoryDisplay } from "../interfaces/types";
+import { CommerceTypeDisplay } from "../interfaces/types";
 
 interface UseProductsParams {
   commerceId?: string;
@@ -43,15 +43,15 @@ export const useProductDetail = (productId: string | null) => {
   });
 };
 
-//hook para obtener los productos filtrados por tipo de coemrcio seleccionado
-export function useProductsByCategory(category: CategoryDisplay | null, size = 12) {
+//hook para obtener los productos filtrados por tipo de comercio seleccionado
+export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
   return useQuery<ProductResponse[], Error>({
-    queryKey: ['products-by-category', category, size],
+    queryKey: ['products-by-commerce-type', commerceType, size],
     queryFn: () => {
-      if (!category) {
-        return getTopDeals(size); //si no hay categoría seleccionada, muestra los top deals
+      if (!commerceType) {
+        return getTopDeals(size); //si no hay tipo de comercio seleccionado, muestra los top deals
       }
-      return getProductsByCategory(category, 0, size);
+      return getProductsByCommerceType(commerceType, 0, size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,

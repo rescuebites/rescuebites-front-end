@@ -1,31 +1,49 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import SearchBar from "../../../../shared/components/layout/SearchBar";
+import SearchBar from "../../../catalog/components/SearchBar";
 import CategoryChips from "../components/CategoryChips";
 import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
 import FilterDrawer from "../components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
 import { useFilters } from "@/modules/customer/home/hooks/useFilters";
-
+import { useSearch } from "@/modules/catalog/hooks/useSearch"
 
 
 export default function HomePage() {
   const { applyFilters, hasActiveFilters } = useFilters();
+  const {
+    query,
+    setQuery,
+    suggestions,
+    showSuggestions,
+    setShowSuggestions,
+    clearSearch,
+    confirmSearch,
+  } = useSearch();
+
   const handleSearchChange = (value: string) => {
-    console.log("Buscando:", value);
+    setQuery(value); // esto ya dispara las suggestions internamente
     if (hasActiveFilters) {
       applyFilters({ searchQuery: value });
     }
   };
 
+  const handleSearch = (q?: string) => {
+  const term = (q ?? query).trim();
+  console.log("navegando con term:", term);
+  if (!term) return;
+  confirmSearch(term);
+  navigate(`/customer/search?q=${encodeURIComponent(term)}`);
+};
+
   const navigate = useNavigate();
 
   const handleGoToAllStores = () => {
-    navigate("/home/allStores");
+    navigate("/customer/allStores");
   };
 
   const handleGoToAllDeals = () => {
-    navigate("/home/allProducts");
+    navigate("/customer/allProducts");
   };
 
   return (
@@ -43,7 +61,15 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={{ xs: 3, sm: 4 }}>
-          <SearchBar onSearchChange={handleSearchChange} />
+          <SearchBar
+            query={query}              
+            onQueryChange={handleSearchChange}  
+            onSearch={handleSearch}
+            onClear={clearSearch}
+            suggestions={suggestions}
+            showSuggestions={showSuggestions}
+            onHideSuggestions={() => setShowSuggestions(false)}
+          />
           <CategoryChips />
         </Stack>
       </Container>
@@ -77,7 +103,7 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={3}>
-          <SectionTitle primary="Productos destacados" secondary="Ver todo" onSecondaryClick={handleGoToAllDeals} />
+          <SectionTitle primary="Mejores ofertas en productos" secondary="Ver todo" onSecondaryClick={handleGoToAllDeals} />
           <TopDeals />
         </Stack>
       </Container>

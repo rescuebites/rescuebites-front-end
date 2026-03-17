@@ -1,12 +1,6 @@
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
-
-export enum ProductCondition {
-  RIPE = 'Maduro',
-  NEAR_EXPIRY = 'Vencimiento próximo',
-  DAMAGED = 'Dañado',
-  SURPLUS = 'Sobrante',
-  OTHER = 'Otro'
-}
+import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
+import { CommerceTypeEnum } from "@/shared/enums/commerce-type.enum";
 
 export interface Product {
   productId: string;
@@ -22,19 +16,8 @@ export interface Product {
   condition?: ProductCondition;
   expirationDate: string | null;
   imageUrls: string[];
-  tags?: ProductTag[];
   active?: boolean;
 }
-
-
-export type ProductTag =
-  | "maduro"
-  | "vegano"
-  | "vegetariano"
-  | "sin-gluten"
-  | "sin-lactosa"
-  | "organico"
-  | "buen-estado";
 
 export interface Store {
   id?: number;
@@ -49,40 +32,35 @@ export interface Store {
   categories?: string[];
 }
 
-//constants para categorías de productos (para mostrar en la UI y mapear con el backend)
-export type CategoryDisplay = 
+// ============================================
+// TIPOS DE COMERCIO (para UI)
+// ============================================
+export type CommerceTypeDisplay = 
   | "Panadería"
   | "Supermercado"
   | "Verdulería"
   | "Restaurante"
   | "Kiosco";
 
-export type CategoryBackend = 
-  | "GREENGROCERY"
-  | "BAKERY"
-  | "RESTAURANT"
-  | "SUPERMARKET"
-  | "KIOSK";
-
-// Mapeo español → inglés
-export const CATEGORY_TO_BACKEND: Record<CategoryDisplay, CategoryBackend> = {
-  "Panadería": "BAKERY",
-  "Supermercado": "SUPERMARKET",
-  "Verdulería": "GREENGROCERY",
-  "Restaurante": "RESTAURANT",
-  "Kiosco": "KIOSK",
+// Mapeo español → backend
+export const COMMERCE_TYPE_TO_BACKEND: Record<CommerceTypeDisplay, CommerceTypeEnum> = {
+  "Panadería": CommerceTypeEnum.BAKERY,
+  "Supermercado": CommerceTypeEnum.SUPERMARKET,
+  "Verdulería": CommerceTypeEnum.GREENGROCERY,
+  "Restaurante": CommerceTypeEnum.RESTAURANT,
+  "Kiosco": CommerceTypeEnum.KIOSK,
 };
 
-// Mapeo inverso (para mostrar nombres en español desde el backend)
-export const BACKEND_TO_CATEGORY: Record<CategoryBackend, CategoryDisplay> = {
-  "BAKERY": "Panadería",
-  "SUPERMARKET": "Supermercado",
-  "GREENGROCERY": "Verdulería",
-  "RESTAURANT": "Restaurante",
-  "KIOSK": "Kiosco",
+// Mapeo inverso (backend → español)
+export const BACKEND_TO_COMMERCE_TYPE: Record<CommerceTypeEnum, CommerceTypeDisplay> = {
+  [CommerceTypeEnum.BAKERY]: "Panadería",
+  [CommerceTypeEnum.SUPERMARKET]: "Supermercado",
+  [CommerceTypeEnum.GREENGROCERY]: "Verdulería",
+  [CommerceTypeEnum.RESTAURANT]: "Restaurante",
+  [CommerceTypeEnum.KIOSK]: "Kiosco",
 };
 
-export const categories: CategoryDisplay[] = [
+export const commerceTypes: CommerceTypeDisplay[] = [
   "Panadería",
   "Supermercado",
   "Verdulería",

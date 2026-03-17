@@ -2,6 +2,7 @@ import { AuthRoutes } from "@/routes/AuthRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
 import {CustomerRoutes} from "@/routes/CustomerRoutes";
 import { Navigate, Route, Routes } from "react-router-dom";
+import { PublicRoutes } from "@/routes/PublicRoutes";
 
 export default function RoutesProvider() {
   return (
@@ -14,10 +15,12 @@ export default function RoutesProvider() {
 
       <Route path="/api/users/*" element={<UserRoutes />} />
 
-      {/* redirige "/customer" a "/customer/home" */}
-
       {/* Acá van las rutas de /customer */}
       <Route path="/customer/*" element={<CustomerRoutes />} />
+
+      {/* Rutas de invitado */}
+      <Route path="/public/*" element={<PublicRoutes />} />
+
     </Routes>
   );
 }

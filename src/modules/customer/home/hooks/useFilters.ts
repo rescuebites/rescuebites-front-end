@@ -1,7 +1,6 @@
 import { useEffect } from 'react';
 import { useFilterStore } from './useFilterStore';
-import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
-
+import { PreferenceType } from '../interfaces/filter.interface';
 
 /**
  * Hook personalizado para manejar los filtros de productos
@@ -30,7 +29,7 @@ export const useFilters = () => {
         // Ejemplo de datos mock (eliminar cuando tengas la API)
         const mockPreferences: PreferenceType[] = [
           PreferenceType.VEGAN,
-          PreferenceType.VEGETARIAN,
+          // PreferenceType.NUT_FREE, // No existe en el enum actual
         ];
         setPermanentPreferences(mockPreferences);
       } catch (error) {

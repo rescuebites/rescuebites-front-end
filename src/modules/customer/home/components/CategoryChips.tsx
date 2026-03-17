@@ -1,6 +1,6 @@
 import { Box, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
-import { categories, CategoryDisplay } from "../interfaces/types";
+import { commerceTypes, CommerceTypeDisplay } from "../interfaces/types";
 import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
 
 // Íconos
@@ -12,8 +12,8 @@ import {
 } from "react-icons/md";
 import { FaLeaf } from "react-icons/fa";
 
-// Mapeo de categorías con íconos y colores
-const categoryData: Record<string, { icon: ReactElement; color: string }> = {
+// Mapeo de tipos de comercio con íconos y colores
+const commerceTypeData: Record<string, { icon: ReactElement; color: string }> = {
   Panadería: { 
     icon: <GiCroissant size={32} />, 
     color: '#A8D5A8' 
@@ -41,11 +41,11 @@ export default function CategoryChips() {
   const selectedCategory = useFilterStore((state) => state.selectedCategory);
   const setSelectedCategory = useFilterStore((state) => state.setSelectedCategory);
 
-  const handleCategoryClick = (category: CategoryDisplay) => {
-    if (selectedCategory === category) {
+  const handleCategoryClick = (commerceType: CommerceTypeDisplay) => {
+    if (selectedCategory === commerceType) {
       setSelectedCategory(null); // Deseleccionar si ya está seleccionado
     } else {
-      setSelectedCategory(category);
+      setSelectedCategory(commerceType);
     }
   };
 
@@ -98,7 +98,7 @@ export default function CategoryChips() {
           scrollbarWidth: 'none',
         }}
       >
-        {categories.map((cat) => (
+        {commerceTypes.map((cat) => (
           <CategoryTile 
             key={cat} 
             category={cat}
@@ -122,7 +122,7 @@ function CategoryTile({
   active: boolean;
   onClick: () => void;
 }) {
-  const data = categoryData[category];
+  const data = commerceTypeData[category];
 
   return (
     <Stack

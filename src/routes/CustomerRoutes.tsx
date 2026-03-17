@@ -7,25 +7,26 @@ import NotificationsPage from "@/shared/pages/notifications";
 import ProfilePage from "@/shared/pages/ProfilePage";
 import ShoppingCartPage from "@/shared/pages/ShoppingCartPage";
 import OrdersPage from "@/shared/pages/OrdersPage";
-import CustomerLayout from "@/shared/components/layout/CustomerLayout";
+import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
+import ClientNavbar from "@/modules/navbar/components/ClientNavbar";
+import AppLayout from "@/shared/components/layout/AppLayout";
 
 export function CustomerRoutes() {
   return (
     <Routes>
-      <Route element={<CustomerLayout />}>
-        <Route index element={<HomePage />} />
-        <Route path="stores/:commerceId" element={<StoresPage />} />
-        <Route path="allProducts" element={<AllProductsPage />} />
-        <Route path="cart" element={<ShoppingCartPage />} />
-        <Route path="orders" element={<OrdersPage />} />
-        <Route path="notifications" element={<NotificationsPage/>} />
-        <Route path="profile" element={<ProfilePage/>} />
+      <Route element={<AppLayout navbar={<ClientNavbar />} />}>
+          <Route index element={<HomePage />} />
+          <Route path="cart" element={<ShoppingCartPage />} />
+          <Route path="orders" element={<OrdersPage />} />
+          <Route path="notifications" element={<NotificationsPage/>} />
+          <Route path="profile" element={<ProfilePage/>} />
+        
+          <Route index element={<HomePage />} />
+          <Route path="/stores/:commerceId" element={<StoresPage />} />
+          <Route path="/allProducts" element={<AllProductsPage />} />
+          <Route path="/allStores" element={<AllStoresPage/>}/>
+          <Route path="/search" element={<SearchResultsPage />} />
       </Route>
-      <Route index element={<HomePage />} />
-      <Route path="/stores/:commerceId" element={<StoresPage />} />
-      <Route path="/allProducts" element={<AllProductsPage />} />
-      <Route path="/allStores" element={<AllStoresPage/>}/>
-
     </Routes>
   );
 };
