@@ -25,7 +25,7 @@ export function ActivateAccountPage() {
 
    const { clientData, commerceData, clearData } = usePendingRegistrationStore();
 
-  const { mutate: createCommerce, isPending: isCreatingCommerce } = useCreateCommerce();
+  const { mutateAsync: createCommerce, isPending: isCreatingCommerce } = useCreateCommerce();
 
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
@@ -49,8 +49,8 @@ export function ActivateAccountPage() {
             clearData();
             clearProfileImage();
           } else if (commerceData) {
-            const imageFile = await getCommerceProfileImageFile();
-            createCommerce({
+              const imageFile = await getCommerceProfileImageFile();
+              await createCommerce({
               createCommerceRequest: { ...commerceData.createCommerceRequest, userId },
               profilePicture: imageFile,
             });

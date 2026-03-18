@@ -83,15 +83,6 @@ export  default function CommerceInputsRegisterForm({
         fullWidth
       />
 
-      <TextField
-        {...register("openingHours", { required: "Ingrese el horario" , message: "Este campo es obligatorio"})}
-        id="openingHours"
-        label="Horario"
-        type="text"
-        fullWidth
-        error={!!errors.openingHours}
-        helperText={errors.openingHours?.message}
-      />
 
       {/* //checkbox para tipos de comercio ----- */}
 

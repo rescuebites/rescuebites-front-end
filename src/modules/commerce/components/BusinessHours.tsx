@@ -1,33 +1,16 @@
-import { useState } from "react";
+import { Dispatch, SetStateAction, useState } from "react";
 import {
-  Box,
-  Typography,
-  Switch,
-  Stack,
-  Divider,
-  Paper,
-  Collapse,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  Button,
-  Select,
-  MenuItem,
-  FormControl,
-  SelectChangeEvent,
+  Box, Typography, Switch, Stack, Divider, Paper,
+  Collapse, Dialog, DialogTitle, DialogContent,
+  DialogActions, Button, Select, MenuItem,
+  FormControl, SelectChangeEvent,
 } from "@mui/material";
-import { CalendarDays, Sunrise, SunMoon, LucideProps } from "lucide-react";
-
-// ─── Constants ────────────────────────────────────────────────────────────────
+import { CalendarDays, Sunrise, SunMoon } from "lucide-react";
 
 const GREEN = "#77A787";
 
-const HOURS = Array.from({ length: 12 }, (_, i) => String(i + 1).padStart(2, "0"));
+const HOURS = Array.from({ length: 24 }, (_, i) => String(i).padStart(2, "0"));
 const MINUTES = ["00", "15", "30", "45"];
-const PERIODS = ["AM", "PM"];
-
-// ─── Types ────────────────────────────────────────────────────────────────────
 
 interface Shift {
   enabled: boolean;
@@ -37,7 +20,7 @@ interface Shift {
 
 interface DayShifts {
   morning: Shift;
-  afternoon?: Shift;
+  afternoon: Shift;
 }
 
 type ShiftKey = keyof DayShifts;
@@ -46,8 +29,8 @@ type TimeField = "open" | "close";
 interface Day {
   id: string;
   label: string;
-  enabled: boolean;
-  shifts: DayShifts | null;
+  closed: boolean;
+  shifts: DayShifts;
 }
 
 interface TimePickerTarget {
@@ -57,18 +40,12 @@ interface TimePickerTarget {
   current: string;
 }
 
-// ─── Helpers ──────────────────────────────────────────────────────────────────
-
 const parseTime = (value: string) => {
-  const [time, period] = value.split(" ");
-  const [hour, minute] = time.split(":");
-  return { hour, minute, period };
+  const [hour, minute] = value.split(":");
+  return { hour, minute };
 };
 
-const formatTime = (hour: string, minute: string, period: string): string =>
-  `${hour}:${minute} ${period}`;
-
-// ─── Switch con color verde ───────────────────────────────────────────────────
+const formatTime = (hour: string, minute: string): string => `${hour}:${minute}`;
 
 const greenSwitchSx = {
   "& .MuiSwitch-switchBase.Mui-checked": { color: GREEN },
@@ -84,54 +61,65 @@ interface TimePickerDialogProps {
 }
 
 const TimePickerDialog = ({ target, onClose, onConfirm }: TimePickerDialogProps) => {
-  const parsed = target ? parseTime(target.current) : { hour: "08", minute: "00", period: "AM" };
+  // Lee el valor actual del target cada vez que se abre
+  const parsed = target ? parseTime(target.current) : { hour: "08", minute: "00" };
   const [hour, setHour] = useState(parsed.hour);
   const [minute, setMinute] = useState(parsed.minute);
-  const [period, setPeriod] = useState(parsed.period);
 
+  // Sincroniza los selects cuando cambia el target (se abre para otro campo)
+  // key en el Dialog padre fuerza el remount y reinicia el estado
   const handleConfirm = () => {
     if (!target) return;
-    onConfirm(target.dayId, target.shiftKey, target.field, formatTime(hour, minute, period));
+    onConfirm(target.dayId, target.shiftKey, target.field, formatTime(hour, minute));
     onClose();
   };
 
   return (
-    <Dialog open={!!target} onClose={onClose} PaperProps={{ sx: { borderRadius: 3, p: 1 } }}>
-      <DialogTitle sx={{ pb: 1, fontWeight: 700 }}>
+    <Dialog
+      open={!!target}
+      onClose={onClose}
+      PaperProps={{ sx: { borderRadius: 3, p: 1 } }}
+    >
+      <DialogTitle sx={{ pb: 1, fontWeight: 700, fontSize: "20px" }}>
         Seleccionar hora de {target?.field === "open" ? "apertura" : "cierre"}
       </DialogTitle>
       <DialogContent>
         <Stack direction="row" spacing={1} alignItems="flex-end" sx={{ mt: 1 }}>
           <FormControl size="small">
-            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5 }}>Hora</Typography>
-            <Select value={hour} onChange={(e: SelectChangeEvent) => setHour(e.target.value)} sx={{ minWidth: 70 }}>
-              {HOURS.map((h) => <MenuItem key={h} value={h}>{h}</MenuItem>)}
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, fontSize: "15px" }}>
+              Hora
+            </Typography>
+            <Select
+              value={hour}
+              onChange={(e: SelectChangeEvent) => setHour(e.target.value)}
+              sx={{ minWidth: 70, fontSize: "18px" }}
+            >
+              {HOURS.map((h) => <MenuItem key={h} value={h} sx={{ fontSize: "18px" }}>{h}</MenuItem>)}
             </Select>
           </FormControl>
 
           <Typography variant="h5" sx={{ pb: 0.8 }}>:</Typography>
 
           <FormControl size="small">
-            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5 }}>Min</Typography>
-            <Select value={minute} onChange={(e: SelectChangeEvent) => setMinute(e.target.value)} sx={{ minWidth: 70 }}>
-              {MINUTES.map((m) => <MenuItem key={m} value={m}>{m}</MenuItem>)}
-            </Select>
-          </FormControl>
-
-          <FormControl size="small">
-            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5 }}>&nbsp;</Typography>
-            <Select value={period} onChange={(e: SelectChangeEvent) => setPeriod(e.target.value)} sx={{ minWidth: 70 }}>
-              {PERIODS.map((p) => <MenuItem key={p} value={p}>{p}</MenuItem>)}
+            <Typography variant="caption" color="text.secondary" sx={{ mb: 0.5, fontSize: "15px" }}>
+              Min
+            </Typography>
+            <Select
+              value={minute}
+              onChange={(e: SelectChangeEvent) => setMinute(e.target.value)}
+              sx={{ minWidth: 70, fontSize: "18px" }}
+            >
+              {MINUTES.map((m) => <MenuItem key={m} value={m} sx={{ fontSize: "18px" }}>{m}</MenuItem>)}
             </Select>
           </FormControl>
         </Stack>
       </DialogContent>
       <DialogActions sx={{ px: 3, pb: 2 }}>
-        <Button onClick={onClose} color="inherit">Cancelar</Button>
+        <Button onClick={onClose} color="inherit" sx={{ fontSize: "17px" }}>Cancelar</Button>
         <Button
           onClick={handleConfirm}
           variant="contained"
-          sx={{ bgcolor: GREEN, "&:hover": { bgcolor: "#6e9254" } }}
+          sx={{ bgcolor: GREEN, "&:hover": { bgcolor: "#6e9254" }, fontSize: "17px" }}
         >
           Confirmar
         </Button>
@@ -140,68 +128,89 @@ const TimePickerDialog = ({ target, onClose, onConfirm }: TimePickerDialogProps)
   );
 };
 
-// ─── TimeRow ──────────────────────────────────────────────────────────────────
+// ─── TimeButton ───────────────────────────────────────────────────────────────
 
-interface TimeRowProps {
-  open: string;
-  close: string;
-  onFieldClick: (field: TimeField) => void;
+interface TimeButtonProps {
+  label: string;
+  value: string;
+  onClick: () => void;
 }
 
-const TimeRow = ({ open, close, onFieldClick }: TimeRowProps) => (
-  <Stack direction="row" spacing={2} sx={{ mt: 0.5 }}>
-    {([
-      { label: "Apertura", value: open,  field: "open"  as TimeField },
-      { label: "Cierre",   value: close, field: "close" as TimeField },
-    ]).map(({ label, value, field }) => (
-      <Box key={label}>
-        <Typography variant="caption" color="text.secondary">{label}</Typography>
-        <Box
-          onClick={() => onFieldClick(field)}
-          sx={{
-            display: "flex",
-            alignItems: "center",
-            gap: 0.5,
-            border: "1px solid",
-            borderColor: "divider",
-            borderRadius: 1,
-            px: 1,
-            py: 0.5,
-            minWidth: 110,
-            cursor: "pointer",
-            transition: "border-color 0.15s",
-            "&:hover": { borderColor: GREEN },
-          }}
-        >
-          <Typography variant="body2">{value}</Typography>
-          <Typography variant="caption" sx={{ ml: "auto", opacity: 0.5 }}>🕐</Typography>
-        </Box>
-      </Box>
-    ))}
-  </Stack>
+const TimeButton = ({ label, value, onClick }: TimeButtonProps) => (
+  <Box>
+    <Typography variant="caption" color="text.secondary" sx={{ fontSize: "15px" }}>
+      {label}
+    </Typography>
+    <Box
+      onClick={onClick}
+      sx={{
+        display: "flex", alignItems: "center", gap: 0.5,
+        border: "1px solid", borderColor: "divider", borderRadius: 1,
+        px: 1, py: 0.5, minWidth: 90, cursor: "pointer",
+        transition: "border-color 0.15s",
+        "&:hover": { borderColor: GREEN },
+      }}
+    >
+      <Typography variant="body2" sx={{ fontSize: "17px" }}>{value}</Typography>
+      <Typography variant="caption" sx={{ ml: "auto", opacity: 0.5 }}>🕐</Typography>
+    </Box>
+  </Box>
 );
 
-// ─── ShiftRow ─────────────────────────────────────────────────────────────────
+// ─── MorningShiftSection ──────────────────────────────────────────────────────
+// Turno mañana siempre activo, sin switch, renombrado a "Turno mañana / único"
 
-interface ShiftRowProps {
-  icon: React.ComponentType<LucideProps>;
-  label: string;
+interface MorningShiftSectionProps {
   shift: Shift;
-  onToggle: () => void;
-  onFieldClick: (field: TimeField) => void;
+  onTimeClick: (field: TimeField) => void;
 }
 
-const ShiftRow = ({ icon: Icon, label, shift, onToggle, onFieldClick }: ShiftRowProps) => (
+const MorningShiftSection = ({ shift, onTimeClick }: MorningShiftSectionProps) => (
+  <Box>
+    <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 0.5 }}>
+      <Sunrise size={20} color="#888" />
+      <Typography variant="body2" color="text.secondary" sx={{ fontSize: "17px" }}>
+        Turno mañana / único
+      </Typography>
+    </Stack>
+    <Stack direction="row" spacing={2}>
+      <TimeButton label="Apertura" value={shift.open}  onClick={() => onTimeClick("open")}  />
+      <TimeButton label="Cierre"   value={shift.close} onClick={() => onTimeClick("close")} />
+    </Stack>
+  </Box>
+);
+
+// ─── AfternoonShiftSection ────────────────────────────────────────────────────
+// Turno tarde opcional con switch
+
+interface AfternoonShiftSectionProps {
+  shift: Shift;
+  onToggle: () => void;
+  onTimeClick: (field: TimeField) => void;
+}
+
+const AfternoonShiftSection = ({ shift, onToggle, onTimeClick }: AfternoonShiftSectionProps) => (
   <Box>
     <Stack direction="row" alignItems="center" justifyContent="space-between">
       <Stack direction="row" alignItems="center" spacing={0.5}>
-        <Icon size={14} color="#888" />
-        <Typography variant="body2" color="text.secondary">{label}</Typography>
+        <SunMoon size={20} color="#888" />
+        <Typography variant="body2" color="text.secondary" sx={{ fontSize: "19px" }}>
+          Turno tarde
+        </Typography>
       </Stack>
-      <Switch size="small" checked={shift.enabled} onChange={onToggle} sx={greenSwitchSx} />
+      <Switch
+        size="small"
+        checked={shift.enabled}
+        onChange={onToggle}
+        sx={greenSwitchSx}
+        onClick={(e) => e.stopPropagation()} // Para que no se propague la hora seleccionada anteriormente
+      />
     </Stack>
     <Collapse in={shift.enabled}>
-      <TimeRow open={shift.open} close={shift.close} onFieldClick={onFieldClick} />
+      <Stack direction="row" spacing={2} sx={{ mt: 0.5 }}>
+        <TimeButton label="Apertura" value={shift.open}  onClick={() => onTimeClick("open")}  />
+        <TimeButton label="Cierre"   value={shift.close} onClick={() => onTimeClick("close")} />
+      </Stack>
     </Collapse>
   </Box>
 );
@@ -213,134 +222,132 @@ interface DayCardProps {
   isTemplate: boolean;
   onToggleDay: (dayId: string) => void;
   onToggleShift: (dayId: string, shiftKey: ShiftKey) => void;
-  onFieldClick: (dayId: string, shiftKey: ShiftKey, field: TimeField, current: string) => void;
-  onCardClick: (dayId: string) => void;
+  onTimeClick: (dayId: string, shiftKey: ShiftKey, field: TimeField, current: string) => void;
+  onCopyTemplate: (dayId: string) => void;
 }
 
-const DayCard = ({ day, isTemplate, onToggleDay, onToggleShift, onFieldClick, onCardClick }: DayCardProps) => (
+const DayCard = ({ day, isTemplate, onToggleDay, onToggleShift, onTimeClick, onCopyTemplate }: DayCardProps) => (
   <Paper
     variant="outlined"
-    onClick={() => onCardClick(day.id)}
+    onClick={() => onCopyTemplate(day.id)}
     sx={{
-      borderRadius: 2,
-      overflow: "hidden",
+      borderRadius: 2, overflow: "hidden",
       borderColor: isTemplate ? GREEN : undefined,
       borderWidth: isTemplate ? 2 : 1,
+      cursor: "pointer",
     }}
   >
     <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ px: 2, py: 1.5 }}>
       <Stack direction="row" alignItems="center" spacing={1}>
-        <CalendarDays size={16} color="#555" />
-        <Typography variant="subtitle2" fontWeight={700}>{day.label}</Typography>
+        <CalendarDays size={17} color="#555" />
+        <Typography variant="subtitle2" fontWeight={700} sx={{ fontSize: "18px" }}>
+          {day.label}
+        </Typography>
       </Stack>
       <Stack direction="row" alignItems="center" spacing={0.5}>
-        <Typography variant="caption" color="text.secondary">Abierto</Typography>
+        <Typography variant="caption" color="text.secondary" sx={{ fontSize: "16px" }}>
+          Abierto
+        </Typography>
         <Switch
           size="small"
-          checked={!day.enabled}
+          checked={!day.closed}
           onChange={() => onToggleDay(day.id)}
           sx={greenSwitchSx}
+          onClick={(e) => e.stopPropagation()}
         />
       </Stack>
     </Stack>
 
-    {day.shifts && (
-      <Collapse in={!day.enabled}>
+    <Collapse in={!day.closed}>
+      <Divider />
+      <Stack spacing={1.5} sx={{ px: 2, py: 1.5 }}>
+        <MorningShiftSection
+          shift={day.shifts.morning}
+          onTimeClick={(field) =>
+            onTimeClick(day.id, "morning", field, day.shifts.morning[field])
+          }
+        />
         <Divider />
-        <Stack spacing={1.5} sx={{ px: 2, py: 1.5 }}>
-          <ShiftRow
-            icon={Sunrise}
-            label="Turno mañana"
-            shift={day.shifts.morning}
-            onToggle={() => onToggleShift(day.id, "morning")}
-            onFieldClick={(field) =>
-              onFieldClick(day.id, "morning", field, day.shifts!.morning[field])
-            }
-          />
-          {day.shifts.afternoon && (
-            <>
-              <Divider />
-              <ShiftRow
-                icon={SunMoon}
-                label="Turno tarde"
-                shift={day.shifts.afternoon}
-                onToggle={() => onToggleShift(day.id, "afternoon")}
-                onFieldClick={(field) =>
-                  onFieldClick(day.id, "afternoon", field, day.shifts!.afternoon![field])
-                }
-              />
-            </>
-          )}
-        </Stack>
-      </Collapse>
-    )}
+        <AfternoonShiftSection
+          shift={day.shifts.afternoon}
+          onToggle={() => onToggleShift(day.id, "afternoon")}
+          onTimeClick={(field) =>
+            onTimeClick(day.id, "afternoon", field, day.shifts.afternoon[field])
+          }
+        />
+      </Stack>
+    </Collapse>
   </Paper>
 );
 
-// ─── Datos iniciales ──────────────────────────────────────────────────────────
+// ─── Estado inicial ───────────────────────────────────────────────────────────
 
-const makeShifts = (morningEnabled = true, afternoonEnabled = false): DayShifts => ({
-  morning:   { enabled: morningEnabled,   open: "08:00 AM", close: "12:00 PM" },
-  afternoon: { enabled: afternoonEnabled, open: "03:00 PM", close: "08:00 PM" },
+const makeShifts = (afternoonEnabled = false): DayShifts => ({
+  morning:   { enabled: true,            open: "08:00", close: "12:00" },
+  afternoon: { enabled: afternoonEnabled, open: "15:00", close: "20:00" },
 });
 
 const INITIAL_DAYS: Day[] = [
-  { id: "monday",    label: "Lunes",     enabled: false, shifts: makeShifts(true, true)  },
-  { id: "tuesday",   label: "Martes",    enabled: false, shifts: makeShifts(true, false) },
-  { id: "wednesday", label: "Miércoles", enabled: false,  shifts: makeShifts()            },
-  { id: "thursday",  label: "Jueves",    enabled: false,  shifts: makeShifts()            },
-  { id: "friday",    label: "Viernes",   enabled: false,  shifts: makeShifts()            },
-  { id: "saturday",  label: "Sábado",    enabled: true,  shifts: makeShifts()            },
-  { id: "sunday",    label: "Domingo",   enabled: true,  shifts: makeShifts()            },
+  { id: "monday",    label: "Lunes",     closed: false, shifts: makeShifts(true)  },
+  { id: "tuesday",   label: "Martes",    closed: false, shifts: makeShifts()      },
+  { id: "wednesday", label: "Miércoles", closed: false, shifts: makeShifts()      },
+  { id: "thursday",  label: "Jueves",    closed: false, shifts: makeShifts()      },
+  { id: "friday",    label: "Viernes",   closed: false, shifts: makeShifts()      },
+  { id: "saturday",  label: "Sábado",    closed: true,  shifts: makeShifts()      },
+  { id: "sunday",    label: "Domingo",   closed: true,  shifts: makeShifts()      },
 ];
 
 // ─── Componente principal ─────────────────────────────────────────────────────
 
-export default function CommerceBusinessHours() {
-  const [days, setDays] = useState<Day[]>(INITIAL_DAYS);
+interface BusinessHoursProps {
+  days: Day[];
+  onDaysChange: Dispatch<SetStateAction<Day[]>>;
+}
+
+export default function CommerceBusinessHours({ days, onDaysChange }: BusinessHoursProps) {
   const [pickerTarget, setPickerTarget] = useState<TimePickerTarget | null>(null);
 
-  // ID del primer día habilitado (actúa como plantilla para el autocompletado)
-  const templateId: string | undefined = days.find((d) => !d.enabled)?.id;
+  const templateId = days.find((d) => !d.closed)?.id;
 
-  // Cuando el usuario hace click en un día distinto al template,
-  // propaga los shifts del template al resto de días habilitados.
-  const handleCardClick = (dayId: string): void => {
+  // Al hacer click en cualquier card que no sea el template,
+  // replica los horarios del template a todos los días abiertos
+  const handleCopyTemplate = (dayId: string): void => {
     if (!templateId || dayId === templateId) return;
     const template = days.find((d) => d.id === templateId);
-    if (!template?.shifts) return;
+    if (!template) return;
 
-    setDays((prev) =>
+    onDaysChange((prev) =>
       prev.map((d) =>
-        d.id === templateId || !d.shifts
+        d.id === templateId || d.closed
           ? d
           : { ...d, shifts: JSON.parse(JSON.stringify(template.shifts)) }
       )
     );
   };
 
-  const toggleDay = (dayId: string): void => {
-    setDays((prev) =>
-      prev.map((d) => (d.id === dayId ? { ...d, enabled: !d.enabled } : d))
+  const handleToggleDay = (dayId: string): void => {
+    onDaysChange((prev) =>
+      prev.map((d) => (d.id === dayId ? { ...d, closed: !d.closed } : d))
     );
   };
 
-  const toggleShift = (dayId: string, shiftKey: ShiftKey): void => {
-    setDays((prev) =>
+  const handleToggleShift = (dayId: string, shiftKey: ShiftKey): void => {
+    onDaysChange((prev) =>
       prev.map((d) => {
-        if (d.id !== dayId || !d.shifts || !d.shifts[shiftKey]) return d;
+        if (d.id !== dayId) return d;
         return {
           ...d,
           shifts: {
             ...d.shifts,
-            [shiftKey]: { ...d.shifts[shiftKey]!, enabled: !d.shifts[shiftKey]!.enabled },
+            [shiftKey]: { ...d.shifts[shiftKey], enabled: !d.shifts[shiftKey].enabled },
           },
         };
       })
     );
   };
 
-  const handleFieldClick = (
+  // Pasa el valor actual del campo para que el picker lo muestre correctamente
+  const handleTimeClick = (
     dayId: string,
     shiftKey: ShiftKey,
     field: TimeField,
@@ -355,14 +362,14 @@ export default function CommerceBusinessHours() {
     field: TimeField,
     value: string
   ): void => {
-    setDays((prev) =>
+    onDaysChange((prev) =>
       prev.map((d) => {
-        if (d.id !== dayId || !d.shifts || !d.shifts[shiftKey]) return d;
+        if (d.id !== dayId) return d;
         return {
           ...d,
           shifts: {
             ...d.shifts,
-            [shiftKey]: { ...d.shifts[shiftKey]!, [field]: value },
+            [shiftKey]: { ...d.shifts[shiftKey], [field]: value },
           },
         };
       })
@@ -370,16 +377,7 @@ export default function CommerceBusinessHours() {
   };
 
   return (
-    <Box sx={{ maxWidth: 340, mx: "auto", pb: 2, pr:2, pl:2 }}>
-      <Typography variant="h6" fontWeight={600} fontSize={"26px"} gutterBottom >
-        Horarios de atención
-      </Typography>
-
-      {templateId && (
-        <Typography variant="caption" color="#999999" sx={{ display: "block", mb: 1.5 }}>
-          Los horarios del primer día activo se copiarán al resto automáticamente.
-        </Typography>
-      )}
+    <Box sx={{ maxWidth: 340, mx: "auto", pb: 2, px: 2 }}>
 
       <Stack spacing={1.5}>
         {days.map((day) => (
@@ -387,36 +385,18 @@ export default function CommerceBusinessHours() {
             key={day.id}
             day={day}
             isTemplate={day.id === templateId}
-            onToggleDay={toggleDay}
-            onToggleShift={toggleShift}
-            onFieldClick={handleFieldClick}
-            onCardClick={handleCardClick}
+            onToggleDay={handleToggleDay}
+            onToggleShift={handleToggleShift}
+            onTimeClick={handleTimeClick}
+            onCopyTemplate={handleCopyTemplate}
           />
         ))}
       </Stack>
 
-      <Box sx={{ mt: 3 }}>
-        <Box
-          component="button"
-          sx={{
-            bgcolor: "#6da17e",
-            color: "#fff",
-            border: "none",
-            borderRadius: 2,
-            px: 4,
-            py: 1.2,
-            fontSize: "18px",
-            fontWeight: 550,
-            cursor: "pointer",
-            width: "100%",
-            "&:hover": { bgcolor: "#77A787" },
-          }}
-        >
-          Registrar Comercio
-        </Box>
-      </Box>
-
+      {/* key fuerza el remount del Dialog cuando cambia el target,
+          garantizando que los selects se inicialicen con el valor correcto */}
       <TimePickerDialog
+        key={pickerTarget ? `${pickerTarget.dayId}-${pickerTarget.shiftKey}-${pickerTarget.field}` : "closed"}
         target={pickerTarget}
         onClose={() => setPickerTarget(null)}
         onConfirm={handleTimeConfirm}
@@ -424,3 +404,6 @@ export default function CommerceBusinessHours() {
     </Box>
   );
 }
+
+export type { Day };
+export { INITIAL_DAYS };
