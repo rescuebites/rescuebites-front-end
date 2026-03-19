@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from "react";
 import type { Page } from "../interfaces/types";
 import type { SearchSuggestion } from "../interfaces/types";
-import type { ProductResponse } from "@/modules/customer/home/interfaces/responses";
+import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 
 const BASE_URL = "/api/v1/search";
 const DEBOUNCE_DELAY = 350;

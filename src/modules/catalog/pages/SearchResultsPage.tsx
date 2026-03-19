@@ -11,7 +11,7 @@ import {
 import { useSearch } from "../hooks/useSearch";
 import SearchBar from "../components/SearchBar";
 import { ProductCard } from "../components/ProductCard";
-import type { ProductResponse } from "../../customer/home/interfaces/responses";
+import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect } from "react";
 import BackButton from "@/shared/components/ui/BackButton";
