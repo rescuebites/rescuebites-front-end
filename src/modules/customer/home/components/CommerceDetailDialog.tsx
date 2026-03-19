@@ -14,7 +14,7 @@ import {
   Restaurant as RestaurantIcon,
 } from "@mui/icons-material";
 
-import { ProductResponse } from "../interfaces/responses";
+import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { useCommerceDetail } from "../hooks/useCommerces";
 import { useProducts } from "../hooks/useProducts";
 import BackButton from "../../../../shared/components/ui/BackButton";
