@@ -2,7 +2,7 @@ import { Box, CircularProgress, Typography } from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
-import type { ProductResponse } from "./../interfaces/responses";
+import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import ProductDetailDialog from "./ProductDetailDialog";
 import { ProductCard } from "../../../catalog/components/ProductCard";
 

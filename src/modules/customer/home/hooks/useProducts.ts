@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals } from "../services/home.service";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
-import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
+import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
+import { PaginatedResponse } from "../interfaces/responses"; 
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 
 interface UseProductsParams {

@@ -7,6 +7,7 @@ import NotificationsPage from "@/shared/pages/notifications";
 import ProfilePage from "@/shared/pages/ProfilePage";
 import ShoppingCartPage from "@/shared/pages/ShoppingCartPage";
 import OrdersPage from "@/shared/pages/OrdersPage";
+import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import ClientNavbar from "@/modules/navbar/components/ClientNavbar";
 import AppLayout from "@/shared/components/layout/AppLayout";
@@ -18,6 +19,7 @@ export function CustomerRoutes() {
           <Route index element={<HomePage />} />
           <Route path="cart" element={<ShoppingCartPage />} />
           <Route path="orders" element={<OrdersPage />} />
+          <Route path="orders/:orderId" element={<OrderDetailPage />} />
           <Route path="notifications" element={<NotificationsPage/>} />
           <Route path="profile" element={<ProfilePage/>} />
         

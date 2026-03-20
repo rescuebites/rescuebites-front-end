@@ -1,5 +1,5 @@
 import { httpClient } from "@/shared/lib/httpClient";
-import { CreateProductRequest } from "../interfaces/product.form.interface";
+import { CreateProductRequest } from "../interfaces/requests/product.form.interface";
 
 const PRODUCT_URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1`;
 

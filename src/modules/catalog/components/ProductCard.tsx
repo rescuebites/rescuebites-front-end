@@ -1,5 +1,5 @@
 import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
-import type { ProductResponse } from "../interfaces/productResponse";
+import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 
 interface ProductCardProps {
   product: ProductResponse;

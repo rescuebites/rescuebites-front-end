@@ -1,6 +1,6 @@
 import { httpClient } from "@/shared/lib/httpClient";
+import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { 
-  ProductResponse,
   CommerceResponse,
   CommercePublicResponse, 
   PaginatedResponse 

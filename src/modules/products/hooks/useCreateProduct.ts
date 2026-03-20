@@ -2,7 +2,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createProduct } from "../api/products.api";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 import { useNavigate } from "react-router-dom";
-import { CreateProductRequest } from "../interfaces/product.form.interface";
+import { CreateProductRequest } from "../interfaces/requests/product.form.interface";
 import { CreateProductSchema } from "../schemas/createProductSchema";
 
 export const useCreateProduct = (commerceId: string | undefined) => {
