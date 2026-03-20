@@ -1,4 +1,4 @@
-import { Box, Typography, Skeleton, Stack } from "@mui/material";
+import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
@@ -8,7 +8,6 @@ import BackButton from "@/shared/components/ui/BackButton";
 
 export default function AllStoresPage() {
   const navigate = useNavigate();
-
   const selectedCategory = useFilterStore((state) => state.selectedCategory);
   const categoryToFetch = selectedCategory || "Panadería";
 

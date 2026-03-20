@@ -6,14 +6,14 @@ import {
   PaginatedResponse 
 } from "../interfaces/responses";
 import { CATEGORY_TO_BACKEND, CategoryDisplay } from "../interfaces/types";
-import { Category } from "../interfaces/filter.interface";
+//import { Category } from "../interfaces/filter.interface";
 
 // Productos destacados del home (ordenados por precio)
-export const getTopDeals = async (size = 12): Promise<ProductResponse[]> => {
+export const getTopDeals = async (locality: string, size = 12): Promise<ProductResponse[]> => {
   try {
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
       `/api/v1/public/products/ordered-by-price`,
-      { params: { page: 0, size } }
+      { params: { locality, page: 0, size } }
     );
     return data?.content ?? [];
   } catch (error) {
@@ -32,11 +32,11 @@ export const getAllProducts = async (page = 0, size = 10): Promise<PaginatedResp
 };
 
 //Obtener todos los comercios paginados -> para sección de tiendas
-export const getAllCommerces = async (page = 0): Promise<PaginatedResponse<CommercePublicResponse>> => {
+export const getAllCommerces = async (locality: string, page = 0): Promise<PaginatedResponse<CommercePublicResponse>> => {
   try {
     const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
       `/api/v1/public/commerces`,
-      { params: { page } }
+      { params: { locality, page } }
     );
     return data;
   } catch (error) {
@@ -53,7 +53,8 @@ export const getAllCommerces = async (page = 0): Promise<PaginatedResponse<Comme
 
 // Comercios por tipo (para stores)
 export const getCommercesByType = async (
-  categoryDisplay: CategoryDisplay, 
+  categoryDisplay: CategoryDisplay,
+  locality: string,
   page = 0, 
   size = 6
 ): Promise<PaginatedResponse<CommercePublicResponse>> => {
@@ -61,7 +62,7 @@ export const getCommercesByType = async (
     const commerceType = CATEGORY_TO_BACKEND[categoryDisplay];
     const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
       `/api/v1/public/commerces/type/${commerceType}`,
-      { params: { page, size } }
+      { params: { locality, page, size } }
     );
     // Si la respuesta es null/undefined, devuelve estructura vacía
       return data ?? { 
@@ -115,6 +116,7 @@ export const getCommerceDetail = async (commerceId: string): Promise<CommerceRes
 //Obtener productos por tipo de comercio seleccionado
 export const getProductsByCategory = async (
   categoryDisplay: CategoryDisplay,
+  locality: string,
   page = 0,
   size = 12
 ): Promise<ProductResponse[]> => {
@@ -122,7 +124,7 @@ export const getProductsByCategory = async (
     const category = CATEGORY_TO_BACKEND[categoryDisplay];
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
       `/api/v1/public/products/type/${category}/ordered-by-price`,
-      { params: { page, size } }
+      { params: { locality, page, size } }
     );
 
     //Normalizar respuesta de imagenes de backend (puede venir como 'images' o 'productImages')
@@ -131,7 +133,7 @@ export const getProductsByCategory = async (
       // Si viene 'images', se copia a 'productImages'
       productImages: (product as any).images || product.productImages || []
     }));
-    
+
     return normalizedContent;
   } catch (error) {
     console.error("Error fetching products by category:", error);

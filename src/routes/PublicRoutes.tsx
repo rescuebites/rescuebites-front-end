@@ -3,7 +3,7 @@ import { Routes, Route } from "react-router-dom";
 import PublicNavbar from "@/modules/navbar/components/PublicNavbar";
 import HomePage from "@/modules/customer/home/pages/HomePage";
 import NotLoggedInScreen from "@/modules/navbar/pages/NotLoggedInScreen";
-import StorePage from "@/modules/customer/home/pages/StorePage";
+import StoresDetailPage from "@/modules/customer/home/pages/StoresDetailPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
@@ -21,7 +21,7 @@ export function PublicRoutes() {
         <Route path="notifications" element={<NotLoggedInScreen />} />
         <Route path="profile" element={<NotLoggedInScreen />} />
         
-        <Route path="stores/:commerceId" element={<StorePage />} />
+        <Route path="stores/:commerceId" element={<StoresDetailPage />} />
         <Route path="allProducts" element={<AllProductsPage />} />
         <Route path="allStores" element={<AllStoresPage />} />
         <Route path="search" element={<SearchResultsPage />} />

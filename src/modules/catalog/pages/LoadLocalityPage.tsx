@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import {
   Card,
   Typography,
@@ -10,33 +11,15 @@ import {
 } from '@mui/material';
 import { MdLocationOn } from 'react-icons/md';
 import Header from '@/shared/components/layout/Header';
-import NavbarUI from '@/modules/navbar/components/NavbarUI';
-import { navbarRoutes } from "../../navbar/config/routes";
+import { useLocalityStore } from '@/modules/customer/home/hooks/useLocalityStore';
+import { localities } from '../constants/localitiesList';
 
 interface LocationCardProps {
   onLocationSubmit: (locality: string) => void;
 }
 
-// Lista inicial de localidades de Córdoba
-const LOCALITIES = [
-  'Villa María',
-  'Córdoba Capital',
-  'Río Cuarto',
-  'Villa Carlos Paz',
-  'San Francisco',
-  'Alta Gracia',
-  'Bell Ville',
-  'Jesús María',
-  'Villa Dolores',
-  'La Calera',
-  'Cosquín',
-  'Cruz del Eje',
-  'Laboulaye',
-  'Unquillo',
-  'Villa Allende',
-];
 
-export default function LocationCard({ onLocationSubmit }: LocationCardProps) {
+function LocationCard({ onLocationSubmit }: LocationCardProps) {
   const [selectedLocality, setSelectedLocality] = useState<string>('');
   const [inputValue, setInputValue] = useState('');
 
@@ -161,7 +144,7 @@ export default function LocationCard({ onLocationSubmit }: LocationCardProps) {
                 onInputChange={(_, newInputValue) => {
                 setInputValue(newInputValue);
                 }}
-                options={LOCALITIES}
+                options={localities}
                 freeSolo
                 renderInput={(params) => (
                 <TextField
@@ -233,21 +216,18 @@ export default function LocationCard({ onLocationSubmit }: LocationCardProps) {
             </Button>
             </Card>
         </Box>
-
-        {/* Navbar normal (sin overlay) */}
-        {/* <Box
-            sx={{
-            position: 'fixed',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            zIndex: 1100,
-            }}
-        >
-            <NavbarUI 
-            routes={navbarRoutes.void}  
-            />
-        </Box> */}
     </Box>
   );
+}
+
+export default function LoadLocalityPage() {
+  const navigate = useNavigate();
+  const { setLocality } = useLocalityStore();
+
+  const handleLocationSubmit = (locality: string) => {
+    setLocality(locality);
+    navigate('/public');
+  };
+
+  return <LocationCard onLocationSubmit={handleLocationSubmit} />;
 }

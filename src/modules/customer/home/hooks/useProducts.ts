@@ -3,6 +3,7 @@ import { getProductDetail, getProductsByCategory, getProductsByCommerce, getTopD
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
 import { CategoryDisplay } from "../interfaces/types";
+import { useLocalityStore } from "./useLocalityStore";
 
 interface UseProductsParams {
   commerceId?: string;
@@ -12,11 +13,14 @@ interface UseProductsParams {
 
 
 export function useTopDeals(size = 6) {
+  const locality = useLocalityStore((state) => state.locality);
+
   return useQuery<ProductResponse[], Error>({ 
-    queryKey: [TOP_DEALS_QUERY_KEY, size], //identificador único de esta query en cache (para evitar hacer otra petición si se llama de nuevo elmismo id)
-    queryFn: () => getTopDeals(size), //función que trae los datos, en este caso la función que hace la petición a la API
+    queryKey: [TOP_DEALS_QUERY_KEY, locality, size], //identificador único de esta query en cache (para evitar hacer otra petición si se llama de nuevo elmismo id)
+    queryFn: () => getTopDeals(locality || 'Córdoba Capital', size), //función que trae los datos, en este caso la función que hace la petición a la API
     staleTime: 5 * 60 * 1000,
     retry: 2,
+    enabled: !!locality,
     placeholderData: [], //valor por defecto si la query falla, por si no hay productos en la bd
   });
 }
@@ -45,16 +49,19 @@ export const useProductDetail = (productId: string | null) => {
 
 //hook para obtener los productos filtrados por tipo de coemrcio seleccionado
 export function useProductsByCategory(category: CategoryDisplay | null, size = 12) {
+  const locality = useLocalityStore((state) => state.locality);
+
   return useQuery<ProductResponse[], Error>({
-    queryKey: ['products-by-category', category, size],
+    queryKey: ['products-by-category', category, locality, size],
     queryFn: () => {
       if (!category) {
-        return getTopDeals(size); //si no hay categoría seleccionada, muestra los top deals
+        return getTopDeals(locality || 'Córdoba Capital', size); //si no hay categoría seleccionada, muestra los top deals
       }
-      return getProductsByCategory(category, 0, size);
+      return getProductsByCategory(category, locality || 'Córdoba Capital', 0, size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
+    enabled: !!locality,
     placeholderData: [],
   });
 }

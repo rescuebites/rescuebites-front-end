@@ -3,14 +3,18 @@ import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../servi
 import { CommercePublicResponse, PaginatedResponse } from "../interfaces/responses";
 import type { CommerceResponse } from "../interfaces/responses";
 import { CategoryDisplay } from "../interfaces/types";
+import { useLocalityStore } from "./useLocalityStore";
 
 //hook para obtener todos los comercios sin importar su tipo, para sección de tiendas
 export function useAllCommerces() {
+  const locality = useLocalityStore((state) => state.locality);
+
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
-    queryKey: ['all-commerces'], 
-    queryFn: () => getAllCommerces(0),  
+    queryKey: ['all-commerces', locality], 
+    queryFn: () => getAllCommerces(locality || 'Córdoba Capital', 0),  
     staleTime: 5 * 60 * 1000, 
-    retry: 2, 
+    retry: 2,
+    enabled: !!locality,
     placeholderData: { 
       content: [], 
       totalElements: 0,
@@ -22,13 +26,15 @@ export function useAllCommerces() {
 }
 
 export function useCommercesByType(commerceType: CategoryDisplay, size = 6) {
+  const locality = useLocalityStore((state) => state.locality);
+
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
-    queryKey: ['commerces', commerceType, size], // Identificador único de esta query en cache
-    queryFn: () => getCommercesByType(commerceType, 0, size), // Función que trae los datos, en este caso la función que hace la petición a la API
-    staleTime: 5 * 60 * 1000, //los datos se consideran frescos por 5 minutos, si se llama de nuevo la misma query dentro de ese tiempo, no hará otra petición a la API sino que usará los datos en cache
-    retry: 2, //si la petición falla hace 2 reintentos antes de marcar la query como error
-    enabled: !!commerceType, // Solo ejecuta si commerceType existe
-    placeholderData: { // Valor por defecto si la query falla, si no hay comercios por ej
+    queryKey: ['commerces', commerceType, locality, size],
+    queryFn: () => getCommercesByType(commerceType, locality || 'Córdoba Capital', 0, size),
+    staleTime: 5 * 60 * 1000,
+    retry: 2,
+    enabled: !!commerceType && !!locality,
+    placeholderData: { 
       content: [], 
       totalElements: 0, 
       totalPages: 0, 
