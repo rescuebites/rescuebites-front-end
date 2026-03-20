@@ -1,20 +1,9 @@
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { CommerceTypeDisplay, CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
+import { COMMERCE_TYPE_STYLES } from "@/shared/config/commerce-styles";
 import { Box, Chip } from "@mui/material";
-import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag, Utensils, LucideShoppingBasket, Popsicle, Cookie } from "lucide-react";
-
-// ─────────────────────────────────────────────
-// ESTILOS PARA CHIPS DE TIPO DE COMERCIO
-// ─────────────────────────────────────────────
-
-const COMMERCE_TYPE_STYLES: Record<CommerceTypeDisplay, { bg: string; color: string; icon: React.ReactNode }> = {
-  Verdulería:  { bg: "#B9EEA6",   color: "#39714C", icon: <Sprout size={14} /> },
-  Panadería:   { bg: "#EB951C87", color: "#A16A0A", icon: <Cookie size={14} /> },
-  Restaurante: { bg: "#E6E6E7",   color: "#6C6567", icon: <Utensils size={14} /> },
-  Supermercado:{ bg: "#F2C94C8C", color: "#CC9F19", icon: <LucideShoppingBasket size={14} /> },
-  Kiosco:      { bg: "#DDD4F9",   color: "#6D59D3", icon: <Popsicle size={14}/>},
-};
+import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag } from "lucide-react";
 
 // Estilo genérico para categorías de producto (Golosinas, Fruta, Pan, etc.)
 // Todas comparten el mismo estilo neutro — podés diferenciarlas después si querés

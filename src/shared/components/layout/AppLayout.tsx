@@ -18,7 +18,7 @@ export default function AppLayout({navbar}:CustomerLayoutProps) {
       </Box>
 
       {/* Navbar fija abajo -> en las rutas se importa la navbar asociada al rol */}
-      <Box sx={{ position: "fixed", bottom: 0, width: "100%" }}>
+      <Box sx={{ position: "fixed", bottom: 0, width: "100%"}}>
         {navbar}
       </Box>
 
