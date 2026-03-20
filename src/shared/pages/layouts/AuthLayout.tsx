@@ -8,7 +8,7 @@ export function AuthLayout() {
       container
       sx={{
         minHeight: "100vh",
-        backgroundColor: "#EAFBF1",
+        backgroundColor: "	#77A787",
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
@@ -16,12 +16,11 @@ export function AuthLayout() {
         pb: 5,
       }}
     >
-      {/* Contenedor para tarjeta + logo */}
       <Box sx={{ position: "relative", display: "inline-block" }}>
         <Box
           sx={{
             position: "absolute",
-            top: -40, 
+            top: -40,
             left: "50%",
             transform: "translateX(-50%)",
             zIndex: 2,
@@ -30,7 +29,6 @@ export function AuthLayout() {
           <Logo width={90} height={90} />
         </Box>
 
-        {/* Tarjeta */}
         <Paper
           elevation={3}
           sx={{
@@ -38,7 +36,7 @@ export function AuthLayout() {
             p: 4,
             width: "100%",
             maxWidth: 400,
-            pt: 10, 
+            pt: 10,
           }}
         >
           <Stack spacing={2}>

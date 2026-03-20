@@ -1,12 +1,12 @@
 import { httpClient } from "@/shared/lib/httpClient";
+import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { 
-  ProductResponse,
   CommerceResponse,
   CommercePublicResponse, 
   PaginatedResponse 
 } from "../interfaces/responses";
-import { CATEGORY_TO_BACKEND, CategoryDisplay } from "../interfaces/types";
-//import { Category } from "../interfaces/filter.interface";
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
+import { getCommerceTypeFromDisplay } from "@/shared/utils/commerce.utils";
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (locality: string, size = 12): Promise<ProductResponse[]> => {
@@ -53,13 +53,13 @@ export const getAllCommerces = async (locality: string, page = 0): Promise<Pagin
 
 // Comercios por tipo (para stores)
 export const getCommercesByType = async (
-  categoryDisplay: CategoryDisplay,
   locality: string,
+  commerceTypeDisplay: CommerceTypeDisplay, 
   page = 0, 
   size = 6
 ): Promise<PaginatedResponse<CommercePublicResponse>> => {
   try {
-    const commerceType = CATEGORY_TO_BACKEND[categoryDisplay];
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
     const { data } = await httpClient.get<PaginatedResponse<CommercePublicResponse>>(
       `/api/v1/public/commerces/type/${commerceType}`,
       { params: { locality, page, size } }
@@ -114,16 +114,16 @@ export const getCommerceDetail = async (commerceId: string): Promise<CommerceRes
 };
 
 //Obtener productos por tipo de comercio seleccionado
-export const getProductsByCategory = async (
-  categoryDisplay: CategoryDisplay,
+export const getProductsByCommerceType = async (
+  commerceTypeDisplay: CommerceTypeDisplay,
   locality: string,
   page = 0,
   size = 12
 ): Promise<ProductResponse[]> => {
   try {
-    const category = CATEGORY_TO_BACKEND[categoryDisplay];
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
-      `/api/v1/public/products/type/${category}/ordered-by-price`,
+      `/api/v1/public/products/type/${commerceType}/ordered-by-price`,
       { params: { locality, page, size } }
     );
 

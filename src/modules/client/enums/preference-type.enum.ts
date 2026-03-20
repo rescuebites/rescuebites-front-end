@@ -1,0 +1,8 @@
+export enum PreferenceType {
+  CELIAC = "CELIAC",
+  VEGAN = "VEGAN",
+  VEGETARIAN = "VEGETARIAN",
+  GLUTEN_FREE = "GLUTEN_FREE",
+  LACTOSE_FREE = "LACTOSE_FREE",
+  LOW_SODIUM = "LOW_SODIUM",
+}

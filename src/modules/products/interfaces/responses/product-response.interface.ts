@@ -1,17 +1,12 @@
 import { CommerceResponse } from "@/modules/customer/home/interfaces/responses";
-
-export interface ImageResponse {
-  imageId: string;
-  url: string;
-  publicId: string | null;
-}
+import { ImageResponse } from "@/shared/interfaces/image-response.interface";
 
 export interface ProductResponse {
   productId: string;
   commerce: CommerceResponse;
   commerceId: string;
   commerceName: string;
-  commerceImages: ImageResponse[];  
+  commerceImages: ImageResponse[];
   commerceOpeningHours: string;
   name: string;
   description: string;
@@ -26,5 +21,5 @@ export interface ProductResponse {
   expirationDate: string | null;
   productImages: ImageResponse[];
   active: boolean;
-  preferences: string[] | null;  
+  preferences: string[] | null;
 }

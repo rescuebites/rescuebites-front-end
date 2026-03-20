@@ -1,6 +1,8 @@
 import { useState } from "react";
-import { TextField, Button, Box, Typography } from "@mui/material";
+import { TextField, Box } from "@mui/material";
 import { useSendRecoveryEmail } from "@/modules/users/hooks/useSendRecoveryEmail";
+import CustomTitle from "@/shared/components/CustomTitle";
+import CustomButton from "@/shared/components/CustomButton";
 
 export function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
@@ -13,14 +15,7 @@ export function ForgotPasswordPage() {
 
   return (
     <>
-      <Typography
-        variant="h5"
-        align="center"
-        gutterBottom
-        sx={{ fontWeight: "bold", color: "##77A787" }}
-      >
-        Recuperar contraseña
-      </Typography>
+      <CustomTitle text="Recuperar contraseña" />
 
       <Box component="form" onSubmit={handleSubmit}>
         <TextField
@@ -36,19 +31,13 @@ export function ForgotPasswordPage() {
             shrink: true,
           }}
         />
-        <Button
+
+        <CustomButton
           type="submit"
-          variant="contained"
+          text="Enviar enlace"
+          isLoading={isPending}
           fullWidth
-          sx={{
-            mt: 2,
-            backgroundColor: "#77A787",
-            "&:hover": { backgroundColor: "#669976" },
-          }}
-          loading={isPending}
-        >
-          {isPending ? "Cargando..." : "Enviar enlace"}
-        </Button>
+        />
       </Box>
     </>
   );

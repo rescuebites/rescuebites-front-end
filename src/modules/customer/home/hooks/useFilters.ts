@@ -29,7 +29,7 @@ export const useFilters = () => {
         // Ejemplo de datos mock (eliminar cuando tengas la API)
         const mockPreferences: PreferenceType[] = [
           PreferenceType.VEGAN,
-          PreferenceType.NUT_FREE,
+          // PreferenceType.NUT_FREE, // No existe en el enum actual
         ];
         setPermanentPreferences(mockPreferences);
       } catch (error) {

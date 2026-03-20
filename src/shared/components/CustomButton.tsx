@@ -18,7 +18,7 @@ export default function CustomButton({
   fullWidth = false,
   disabled = false,
   onClick,
-  backgroundColor = "#77A787",
+  backgroundColor = "#5A9A6E",
   sx,
 }: CustomButtonProps) {
   return (
@@ -30,10 +30,11 @@ export default function CustomButton({
       disabled={disabled || isLoading}
       sx={{
         mt: 2,
+        borderRadius: 2,
         backgroundColor,
         fontWeight: "bold",
         ...(fullWidth ? {} : { width: "80%", mx: "auto", display: "block" }),
-        "&:hover": { backgroundColor: "#7fbf7f" },
+        "&:hover": { backgroundColor: "#77A787" },
         ...sx,
       }}
     >

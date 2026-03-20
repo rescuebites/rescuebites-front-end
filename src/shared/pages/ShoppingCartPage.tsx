@@ -7,16 +7,15 @@ import {
   Button,
   Card,
   CardContent,
-  Avatar,
   Stack,
   Container,
 } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
-import LocationOnIcon from "@mui/icons-material/LocationOn";
 import SwapHorizIcon from "@mui/icons-material/SwapHoriz";
 import { QuantityControl } from "../components/layout/QuantityControl";
 import { ProductChips } from "../components/layout/ProductChips";
 import BackButton from "../components/ui/BackButton";
+import CommerceInfoCard from "../components/CommerceInfoCard";
 
 interface CartItem {
   id: number;
@@ -257,45 +256,12 @@ const CartPage: React.FC = () => {
           Comercio
         </Typography>
 
-        <Card
-          elevation={0}
-          sx={{
-            borderRadius: 3,
-            border: "1px solid #F3F4F6",
-            display: 'flex',
-            alignItems: 'flex-start',
-            mb:4
-          }}
-        >
-          <CardContent sx={{ p: "14px !important" }}>
-            <Stack direction="row" spacing={1.5} alignItems="center">
-              <Avatar
-                // src={commerce.images?.[0]?.url || ''}
-                sx={{
-                  width: { xs: 60, sm: 80, md: 100},
-                  height: { xs: 60, sm: 80, md: 100},
-                  backgroundColor: '#77A787',
-                  borderRadius:{xs:3, sm:5, md:7}
-                }}
-              >
-                Brizha
-              </Avatar>
-              <Box>
-                <Typography
-                  sx={{ fontWeight: 700, fontSize: {xs:19, sm:22, md:25}, color: '#2D2D2D' }}
-                >
-                  {COMMERCE.name}
-                </Typography>
-                <Stack direction="row" alignItems="center" spacing={0.25}>
-                  <LocationOnIcon sx={{ fontSize: {xs:13, sm:15, md:17}, color: "#9CA3AF" }} />
-                  <Typography sx={{ fontSize: {xs:16, sm:19, md:22}, color: "#9CA3AF" }}>
-                    {COMMERCE.address}
-                  </Typography>
-                </Stack>
-              </Box>
-            </Stack>
-          </CardContent>
-        </Card>
+        <Box sx={{ mb: 4 }}>
+          <CommerceInfoCard
+            commerceName={COMMERCE.name}
+            commerceAddress={COMMERCE.address}
+          />
+        </Box>
 
         {/* Método de pago*/}
         <Typography

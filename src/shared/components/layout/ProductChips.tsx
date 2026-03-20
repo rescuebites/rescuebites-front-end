@@ -1,26 +1,9 @@
-import { CategoryBackend, CategoryDisplay, ProductCondition } from "@/modules/customer/home/interfaces/types";
+import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceTypeDisplay, CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
+import { COMMERCE_TYPE_STYLES } from "@/shared/config/commerce-styles";
 import { Box, Chip } from "@mui/material";
-import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag, Utensils, LucideShoppingBasket, Popsicle, Cookie } from "lucide-react";
-
-// ─────────────────────────────────────────────
-// MAPEOS DE TIPO DE COMERCIO
-// ─────────────────────────────────────────────
-
-export const BACKEND_TO_CATEGORY: Record<CategoryBackend, CategoryDisplay> = {
-  BAKERY: "Panadería",
-  SUPERMARKET: "Supermercado",
-  GREENGROCERY: "Verdulería",
-  RESTAURANT: "Restaurante",
-  KIOSK: "Kiosco",
-};
-
-const COMMERCE_TYPE_STYLES: Record<CategoryDisplay, { bg: string; color: string; icon: React.ReactNode }> = {
-  Verdulería:  { bg: "#B9EEA6",   color: "#39714C", icon: <Sprout size={14} /> },
-  Panadería:   { bg: "#EB951C87", color: "#A16A0A", icon: <Cookie size={14} /> },
-  Restaurante: { bg: "#E6E6E7",   color: "#6C6567", icon: <Utensils size={14} /> },
-  Supermercado:{ bg: "#F2C94C8C", color: "#CC9F19", icon: <LucideShoppingBasket size={14} /> },
-  Kiosco:      { bg: "#DDD4F9",   color: "#6D59D3", icon: <Popsicle size={14}/>},
-};
+import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag } from "lucide-react";
 
 // Estilo genérico para categorías de producto (Golosinas, Fruta, Pan, etc.)
 // Todas comparten el mismo estilo neutro — podés diferenciarlas después si querés
@@ -74,12 +57,12 @@ export function getDaysUntilExpiration(expirationDate: string): number {
 // SUB-COMPONENTES REUTILIZABLES
 
 /** Chip de tipo de comercio — acepta key backend ("KIOSK") o display ("Kiosco") */
-export function CategoryChip({ category }: { category: string }) {
+export function CommerceTypeChip({ commerceType }: { commerceType: string }) {
   const display =
-    BACKEND_TO_CATEGORY[category as CategoryBackend] ??
-    (category as CategoryDisplay);
+    CommerceTypeDisplayName[commerceType as CommerceType] ??
+    (commerceType as CommerceTypeDisplay);
 
-  const style = COMMERCE_TYPE_STYLES[display as CategoryDisplay];
+  const style = COMMERCE_TYPE_STYLES[display as CommerceTypeDisplay];
   if (!style) return null;
 
   return (
@@ -260,7 +243,7 @@ export function ProductChips({
         )}
 
         {/* Tipo de comercio — "Kiosco", "Verdulería", etc. */}
-        {showCategory && category && <CategoryChip category={category} />}
+        {showCategory && category && <CommerceTypeChip commerceType={category} />}
 
       </Box>
     </>

@@ -1,8 +1,9 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail, getProductsByCategory, getProductsByCommerce, getTopDeals } from "../services/home.service";
+import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals } from "../services/home.service";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
-import { ProductResponse, PaginatedResponse } from "../interfaces/responses"; 
-import { CategoryDisplay } from "../interfaces/types";
+import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
+import { PaginatedResponse } from "../interfaces/responses"; 
+import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { useLocalityStore } from "./useLocalityStore";
 
 interface UseProductsParams {
@@ -48,16 +49,16 @@ export const useProductDetail = (productId: string | null) => {
 };
 
 //hook para obtener los productos filtrados por tipo de coemrcio seleccionado
-export function useProductsByCategory(category: CategoryDisplay | null, size = 12) {
+export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
   const locality = useLocalityStore((state) => state.locality);
 
   return useQuery<ProductResponse[], Error>({
-    queryKey: ['products-by-category', category, locality, size],
+    queryKey: ['products-by-category', commerceType, locality, size],
     queryFn: () => {
-      if (!category) {
+      if (!commerceType) {
         return getTopDeals(locality || 'Córdoba Capital', size); //si no hay categoría seleccionada, muestra los top deals
       }
-      return getProductsByCategory(category, locality || 'Córdoba Capital', 0, size);
+      return getProductsByCommerceType(commerceType, locality || 'Córdoba Capital', 0, size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
