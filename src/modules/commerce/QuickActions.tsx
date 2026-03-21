@@ -6,7 +6,7 @@ import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 
 export default function QuickActions() {
   return (
-    <Stack direction="row" spacing={2}>
+    <Stack direction="row" spacing={1}>
       <QuickActionCard
         title="Register Product"
         icon={<RestaurantIcon />}

@@ -1,7 +1,11 @@
-import { Box } from "@mui/material";
-import SectionHeader from "./SectionHeader";
+import { Box, Typography } from "@mui/material";
 import ProductsSection from "./ProductsSection";
 import type { ProductResponse } from "../customer/home/interfaces/responses";
+import StatisticsCard from "./StatisticsCard";
+import OrdersSection from "./OrdersSection";
+import QuickActions from "./QuickActions";
+import SearchBar from "@/shared/components/layout/SearchBar";
+import CollapsibleSection from "./CollapsibleSection";
 
 const mockProducts: ProductResponse[] = [
   {
@@ -12,7 +16,7 @@ const mockProducts: ProductResponse[] = [
     discountPercentage: 50,
     expirationDate: "2026-01-22",
     productImages: [{ url: "/coffee.jpg" }],
-    stock: 6
+    stock: 6,
   },
   {
     id: 2,
@@ -22,27 +26,54 @@ const mockProducts: ProductResponse[] = [
     discountPercentage: 40,
     expirationDate: "2026-01-21",
     productImages: [{ url: "/croissant.jpg" }],
-    stock: 2
-  }
+    stock: 2,
+  },
 ] as any;
 
 export default function CustomerDashboardPage() {
   return (
-    <Box
-      sx={{
-        px: 2.5,
-        pb: 12,
-        maxWidth: 600,
-        mx: "auto"
-      }}
-    >
-      {/* Statistics */}
-      <SectionHeader title="Statistics" />
-      
-      {/* Products */}
-      <SectionHeader title="Products" />
+    <>
+      <Box
+        sx={{
+          px: 2.5,
+          pt: 1,
+          pb: 1,
+          maxWidth: 600,
+          mx: "auto",
+        }}
+      >
+        {/* Search */}
+        <SearchBar onSearchChange={() => {}} />
 
-      <ProductsSection products={mockProducts} />
-    </Box>
+        {/* Quick actions */}
+        <Box mt={3}>
+          <Typography fontWeight={700} fontSize={20} mb={2}>
+            Quick Actions
+          </Typography>
+
+          <QuickActions />
+        </Box>
+      </Box>
+      <Box
+        sx={{
+          px: 2.5,
+          pb: 12,
+          maxWidth: 600,
+          mx: "auto",
+        }}
+      >
+        <CollapsibleSection title="Orders">
+          <OrdersSection />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Statistics">
+          <StatisticsCard />
+        </CollapsibleSection>
+
+        <CollapsibleSection title="Products">
+          <ProductsSection products={mockProducts} />
+        </CollapsibleSection>
+      </Box>
+    </>
   );
 }

@@ -3,10 +3,11 @@ import ChevronRightIcon from "@mui/icons-material/ChevronRight";
 
 interface Props {
   title: string;
+  open?: boolean;
   onClick?: () => void;
 }
 
-export default function SectionHeader({ title, onClick }: Props) {
+export default function SectionHeader({ title, open, onClick }: Props) {
   return (
     <Box
       sx={{
@@ -14,14 +15,14 @@ export default function SectionHeader({ title, onClick }: Props) {
         alignItems: "center",
         justifyContent: "space-between",
         mb: 2,
-        mt: 3
+        mt: 3,
       }}
     >
       <Typography
         sx={{
           fontWeight: 700,
           fontSize: 22,
-          color: "#2D2D2D"
+          color: "#2D2D2D",
         }}
       >
         {title}
@@ -30,7 +31,9 @@ export default function SectionHeader({ title, onClick }: Props) {
       <IconButton
         onClick={onClick}
         sx={{
-          color: "#77A787"
+          color: "#77A787",
+          transform: open ? "rotate(90deg)" : "rotate(0deg)",
+          transition: "0.2s",
         }}
       >
         <ChevronRightIcon />

@@ -1,13 +1,9 @@
-import { Box, Typography, Stack } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import OrderCard from "./OrderCard";
 
 export default function OrdersSection() {
   return (
     <Box mt={3}>
-      <Typography fontWeight={700} fontSize={20} mb={2}>
-        Orders
-      </Typography>
-
       <Stack spacing={2}>
         <OrderCard
           name="Laura Perez"
