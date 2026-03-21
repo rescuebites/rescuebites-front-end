@@ -15,7 +15,7 @@ const mockProducts: ProductResponse[] = [
     originalPrice: 50,
     discountPercentage: 50,
     expirationDate: "2026-01-22",
-    productImages: [{ url: "/coffee.jpg" }],
+    productImages: [{ url: "https://images.unsplash.com/photo-1509042239860-f550ce710b93" }],
     stock: 6,
   },
   {
@@ -25,7 +25,7 @@ const mockProducts: ProductResponse[] = [
     originalPrice: 30,
     discountPercentage: 40,
     expirationDate: "2026-01-21",
-    productImages: [{ url: "/croissant.jpg" }],
+    productImages: [{ url: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b" }],
     stock: 2,
   },
 ] as any;

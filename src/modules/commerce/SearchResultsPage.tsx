@@ -12,7 +12,7 @@ export default function SearchResultsPage() {
       discount: 50,
       expiresIn: "2 days",
       stock: 1,
-      image: "/salad1.jpg",
+      image: "https://picsum.photos/seed/pasta-salad/300/200",
     },
     {
       id: 2,
@@ -22,7 +22,7 @@ export default function SearchResultsPage() {
       discount: 45,
       expiresIn: "1 days",
       stock: 2,
-      image: "/salad2.jpg",
+      image: "https://picsum.photos/seed/caesar-salad/300/200",
     },
     {
       id: 3,
@@ -32,7 +32,7 @@ export default function SearchResultsPage() {
       discount: 40,
       expiresIn: "4 days",
       stock: 4,
-      image: "/salad3.jpg",
+      image: "https://picsum.photos/seed/waldorf/300/200",
     },
   ];
 

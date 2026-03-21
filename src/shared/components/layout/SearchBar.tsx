@@ -3,12 +3,9 @@ import {
   InputAdornment,
   IconButton,
   Box,
-  Badge,
 } from "@mui/material";
 import { useState } from "react";
 import { MdClose, MdSearch } from "react-icons/md";
-import TuneIcon from "@mui/icons-material/Tune";
-import { useFilterStore } from "../../../modules/customer/home/hooks/useFilterStore";
 
 export default function SearchBar({
   onSearchChange,
@@ -27,9 +24,6 @@ export default function SearchBar({
     setValue("");
     onSearchChange("");
   };
-
-  const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
-  const activeFiltersCount = getActiveFiltersCount();
 
   return (
     <Box
