@@ -1,6 +1,6 @@
 import { Footer } from "@/modules/auth/components/Footer";
 import LoginForm from "@/modules/auth/components/LoginForm";
-import CustomerDashboardPage from "@/modules/commerce/CustomerDashboardPage";
+import CustomerDashboardPage from "@/modules/commerce/CommerceDashboardPage";
 import SearchResultsPage from "@/modules/commerce/SearchResultsPage";
 
 export function LoginPage() {

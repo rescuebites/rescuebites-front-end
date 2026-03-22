@@ -10,13 +10,14 @@ export default function RoutesProvider() {
     <Routes>
       <Route path="/auth/*" element={<AuthRoutes />} />
       <Route path="/api/users/*" element={<UserRoutes />} />
-      <Route path="/commerce/*" element={<CommerceRoutes />} />
 
       {/* Selector de localidad — fuera de AppLayout, sin barra de navegación */}
       <Route path="locality" element={<LoadLocalityPage />} />
 
       <Route path="/*" element={<CustomerRoutes />} />
 
+
+      <Route path="/commerce/*" element={<CommerceRoutes />} />
       {/* Redirecciones heredadas para que los enlaces antiguos no den 404 */}
       <Route path="/customer/*" element={<Navigate to="/" replace />} />
       <Route path="/public/*" element={<Navigate to="/" replace />} /> 
