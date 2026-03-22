@@ -10,7 +10,7 @@ import OrdersPage from "@/shared/pages/OrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import ClientNavbar from "@/modules/navbar/components/ClientNavbar";
-import AppLayout from "@/shared/components/layout/AppLayout";
+import AppLayout from "@/shared/pages/layouts/AppLayout";
 
 export function CustomerRoutes() {
   return (
@@ -21,8 +21,7 @@ export function CustomerRoutes() {
           <Route path="orders" element={<OrdersPage />} />
           <Route path="orders/:orderId" element={<OrderDetailPage />} />
           <Route path="notifications" element={<NotificationsPage/>} />
-          <Route path="profile" element={<ProfilePage/>} />
-        
+          <Route path="profile" element={<ProfilePage/>} />        
           <Route index element={<HomePage />} />
           <Route path="/stores/:commerceId" element={<StoresPage />} />
           <Route path="/allProducts" element={<AllProductsPage />} />
