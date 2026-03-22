@@ -7,7 +7,7 @@ import StorePage from "@/modules/customer/home/pages/StorePage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
-import AppLayout from "@/shared/components/layout/AppLayout";
+import AppLayout from "@/shared/pages/layouts/AppLayout";
 
 
 export function PublicRoutes() {
