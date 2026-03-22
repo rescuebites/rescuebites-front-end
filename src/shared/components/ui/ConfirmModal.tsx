@@ -7,6 +7,9 @@ import {
   DialogTitle,
   Button,
 } from "@mui/material";
+import { secondaryButtonSx } from "@/shared/styles/buttonSx";
+import { dangerButtonSx } from "@/shared/styles/buttonSx";
+import { primaryButtonSx } from "@/shared/styles/buttonSx";
 
 interface ConfirmModalProps {
   open: boolean;
@@ -17,6 +20,7 @@ interface ConfirmModalProps {
   onConfirm: () => void;
   onCancel: () => void;
   children?: ReactNode;
+  variant?: "normal" | "danger";
 }
 
 export function ConfirmModal({
@@ -28,28 +32,43 @@ export function ConfirmModal({
   onConfirm,
   onCancel,
   children,
+  variant = "normal",
 }: ConfirmModalProps) {
-  
-    return (
-        
-        <Dialog open={open} onClose={onCancel}>
-            
-        <DialogTitle>{title}</DialogTitle>
+  const confirmButtonSx =
+    variant === "danger" ? { ...dangerButtonSx } : { ...primaryButtonSx };
 
-        <DialogContent>
-            {description && <DialogContentText>{description}</DialogContentText>}
-            {children}
-        </DialogContent>
+  return (
+    <Dialog
+      open={open}
+      onClose={onCancel}
+      PaperProps={{
+        sx: {
+          borderRadius: 3,
+          p: 1,
+        },
+      }}
+    >
+      <DialogTitle sx={{ fontWeight: 600, color: "#2D2D2D" }}>
+        {title}
+      </DialogTitle>
 
-        <DialogActions>
-            <Button onClick={onCancel} color="inherit">
-            {cancelText}
-            </Button>
-            <Button onClick={onConfirm} color="primary" variant="contained">
-            {confirmText}
-            </Button>
-        </DialogActions>
-        
-        </Dialog>
-    );
+      <DialogContent>
+        {description && (
+          <DialogContentText sx={{ color: "#6B7280" }}>
+            {description}
+          </DialogContentText>
+        )}
+        {children}
+      </DialogContent>
+
+      <DialogActions sx={{ px: 3, pb: 2 }}>
+        <Button onClick={onCancel} sx={secondaryButtonSx}>
+          {cancelText}
+        </Button>
+        <Button onClick={onConfirm} variant="contained" sx={confirmButtonSx}>
+          {confirmText}
+        </Button>
+      </DialogActions>
+    </Dialog>
+  );
 }
