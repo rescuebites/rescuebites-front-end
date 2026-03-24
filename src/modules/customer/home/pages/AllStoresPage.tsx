@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
 import { StoreCard } from "../components/StoreCard";
-import CategoryChips from "../components/CategoryChips";
+import CategoryChips from "../components/CommerceTypeChips";
 import BackButton from "@/shared/components/ui/BackButton";
 
 export default function AllStoresPage() {

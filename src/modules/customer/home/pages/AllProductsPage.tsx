@@ -2,7 +2,7 @@ import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
 import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
-import CategoryChips from "../components/CategoryChips";
+import CategoryChips from "../components/CommerceTypeChips";
 import ProductDetailDialog from "../components/ProductDetailDialog";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
@@ -10,6 +10,7 @@ import { useFilters } from "@/modules/customer/home/hooks/useFilters";
 import { ProductCard } from "../../../catalog/components/ProductCard";
 import SearchBar from "@/modules/catalog/components/SearchBar";
 import { useSearch } from "@/modules/catalog/hooks/useSearch";
+import CustomTitle from "@/shared/components/CustomTitle";
 
 export default function AllProductsPage() {
   const { applyFilters, hasActiveFilters } = useFilters();
@@ -66,9 +67,7 @@ export default function AllProductsPage() {
           />
         </Stack>
       {/* Header */}
-      <Typography variant="h5" sx={{ fontWeight: 700, color: "#2D2D2D", mb: 3 }}>
-        Todos los productos
-      </Typography>
+      <CustomTitle text="Productos disponibles" color="#2D2D2D" variant="h5" align="left"/>
 
       {/* Categorías */}
       <Box sx={{ mb: 5 }}>
@@ -80,7 +79,7 @@ export default function AllProductsPage() {
         <Skeleton />
       ) : !products || products.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
-          <Typography variant="h6" sx={{ color: "#2D2D2D" }}>
+          <Typography variant="h6" sx={{ color: "#2D2D2D", fontWeight: "bold" }}>
             {selectedCategory
               ? `No hay productos en la categoría "${selectedCategory}"`
               : "No hay productos disponibles"}

@@ -5,7 +5,7 @@ import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import NotificationsPage from "@/shared/pages/notifications";
 import ProfilePage from "@/shared/pages/ProfilePage";
-import ShoppingCartPage from "@/shared/pages/ShoppingCartPage";
+import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import OrdersPage from "@/shared/pages/OrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";

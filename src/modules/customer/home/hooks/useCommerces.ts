@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../services/home.service";
+import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../api/home.api";
 import { CommercePublicResponse, PaginatedResponse } from "../interfaces/responses";
 import type { CommerceResponse } from "../interfaces/responses";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
@@ -29,7 +29,7 @@ export function useCommercesByType(commerceType: CommerceTypeDisplay, size = 6) 
   const locality = useLocalityStore((state) => state.locality);
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
     queryKey: ['commerces', commerceType, locality, size],
-    queryFn: () => getCommercesByType(commerceType, locality || 'Córdoba Capital', 0, size),
+    queryFn: () => getCommercesByType(locality || 'Córdoba Capital', commerceType, 0, size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
     enabled: !!commerceType && !!locality,
