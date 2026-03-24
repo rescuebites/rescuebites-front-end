@@ -1,5 +1,5 @@
-import { LineChart, Line, ResponsiveContainer, XAxis, Tooltip } from "recharts";
 import { Box } from "@mui/material";
+import { LineChart, Line, ResponsiveContainer, XAxis, Tooltip } from "recharts";
 
 const data = [
   { day: "Mon", sales: 120 },

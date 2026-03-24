@@ -1,11 +1,11 @@
 import { Box, Typography } from "@mui/material";
+import SearchBar from "@/shared/components/layout/SearchBar";
 import ProductsSection from "./ProductsSection";
-import type { ProductResponse } from "../customer/home/interfaces/responses";
 import StatisticsCard from "./StatisticsCard";
 import OrdersSection from "./OrdersSection";
 import QuickActions from "./QuickActions";
-import SearchBar from "@/shared/components/layout/SearchBar";
 import CollapsibleSection from "./CollapsibleSection";
+import type { ProductResponse } from "../products/interfaces/responses/product-response.interface";
 
 const mockProducts: ProductResponse[] = [
   {
@@ -15,7 +15,9 @@ const mockProducts: ProductResponse[] = [
     originalPrice: 50,
     discountPercentage: 50,
     expirationDate: "2026-01-22",
-    productImages: [{ url: "https://images.unsplash.com/photo-1509042239860-f550ce710b93" }],
+    productImages: [
+      { url: "https://images.unsplash.com/photo-1509042239860-f550ce710b93" },
+    ],
     stock: 6,
   },
   {
@@ -25,7 +27,9 @@ const mockProducts: ProductResponse[] = [
     originalPrice: 30,
     discountPercentage: 40,
     expirationDate: "2026-01-21",
-    productImages: [{ url: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b" }],
+    productImages: [
+      { url: "https://images.unsplash.com/photo-1588196749597-9ff075ee6b5b" },
+    ],
     stock: 2,
   },
 ] as any;

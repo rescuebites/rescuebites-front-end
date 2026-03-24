@@ -1,5 +1,5 @@
-import { Box, Typography } from "@mui/material";
 import { ReactNode } from "react";
+import { Box, Typography } from "@mui/material";
 
 interface Props {
   title: string;

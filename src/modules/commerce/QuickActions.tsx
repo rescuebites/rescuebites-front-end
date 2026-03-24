@@ -1,8 +1,8 @@
 import { Stack } from "@mui/material";
-import QuickActionCard from "./QuickActionCard";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
 import PersonIcon from "@mui/icons-material/Person";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import QuickActionCard from "./QuickActionCard";
 
 export default function QuickActions() {
   return (
