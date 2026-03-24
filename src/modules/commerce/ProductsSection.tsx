@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
-import { ProductCard } from "../customer/home/components/ProductCard";
-import type { ProductResponse } from "../customer/home/interfaces/responses";
+import { ProductCard } from "../catalog/components/ProductCard";
+import type { ProductResponse } from "../products/interfaces/responses/product-response.interface";
+
 interface Props {
   products: ProductResponse[];
 }
