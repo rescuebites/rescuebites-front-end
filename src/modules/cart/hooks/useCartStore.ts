@@ -15,12 +15,10 @@ interface CartStore {
   updatePaymentMethod: (method: PaymentMethod) => Promise<void>;
   getQuantity: (productId: string) => number;
   getCartItemId: (productId: string) => string | undefined;
-  error: string | null;
-  clearError: () => void;
 }
 
-//const getClientId = () => useAuthStore.getState().clientId;
-const getClientId = () => "295a5546-bc99-4616-8e10-5bb9aabb1269";
+const getClientId = () => useAuthStore.getState().clientId;
+//const getClientId = () => "295a5546-bc99-4616-8e10-5bb9aabb1269";
 
 export const useCartStore = create<CartStore>()((set, get) => ({
   cart: null,
@@ -34,17 +32,14 @@ export const useCartStore = create<CartStore>()((set, get) => ({
     set({ cart, loading: false });
   },
 
-  error: null,
-  clearError: () => set({ error: null }),
-
   addItem: async (productId, quantity) => {
     const clientId = getClientId();
+    console.log(clientId);
     if (!clientId) return;
     try {
       const cart = await cartApi.addToCart(clientId, productId, quantity);
       set({ cart });
     } catch (error: any) {
-      // console.log("Error en store addItem:", error); 
       // throw error;
     }
   },
@@ -72,8 +67,6 @@ export const useCartStore = create<CartStore>()((set, get) => ({
   },
 
   updatePaymentMethod: async (method) => {
-    console.log("cartApi completo:", cartApi);         // ← agregá esto
-  console.log("fn:", cartApi.updatePaymentMethod);
   const clientId = getClientId();
   if (!clientId) return;
   const cart = await cartApi.updatePaymentMethod(clientId, method);

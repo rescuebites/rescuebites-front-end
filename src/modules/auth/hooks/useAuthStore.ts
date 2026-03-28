@@ -54,11 +54,7 @@ export const useAuthStore = create<AuthStore>()(
     {
       name: "auth-storage",
       onRehydrateStorage: () => (state) => {
-        if (
-          state?.authResponse?.token &&
-          !state.commerceId &&
-          !state.clientId
-        ) {
+        if (state?.authResponse?.token && (!state.clientId || !state.commerceId || !state.commerceType)) {
           const jwtPayload = decodeJwtPayload(state.authResponse.token);
           useAuthStore.setState({
             clientId: jwtPayload?.clientId,

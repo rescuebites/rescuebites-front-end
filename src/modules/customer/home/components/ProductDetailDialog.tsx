@@ -12,6 +12,7 @@ import { ProductDetailInfo } from "./ProductDetailInfo";
 import { ProductDetailCommerce } from "./ProductDetailCommerce";
 import { ProductDetailQuantity } from "./ProductDetailQuantity";
 import { ProductDetailActions } from "./ProductDetailActions";
+import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 
 type DialogMode = "addToCart" | "viewOnly" | "edit";
 
@@ -34,6 +35,9 @@ export default function ProductDetailDialog({
 }: ProductDetailDialogProps) {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
+
+  const { addItem, updateItem, getCartItemId } = useCartStore();
+  
 
   const { data: productDetail, isLoading } = useProductDetail(productId);
 
@@ -73,12 +77,15 @@ export default function ProductDetailDialog({
     navigate(`/create-product?productId=${productId}`, { replace: true });
   };
 
-  const handleAddToCart = () => {
-    console.log("Agregar al carrito:", {
-      productId: productDetail.productId,
-      quantity,
-      price: productDetail.discountedPrice,
-    });
+  const cartItemId = productDetail ? getCartItemId(productDetail.productId) : undefined;
+  const handleAddToCart = async () => {
+    if (!productDetail) return;
+    if (cartItemId) {
+      await updateItem(cartItemId, quantity);
+    } else {
+      await addItem(productDetail.productId, quantity);
+    }
+    onClose();
   };
 
   return (
