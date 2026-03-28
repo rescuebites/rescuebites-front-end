@@ -1,4 +1,3 @@
-// pages/SearchResultsPage.tsx  (or wherever your router points)
 import {
   Box,
   Typography,

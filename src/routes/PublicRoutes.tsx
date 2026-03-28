@@ -26,7 +26,7 @@ export function PublicRoutes() {
         <Route path="allStores" element={<AllStoresPage />} />
         <Route path="search" element={<SearchResultsPage />} />
       </Route>
-      <Route path="p" element={<LoadLocalityPage />} />
+      <Route path="locality" element={<LoadLocalityPage />} />
     </Routes>
   );
 }

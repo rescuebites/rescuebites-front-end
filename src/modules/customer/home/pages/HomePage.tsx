@@ -34,17 +34,17 @@ export default function HomePage() {
   console.log("navegando con term:", term);
   if (!term) return;
   confirmSearch(term);
-  navigate(`/customer/search?q=${encodeURIComponent(term)}`);
+  navigate(`/search?q=${encodeURIComponent(term)}`);
 };
 
   const navigate = useNavigate();
 
   const handleGoToAllStores = () => {
-    navigate("/customer/allStores");
+    navigate("/allStores");
   };
 
   const handleGoToAllDeals = () => {
-    navigate("/customer/allProducts");
+    navigate("/allProducts");
   };
 
   return (

@@ -12,7 +12,7 @@ interface AddToCartPopupProps {
   unitPrice: number;
   availableStock: number;
   unit?: string;
-  image?: React.ReactNode;
+  imageUrl?: string;
   inCart: boolean;
   qty: number;
   onQtyChange: (qty: number) => void;
@@ -27,7 +27,7 @@ export default function AddToCartPopup({
   unitPrice,
   availableStock,
   unit,
-  image,
+  imageUrl,
   inCart,
   qty,
   onQtyChange,
@@ -59,7 +59,9 @@ export default function AddToCartPopup({
             flexShrink: 0, fontSize: 24, overflow: "hidden",
           }}
         >
-          {image}
+          {imageUrl && (
+            <img src={imageUrl} alt={productName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+          )}
         </Box>
 
         <Box sx={{ flex: 1, minWidth: 0 }}>

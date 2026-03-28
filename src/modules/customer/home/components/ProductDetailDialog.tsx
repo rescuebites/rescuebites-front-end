@@ -69,7 +69,7 @@ export default function ProductDetailDialog({
 
   const handleGoToCommerce = () => {
     onClose(); 
-    navigate(`/customer/stores/${productDetail.commerceId}`, { replace: true });
+    navigate(`/stores/${productDetail.commerceId}`, { replace: true });
   };
 
   const handleEditProduct = () => {

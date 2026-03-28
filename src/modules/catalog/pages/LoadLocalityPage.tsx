@@ -226,7 +226,7 @@ export default function LoadLocalityPage() {
 
   const handleLocationSubmit = (locality: string) => {
     setLocality(locality);
-    navigate('/public');
+    navigate('/');
   };
 
   return <LocationCard onLocationSubmit={handleLocationSubmit} />;

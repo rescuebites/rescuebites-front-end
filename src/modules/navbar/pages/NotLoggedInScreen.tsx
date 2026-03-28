@@ -29,7 +29,7 @@ export default function NotLoggedInScreen({
         >
       {/* Botón volver para atrás */}
       <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, alignSelf: 'flex-start' }}>
-        <BackButton onClick={() => navigate('/public')}/>
+        <BackButton onClick={() => navigate('/')}/>
       </Box>
       {/* Imagen bolsita */}
       <Box

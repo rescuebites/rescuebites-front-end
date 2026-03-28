@@ -385,11 +385,7 @@ function ProductCard({ product }: { product: ProductResponse }) {
           productName={product.name}
           unitPrice={product.discountedPrice}
           availableStock={product.stock}
-          image={
-            product.productImages?.[0]?.url
-              ? <img src={product.productImages[0].url} alt={product.name} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
-              : undefined
-          }
+          imageUrl={product.productImages?.[0]?.url}
         />
         </Box>
       </CardContent>
