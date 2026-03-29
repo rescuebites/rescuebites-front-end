@@ -137,7 +137,12 @@ export const SalesReport = ({}) => {
       {/* Chart */}
       <Card sx={{ mt: 3, borderRadius: 4 }}>
         <CardContent>
-          <Typography fontSize={14} mb={2}>
+          <Typography
+            fontSize={14}
+            fontWeight={700} // 🔥 negrita
+            textAlign="center" // 🔥 centrado
+            mb={2}
+          >
             Top 3 Productos más Vendidos
           </Typography>
 
