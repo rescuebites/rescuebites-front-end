@@ -5,18 +5,30 @@ import DateField from "@/shared/components/DateField";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 
-const COLORS = ["#86EFAC", "#4ADE80", "#166534"];
+const COLORS = ["#166534", "#4ADE80", "#86EFAC"];
 
 const rawData = [
-  { name: "Café", value: 12, percent: "33%" },
-  { name: "Panadería", value: 10, percent: "27%" },
-  { name: "Snacks", value: 14, percent: "38%" },
+  {
+    name: "Snacks",
+    value: 14,
+    price: "9.000",
+    percent: "40%",
+  },
+  {
+    name: "Panadería",
+    value: 13,
+    price: "15.000",
+    percent: "35%",
+  },
+  { name: "Café", value: 9, price: "20.000", percent: "25%" },
 ];
 
-const data = rawData.map((item, index) => ({
-  ...item,
-  fill: COLORS[index],
-}));
+const data = [...rawData]
+  .sort((a, b) => b.value - a.value) // opcional seguridad
+  .map((item, index) => ({
+    ...item,
+    fill: COLORS[index],
+  }));
 
 const total = data.reduce((acc, item) => acc + item.value, 0);
 
@@ -183,29 +195,90 @@ export const SalesReport = ({}) => {
           </Box>
 
           {/* Leyenda */}
-          <Stack mt={2} spacing={1}>
+          <Stack mt={2} spacing={1.5}>
             {data.map((item) => (
               <Stack
                 key={item.name}
                 direction="row"
                 alignItems="center"
                 justifyContent="space-between"
+                sx={{
+                  py: 1,
+                }}
               >
-                <Stack direction="row" spacing={1} alignItems="center">
+                {/* IZQUIERDA */}
+                <Stack direction="row" spacing={1.5} alignItems="center">
+                  {/* Dot */}
                   <Box
                     sx={{
-                      width: 10,
-                      height: 10,
+                      width: 28,
+                      height: 28,
                       borderRadius: "50%",
-                      bgcolor: item.fill,
+                      bgcolor: `${item.fill}20`, // 🔥 color con transparencia
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
                     }}
-                  />
-                  <Typography fontSize={14}>{item.name}</Typography>
+                  >
+                    <Box
+                      sx={{
+                        width: 10,
+                        height: 10,
+                        borderRadius: "50%",
+                        bgcolor: item.fill, // 🔥 color sólido
+                      }}
+                    />
+                  </Box>
+
+                  {/* Texto */}
+                  <Box>
+                    <Typography
+                      sx={{
+                        fontSize: 15,
+                        fontWeight: 600, // semi-bold
+                        color: "#1F2937", // gris oscuro (no negro)
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {item.name}
+                    </Typography>
+
+                    <Typography
+                      sx={{
+                        fontSize: 12,
+                        color: "#6B7280", // gris suave
+                        lineHeight: 1.2,
+                      }}
+                    >
+                      {item.value} Unidades Vendidas
+                    </Typography>
+                  </Box>
                 </Stack>
 
-                <Typography fontWeight={600}>
-                  {item.value} - {item.percent}
-                </Typography>
+                {/* DERECHA */}
+                <Box textAlign="right">
+                  <Typography
+                    sx={{
+                      fontSize: 15,
+                      fontWeight: 600,
+                      color: "#1F2937",
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    ${item.price}
+                  </Typography>
+
+                  <Typography
+                    sx={{
+                      fontSize: 13,
+                      fontWeight: 700,
+                      color: item.fill, // 🔥 dinámico según ranking
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {item.percent}
+                  </Typography>
+                </Box>
               </Stack>
             ))}
           </Stack>
