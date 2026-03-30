@@ -20,7 +20,7 @@ type Props<T extends FieldValues & CredentialFields> = {
   showConfirmPassword?: boolean;
 };
 
-export default function InputsRegisterForm<T extends FieldValues & CredentialFields>({
+export default function LoginInputs<T extends FieldValues & CredentialFields>({
   register,
   errors,
   watch,

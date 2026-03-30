@@ -1,5 +1,5 @@
 import Stack from "@mui/material/Stack";
-import InputsRegisterForm from "../components/LoginInputsRegisterForm";
+import LoginInputs from "../components/LoginInputs";
 import CommerceInputsRegisterForm from "../components/CommerceInputsRegisterForm";
 import { useCommerceRegistrationForm } from "@/modules/commerce/hooks/useCommerceRegistrationForm";
 import ImageUpload from "../components/ImageUpload";
@@ -23,7 +23,7 @@ export default function RegisterForm() {
             trigger={trigger}
             error={errors?.profilePhoto?.message}
           />
-          <InputsRegisterForm register={register} errors={errors} watch={watch}/>
+          <LoginInputs register={register} errors={errors} watch={watch}/>
         </Stack>
         <Stack spacing={2} sx={{ mt: 2 }}>
           <CommerceInputsRegisterForm
