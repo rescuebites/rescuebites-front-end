@@ -5,12 +5,12 @@ import DateField from "@/shared/components/DateField";
 import ReceiptLongOutlinedIcon from "@mui/icons-material/ReceiptLongOutlined";
 import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 
-const COLORS = ["#66BB6A", "#43A047", "#A5D6A7"];
+const COLORS = ["#86EFAC", "#4ADE80", "#166534"];
 
 const rawData = [
-  { name: "Café", value: 12 },
-  { name: "Panadería", value: 10 },
-  { name: "Snacks", value: 14 },
+  { name: "Café", value: 12, percent: "33%" },
+  { name: "Panadería", value: 10, percent: "27%" },
+  { name: "Snacks", value: 14, percent: "38%" },
 ];
 
 const data = rawData.map((item, index) => ({
@@ -32,7 +32,7 @@ export const SalesReport = ({}) => {
     <Box p={2} bgcolor="#f5f5f5" minHeight="100vh">
       {/* Header */}
       <Typography variant="h6" fontWeight="bold" mb={2}>
-        Reportes
+        Ventas realizadas
       </Typography>
 
       {/* Filtros */}
@@ -203,7 +203,9 @@ export const SalesReport = ({}) => {
                   <Typography fontSize={14}>{item.name}</Typography>
                 </Stack>
 
-                <Typography fontWeight={600}>{item.value}</Typography>
+                <Typography fontWeight={600}>
+                  {item.value} - {item.percent}
+                </Typography>
               </Stack>
             ))}
           </Stack>
