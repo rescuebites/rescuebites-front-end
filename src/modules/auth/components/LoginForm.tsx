@@ -6,8 +6,11 @@ import { Visibility, VisibilityOff } from "@mui/icons-material";
 import { useLogin } from "@/modules/auth/hooks/useLogin";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
+<<<<<<< HEAD
 import { fieldSx } from "@/shared/styles/fieldSx";
 import { loginSchema, LoginSchema } from "@/modules/auth/schemas/loginSchema";
+=======
+>>>>>>> 03a4eaf (ADD Sales report route)
 
 const LoginForm = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -89,7 +92,11 @@ const LoginForm = () => {
           sx={{ mt: 1 }}
           fullWidth
         />
+<<<<<<< HEAD
       </Stack>
+=======
+      </form>
+>>>>>>> 03a4eaf (ADD Sales report route)
     </>
   );
 };
