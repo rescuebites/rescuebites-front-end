@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from "@mui/material";
+import { Button, CircularProgress, SxProps, Theme } from "@mui/material";
 
 interface CustomButtonProps {
   type?: "button" | "submit" | "reset";
@@ -8,6 +8,7 @@ interface CustomButtonProps {
   disabled?: boolean;
   onClick?: () => void;
   backgroundColor?: string;
+  sx?: SxProps<Theme>;
 }
 
 export default function CustomButton({
@@ -17,7 +18,8 @@ export default function CustomButton({
   fullWidth = false,
   disabled = false,
   onClick,
-  backgroundColor = "#77A787",
+  backgroundColor = "#5A9A6E",
+  sx,
 }: CustomButtonProps) {
   return (
     <Button
@@ -28,10 +30,12 @@ export default function CustomButton({
       disabled={disabled || isLoading}
       sx={{
         mt: 2,
+        borderRadius: 2,
         backgroundColor,
         fontWeight: "bold",
         ...(fullWidth ? {} : { width: "80%", mx: "auto", display: "block" }),
-        "&:hover": { backgroundColor: "#7fbf7f" },
+        "&:hover": { backgroundColor: "#77A787" },
+        ...sx,
       }}
     >
       {isLoading ? <CircularProgress size={24} color="inherit" /> : text}

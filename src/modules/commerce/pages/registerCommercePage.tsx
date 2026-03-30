@@ -23,7 +23,7 @@ export default function RegisterForm() {
             trigger={trigger}
             error={errors?.profilePhoto?.message}
           />
-          <InputsRegisterForm register={register} errors={errors} watch={watch} />
+          <InputsRegisterForm register={register} errors={errors} watch={watch}/>
         </Stack>
         <Stack spacing={2} sx={{ mt: 2 }}>
           <CommerceInputsRegisterForm

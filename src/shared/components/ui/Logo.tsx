@@ -1,14 +1,16 @@
-import { Paper } from "@mui/material";
+import { Paper, SxProps, Theme } from "@mui/material";
 
 interface LogoProps {
     width?: number | string;
     height?: number | string;
+    elevation?: number;
+    sx?: SxProps<Theme>;
 }   
 
-export function Logo({width, height}: LogoProps){
+export function Logo({ width, height, elevation = 3 }: LogoProps) {
     return (
         <Paper
-            elevation={3}
+            elevation={elevation}
             component="img"
             src="/logo.png"
             alt="Logo"

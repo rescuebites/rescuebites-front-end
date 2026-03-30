@@ -1,14 +1,17 @@
 import { TextField } from "@mui/material";
-import { Controller, Control } from "react-hook-form";
+import { Control, Controller } from "react-hook-form";
 
-interface BirthDateFieldProps {
+interface DateFieldProps {
   control: Control<any>;
   name: string;
   label?: string;
   error?: string;
+  minDate?: string;
+  size?: "small" | "medium";
+  sx?: object;
 }
 
-export default function BirthDateField({ control, name, label = "Fecha de Nacimiento", error }: BirthDateFieldProps) {
+export default function DateField({ control, name, label, error, minDate, size, sx }: DateFieldProps) {
   return (
     <Controller
       name={name}
@@ -18,17 +21,20 @@ export default function BirthDateField({ control, name, label = "Fecha de Nacimi
           label={label}
           type="date"
           InputLabelProps={{ shrink: true }}
-          required
           fullWidth
-          margin="normal"
+          size={size}
           error={!!error}
           helperText={error}
           {...field}
           inputProps={{
+            min: minDate,
             placeholder: "dd/mm/aaaa",
             style: { cursor: "text" },
           }}
-          sx={{ "& input": { color: field.value ? "black" : "gray" } }}
+          sx={{ 
+            "& input": { color: field.value ? "black" : "gray" }, 
+            ...sx 
+          }}
         />
       )}
     />

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const registerSchema = z
+export const registerClientSchema = z
   .object({
     
     firstName: z.string().min(1, "El nombre es obligatorio"),
@@ -21,7 +21,17 @@ export const registerSchema = z
         }
       ),
     
-    address: z.string().optional(),
+    address: z.string().min(1, "La dirección es obligatoria"),
+
+    locality: z.string().min(1, "La localidad es obligatoria"),
+
+    phone: z
+      .string()
+      .min(1, "El teléfono es obligatorio")
+      .regex(
+        /^\+54(9)?[0-9]{10}$/,
+        "El número de celular debe tener el formato válido argentino, ej: +549XXXXXXXXXX"
+      ),
     
     email: z
       .string()

@@ -33,10 +33,10 @@ export function AuthLayout() {
           elevation={3}
           sx={{
             borderRadius: 3,
-            p: 4,
+            p: 3,
             width: "100%",
             maxWidth: 400,
-            pt: 10,
+            pt: 9,
           }}
         >
           <Stack spacing={2}>

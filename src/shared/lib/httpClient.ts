@@ -34,9 +34,10 @@ httpClient.interceptors.request.use((config) => {
   if (!authResponse) return config;
 
   const { token } = authResponse;
-  const shouldExclude = EXCLUDED_BEARER_ROUTES.some((path) =>
-    config.url?.includes(path)
-  );
+  const shouldExclude = EXCLUDED_BEARER_ROUTES.some((path) => {
+    const urlWithoutBase = config.url?.split('?')[0]; // Remover query params
+    return urlWithoutBase === path || urlWithoutBase === `${path}/`;
+  });
 
 
   if (!shouldExclude && token) {

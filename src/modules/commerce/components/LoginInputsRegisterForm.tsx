@@ -1,6 +1,5 @@
-import { FieldErrors } from "react-hook-form";
+import { FieldErrors, UseFormRegister, UseFormWatch, FieldValues, Path } from "react-hook-form";
 import TextField from "@mui/material/TextField";
-import type { Inputs } from "@/modules/commerce/interfaces/createCommerce.interface";
 import InputAdornment from "@mui/material/InputAdornment";
 import IconButton from "@mui/material/IconButton";
 import Visibility from "@mui/icons-material/Visibility";
@@ -8,13 +7,25 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import React from "react";
 
 
-type Props = {
-  register: any;
-  errors: FieldErrors<Inputs>;
-  watch: any; //propiedad para obtener el valor de password y compararlo con confirmPassword en la validación
+type CredentialFields = {
+  email: string;
+  password: string;
+  confirmPassword?: string;
 };
 
-export default function InputsRegisterForm({ register, errors, watch }: Props) {
+type Props<T extends FieldValues & CredentialFields> = {
+  register: UseFormRegister<T>;
+  errors: FieldErrors<T>;
+  watch?: UseFormWatch<T>;
+  showConfirmPassword?: boolean;
+};
+
+export default function InputsRegisterForm<T extends FieldValues & CredentialFields>({
+  register,
+  errors,
+  watch,
+  showConfirmPassword = true,
+}: Props<T>) {
   const [showPassword, setShowPassword] = React.useState(false);
 
   const handleClickShowPassword = () => setShowPassword((show) => !show);
@@ -34,18 +45,18 @@ export default function InputsRegisterForm({ register, errors, watch }: Props) {
   return (
     <>
       <TextField
-        {...register("email", {
-          required: "Ingrese su correo electrónico", message: "Este campo es obligatorio"
+        {...register("email" as Path<T>, {
+          required: "Ingrese su correo electrónico",
         })}
         id="email"
         label="Correo electrónico"
         type="text"
         fullWidth
-        error={!!errors.email}
-        helperText={errors.email?.message}
+        error={!!(errors as any).email}
+        helperText={(errors as any).email?.message}
       />
       <TextField
-        {...register("password", { 
+        {...register("password" as Path<T>, { 
           required: "Ingrese una contraseña",
           minLength: { value: 8, message: "La contraseña debe tener al menos 8 caracteres" },
           maxLength: { value: 22, message: "La contraseña no debe exceder los 22 caracteres" },
@@ -60,8 +71,8 @@ export default function InputsRegisterForm({ register, errors, watch }: Props) {
         label="Contraseña"
         type={showPassword ? "text" : "password"}
         fullWidth
-        error={!!errors.password}
-        helperText={errors.password?.message}
+        error={!!(errors as any).password}
+        helperText={(errors as any).password?.message}
         InputProps={{
           endAdornment: (
             <InputAdornment position="end">
@@ -77,20 +88,23 @@ export default function InputsRegisterForm({ register, errors, watch }: Props) {
           ),
         }}
       />
-      <TextField                                                        
-        {...register("confirmPassword", { 
-          required: "Confirmé la contraseña" , 
-          validate: (value: string) => { 
-            const password = watch("password");
-            return value === password || "Las contraseñas ingresadas no coinciden";
-          }})}
-        id="confirmPassword"
-        label="Confirmar Contraseña"
-        type={showPassword ? "text" : "password"}
-        fullWidth
-        error={!!errors.confirmPassword}
-        helperText={errors.confirmPassword?.message}
-      />
+      {showConfirmPassword && watch && (
+        <TextField
+          {...register("confirmPassword" as Path<T>, {
+            required: "Confirmé la contraseña",
+            validate: (value: string) => {
+              const password = watch("password" as Path<T>);
+              return value === password || "Las contraseñas ingresadas no coinciden";
+            },
+          })}
+          id="confirmPassword"
+          label="Confirmar Contraseña"
+          type={showPassword ? "text" : "password"}
+          fullWidth
+          error={!!(errors as any).confirmPassword}
+          helperText={(errors as any).confirmPassword?.message}
+        />
+      )}
     </>
   );
 }
