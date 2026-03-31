@@ -1,6 +1,7 @@
 import { Footer } from "@/modules/auth/components/Footer";
 import LoginForm from "@/modules/auth/components/LoginForm";
 import SearchResultsPage from "@/modules/commerce/components/SearchResultsPage";
+import { SalesReport } from "@/modules/reports/SalesReport/SalesReport";
 
 export function LoginPage() {
   return (
@@ -18,6 +19,7 @@ export function LoginPage() {
       />
 
       <SearchResultsPage />
+      <SalesReport/>
     </>
   );
 }
