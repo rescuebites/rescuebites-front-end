@@ -11,8 +11,8 @@ export const createProductSchema = z.object({
   }),
   conditions: z.array(z.nativeEnum(ProductCondition)).min(1, "Seleccione al menos una condición"),
   stock: z.number().min(1, "El stock debe ser al menos 1"),
-  originalPrice: z.preprocess((val) => Number(val), z.number().min(0.01, "El precio debe ser mayor a 0")),
-  discountPercentage: z.preprocess((val) => Number(val), z.number().min(0).max(100, "El descuento no puede superar el 100%")),
+  originalPrice: z.number().min(0.01, "El precio debe ser mayor a 0"),
+  discountPercentage: z.number().min(0).max(100, "El descuento no puede superar el 100%"),
   expirationDate: z.string().min(1, "La fecha es obligatoria").refine((val) => {
     const selected = new Date(val);
     const today = new Date();

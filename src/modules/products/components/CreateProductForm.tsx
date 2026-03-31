@@ -45,7 +45,7 @@ export const CreateProductForm = ({
     formState: { errors },
     register,
   } = useForm<CreateProductSchema>({
-    resolver: zodResolver(createProductSchema) as any,
+    resolver: zodResolver(createProductSchema),
     mode: "onBlur",
     defaultValues: {
       stock: 1,
