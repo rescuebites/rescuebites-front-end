@@ -1,16 +1,14 @@
 import { Box, Container, Stack, Typography } from "@mui/material";
-import SearchBar from "../../../catalog/components/SearchBar";
+import SearchBar from "../../../filterPanel/components/SearchBar";
 import CategoryChips from "../components/CategoryChips";
 import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
 import FilterDrawer from "../components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
-import { useFilters } from "@/modules/customer/home/hooks/useFilters";
-import { useSearch } from "@/modules/catalog/hooks/useSearch"
+import { useSearch } from "@/modules/filterPanel/hooks/useSearch"
 
 
 export default function HomePage() {
-  const { applyFilters, hasActiveFilters } = useFilters();
   const {
     query,
     setQuery,
@@ -23,9 +21,6 @@ export default function HomePage() {
 
   const handleSearchChange = (value: string) => {
     setQuery(value); // esto ya dispara las suggestions internamente
-    if (hasActiveFilters) {
-      applyFilters({ searchQuery: value });
-    }
   };
 
   const handleSearch = (q?: string) => {
@@ -69,6 +64,7 @@ export default function HomePage() {
             suggestions={suggestions}
             showSuggestions={showSuggestions}
             onHideSuggestions={() => setShowSuggestions(false)}
+            onShowSuggestions={() => setShowSuggestions(true)}
           />
           <CategoryChips />
         </Stack>

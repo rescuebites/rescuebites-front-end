@@ -1,12 +1,14 @@
 import { useEffect } from 'react';
 import { useFilterStore } from './useFilterStore';
-import { PreferenceType } from '../interfaces/filter.interface';
+import { getClientById } from '@/modules/client/api/client.api';
+import { useAuthStore } from '@/modules/auth/hooks/useAuthStore';
 
 /**
  * Hook personalizado para manejar los filtros de productos
  * Carga las preferencias permanentes del usuario al montar
  */
 export const useFilters = () => {
+  const clientId = useAuthStore((state) => state.clientId);
   const {
     permanentPreferences,
     temporaryPreferences,
@@ -20,57 +22,28 @@ export const useFilters = () => {
 
   // Cargar preferencias permanentes del usuario desde la API
   useEffect(() => {
+    if (!clientId) return;
+
     const loadUserPreferences = async () => {
       try {
-        // TODO: Reemplazar con tu llamada real a la API
-        // const response = await api.get('/api/client/preferences');
-        // setPermanentPreferences(response.data.dietaryPreferences);
-        
-        // Ejemplo de datos mock (eliminar cuando tengas la API)
-        const mockPreferences: PreferenceType[] = [
-          PreferenceType.VEGAN,
-          // PreferenceType.NUT_FREE, // No existe en el enum actual
-        ];
-        setPermanentPreferences(mockPreferences);
+        const client = await getClientById(clientId);
+        setPermanentPreferences(client.preferences);
       } catch (error) {
         console.error('Error cargando preferencias del usuario:', error);
       }
     };
 
     loadUserPreferences();
-  }, [setPermanentPreferences]);
+  }, [clientId, setPermanentPreferences]);
 
   /**
    * Obtiene los filtros activos para enviar a la API
    */
   const getActiveFiltersForAPI = () => {
     return {
-      permanentPreferences,
-      temporaryPreferences,
+      preferences: getAllActivePreferences(),
       categories,
     };
-  };
-
-  /**
-   * Aplica los filtros y ejecuta una búsqueda
-   */
-  const applyFilters = async (additionalParams?: any) => {
-    const filters = getActiveFiltersForAPI();
-    
-    try {
-      // TODO: Reemplazar con tu llamada real a la API
-      // const response = await api.post('/api/products/filter', {
-      //   ...filters,
-      //   ...additionalParams,
-      // });
-      // return response.data;
-      
-      console.log('Filtros aplicados:', filters);
-      return filters;
-    } catch (error) {
-      console.error('Error aplicando filtros:', error);
-      throw error;
-    }
   };
 
   return {
@@ -84,7 +57,6 @@ export const useFilters = () => {
     getActiveFiltersCount: getActiveFiltersCount(),
     hasActiveFilters: hasActiveFilters(),
     clearTemporaryFilters,
-    applyFilters,
     getActiveFiltersForAPI,
   };
 };

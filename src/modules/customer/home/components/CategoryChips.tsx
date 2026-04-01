@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { getAllCommerceDisplayNames } from "@/shared/utils/commerce.utils";
-import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 
 // Íconos
 import { GiCroissant } from "react-icons/gi";
@@ -39,14 +39,14 @@ const commerceTypeData: Record<string, { icon: ReactElement; color: string }> = 
 
 export default function CategoryChips() {
   
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const setSelectedCategory = useFilterStore((state) => state.setSelectedCategory);
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const setSelectedCommerceType = useCommerceTypeStore((state) => state.setSelectedCommerceType);
 
   const handleCategoryClick = (commerceType: CommerceTypeDisplay) => {
-    if (selectedCategory === commerceType) {
-      setSelectedCategory(null); // Deseleccionar si ya está seleccionado
+    if (selectedCommerceType === commerceType) {
+      setSelectedCommerceType(null);
     } else {
-      setSelectedCategory(commerceType);
+      setSelectedCommerceType(commerceType);
     }
   };
 
@@ -69,9 +69,9 @@ export default function CategoryChips() {
         >
           Categorías
         </Typography>
-        {selectedCategory && (
+        {selectedCommerceType && (
           <Typography 
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => setSelectedCommerceType(null)}
             sx={{ 
               color: '#757575', 
               fontSize: 14,
@@ -103,7 +103,7 @@ export default function CategoryChips() {
           <CategoryTile 
             key={cat} 
             category={cat}
-            active={selectedCategory === cat}
+            active={selectedCommerceType === cat}
             onClick={() => handleCategoryClick(cat)}
           />
         ))}

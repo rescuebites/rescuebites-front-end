@@ -14,11 +14,12 @@ import {
   Typography,
   ClickAwayListener,
 } from "@mui/material";
-import { MdClose, MdSearch, MdStorefront } from "react-icons/md";
+import { MdClose, MdSearch, } from "react-icons/md";
 import { BiSolidFoodMenu } from "react-icons/bi";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useFilterStore } from "../../../modules/customer/home/hooks/useFilterStore";
-import type { SearchSuggestion } from "../interfaces/types";
+import type { SearchSuggestion } from "../interfaces/responses/search-response.interface";
+import { ShoppingBasket, Store } from "lucide-react";
 
 interface SearchBarProps {
   query: string;
@@ -28,6 +29,7 @@ interface SearchBarProps {
   suggestions: SearchSuggestion[];
   showSuggestions: boolean;
   onHideSuggestions: () => void;
+  onShowSuggestions: () => void;
 }
 
 export default function SearchBar({
@@ -38,6 +40,7 @@ export default function SearchBar({
   suggestions,
   showSuggestions,
   onHideSuggestions,
+  onShowSuggestions,
 }: SearchBarProps) {
   const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
   const activeFiltersCount = getActiveFiltersCount();
@@ -61,7 +64,7 @@ export default function SearchBar({
               if (e.key === "Escape") onHideSuggestions();
             }}
             onFocus={() => {
-              if (suggestions.length > 0) onQueryChange(query); // re-show
+              if (suggestions.length > 0) onShowSuggestions();
             }}
             sx={{
               bgcolor: "#F5F5F5",
@@ -146,7 +149,7 @@ export default function SearchBar({
                             }}
                           >
                             <ListItemIcon sx={{ minWidth: 36 }}>
-                              <MdStorefront size={20} color="#77A787" />
+                              <Store size={20} color="#77A787" />
                             </ListItemIcon>
                             <ListItemText
                               primary={s.label}
@@ -195,7 +198,7 @@ export default function SearchBar({
                             }}
                           >
                             <ListItemIcon sx={{ minWidth: 36 }}>
-                              <BiSolidFoodMenu size={20} color="#FF8A65" />
+                              <ShoppingBasket size={20} color="#be8573" />
                             </ListItemIcon>
                             <ListItemText
                               primary={s.label}

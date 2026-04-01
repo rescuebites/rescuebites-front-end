@@ -1,20 +1,20 @@
 import { Box, Stack, Typography, Skeleton } from "@mui/material";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
-import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import { useNavigate } from "react-router-dom";
 import { StoreCard } from "./StoreCard";
 
 const FEATURED_LIMIT = 10;
 
 export default function FeaturedStores() {
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const categoryToFetch = selectedCategory || "Panadería";
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const categoryToFetch = selectedCommerceType || "Panadería";
 
   const { data: filteredData, isLoading: filteredLoading } = useCommercesByType(categoryToFetch);
   const { data: allData, isLoading: allLoading } = useAllCommerces();
 
-  const isLoading = selectedCategory ? filteredLoading : allLoading;
-  const allCommerces = selectedCategory
+  const isLoading = selectedCommerceType ? filteredLoading : allLoading;
+  const allCommerces = selectedCommerceType
     ? (filteredData?.content ?? [])
     : (allData?.content ?? []);
 
@@ -28,8 +28,8 @@ export default function FeaturedStores() {
     return (
       <Box sx={{ textAlign: "center", py: 8 }}>
         <Typography variant="h6" sx={{ color: "#2D2D2D" }}>
-          {selectedCategory
-            ? `No hay comercios de tipo "${selectedCategory}"`
+          {selectedCommerceType
+            ? `No hay comercios de tipo "${selectedCommerceType}"`
             : "No hay comercios disponibles"}
         </Typography>
       </Box>

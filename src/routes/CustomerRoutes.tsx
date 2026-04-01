@@ -8,7 +8,7 @@ import ProfilePage from "@/shared/pages/ProfilePage";
 import ShoppingCartPage from "@/shared/pages/ShoppingCartPage";
 import OrdersPage from "@/shared/pages/OrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
-import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
+import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
 import ClientNavbar from "@/modules/navbar/components/ClientNavbar";
 import AppLayout from "@/shared/pages/layouts/AppLayout";
 

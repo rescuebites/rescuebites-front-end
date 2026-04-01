@@ -1,18 +1,16 @@
 import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
-import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import CategoryChips from "../components/CategoryChips";
 import ProductDetailDialog from "../components/ProductDetailDialog";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
-import { useFilters } from "@/modules/customer/home/hooks/useFilters";
 import { ProductCard } from "../../../catalog/components/ProductCard";
-import SearchBar from "@/modules/catalog/components/SearchBar";
-import { useSearch } from "@/modules/catalog/hooks/useSearch";
+import SearchBar from "@/modules/filterPanel/components/SearchBar";
+import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
 
 export default function AllProductsPage() {
-  const { applyFilters, hasActiveFilters } = useFilters();
   
   const {
       query,
@@ -26,9 +24,6 @@ export default function AllProductsPage() {
   
     const handleSearchChange = (value: string) => {
       setQuery(value); // esto ya dispara las suggestions internamente
-      if (hasActiveFilters) {
-        applyFilters({ searchQuery: value });
-      }
     };
   
     const handleSearch = (q?: string) => {
@@ -42,8 +37,8 @@ export default function AllProductsPage() {
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const { data: products, isLoading } = useProductsByCommerceType(selectedCategory, 100); // trae más productos que en home
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const { data: products, isLoading } = useProductsByCommerceType(selectedCommerceType, 100); // trae más productos que en home
 
   const navigate= useNavigate();
 
@@ -63,6 +58,7 @@ export default function AllProductsPage() {
             suggestions={suggestions}
             showSuggestions={showSuggestions}
             onHideSuggestions={() => setShowSuggestions(false)}
+            onShowSuggestions={() => setShowSuggestions(true)}
           />
         </Stack>
       {/* Header */}
@@ -81,8 +77,8 @@ export default function AllProductsPage() {
       ) : !products || products.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
           <Typography variant="h6" sx={{ color: "#2D2D2D" }}>
-            {selectedCategory
-              ? `No hay productos en la categoría "${selectedCategory}"`
+            {selectedCommerceType
+              ? `No hay productos en la categoría "${selectedCommerceType}"`
               : "No hay productos disponibles"}
           </Typography>
         </Box>
