@@ -87,7 +87,7 @@ export  default function CommerceInputsRegisterForm({
       {/* //checkbox para tipos de comercio ----- */}
 
       <FormControl error={!!errors.commerceTypes} variant="standard">
-      <CustomTitle variant="h6" align="left" text="Preferencias alimenticias" />
+      <CustomTitle variant="h6" align="left" text="Tipo de comercio" />
 
       <Controller //conecta los checkboxes con react-hook-form, para controlar su valor y validación.
         name="commerceTypes"
