@@ -12,7 +12,7 @@ export function StoreCard({ commerce, onClick }: StoreCardProps) {
 
   const handleClick = () => {
     if (onClick) onClick();
-    else navigate(`/customer/stores/${commerce.commerceId}`);
+    else navigate(`/stores/${commerce.commerceId}`);
   };
 
   return (

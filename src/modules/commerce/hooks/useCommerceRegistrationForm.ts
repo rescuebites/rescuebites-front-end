@@ -33,7 +33,7 @@ export const useCommerceRegistrationForm = () => {
       });
     },
     onSuccess: () => {
-      navigate("/register-commerce/schedule", { replace: true });
+      navigate("/commerce/schedule", { replace: true });
     },
     onError: (error: any) => {
       const message = error.response?.data?.message || "Error al guardar los datos.";

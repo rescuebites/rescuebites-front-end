@@ -21,6 +21,10 @@ import BackButton from "../../../../shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
+import CustomTitle from "@/shared/components/CustomTitle";
+import { useCartStore } from "@/modules/cart/hooks/useCartStore";
+import { useEffect } from "react";
+import AddToCartControl from "@/modules/cart/components/AddToCartControl";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -46,6 +50,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
     const sorted = [...products];
     return sorted; // Ya vienen ordenados por más nuevo desde el backend
   };
+
+    //función para probar si funciona el agregado de productos a carrito
+  const { fetchCart } = useCartStore();
+  useEffect(() => {
+    fetchCart();
+  }, []);
 
   // Loading state
   if (isLoadingCommerce || isLoadingProducts) {
@@ -95,7 +105,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
       }}
     >
       <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
-        <BackButton onClick={() => navigate("/customer", { replace: true })} />
+        <BackButton  />
       </Box>
       <Box
         sx={{
@@ -129,31 +139,11 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
           </Avatar>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Typography
-              variant="h4"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: 30, sm: 55, md: 65 },
-                mb: { xs: 1.5, sm: 1.5, md: 2 },
-                lineHeight: 1,
-                color: "#2D2D2D",
-              }}
-            >
-              {commerce.name}
-            </Typography>
+            <CustomTitle text={commerce.name} color="#2D2D2D" variant="h3" align="left"/>
 
             {commerce.description && (
-              <Typography
-                variant="body1"
-                sx={{
-                  color: "#757575",
-                  fontSize: { xs: 20, sm: 26, md: 28 },
-                  mb: { xs: 1.5, sm: 2, md: 2.5 },
-                  lineHeight: 1,
-                }}
-              >
-                {commerce.description}
-              </Typography>
+              <CustomTitle text={commerce.description} color="#757575" variant="h5" align="left"/>
+              
             )}
             {/* Ícono de tipo de comercio */}
             {commerce.commerceTypes?.[0] && (
@@ -193,16 +183,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#757575",
-                    fontSize: { xs: 17, sm: 20, md: 24 },
-                  }}
-                >
-                  {commerce.address}
-                  {commerce.locality && `, ${commerce.locality}`}
-                </Typography>
+                <CustomTitle text={commerce.address} color="#757575" variant="h6" align="left"/>
               </Box>
             )}
 
@@ -221,15 +202,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#757575",
-                    fontSize: { xs: 17, sm: 20, md: 24 },
-                  }}
-                >
-                  {commerce.openingHours}
-                </Typography>
+                <CustomTitle text={commerce.openingHours} color="#757575" variant="h6" align="left"/>
               </Box>
             )}
 
@@ -248,15 +221,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <Typography
-                  variant="body2"
-                  sx={{
-                    color: "#757575",
-                    fontSize: { xs: 17, sm: 20, md: 24 },
-                  }}
-                >
-                  {commerce.phone}
-                </Typography>
+                <CustomTitle text={commerce.phone} color="#757575" variant="h6" align="left"/>
               </Box>
             )}
           </Box>
@@ -272,16 +237,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             px: { xs: 0, sm: 0.5 },
           }}
         >
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              fontSize: { xs: 24, sm: 30, md: 35 },
-              color: "#2D2D2D",
-            }}
-          >
-            Catálogo
-          </Typography>
+          <CustomTitle text="Catálogo" color="#2D2D2D" variant="h4" align="left"/>
         </Box>
 
         {/* Menu Items */}
@@ -373,18 +329,7 @@ function ProductCard({ product }: { product: ProductResponse }) {
               flexDirection: "column",
             }}
           >
-            <Typography
-              variant="h6"
-              sx={{
-                fontWeight: 700,
-                fontSize: { xs: 26, sm: 30, md: 36 },
-                mb: { xs: 1.5, sm: 1.7, md: 2 },
-                color: "#2D2D2D",
-                lineHeight: 1.3,
-              }}
-            >
-              {product.name}
-            </Typography>
+            <CustomTitle text={product.name} color="#2D2D2D" variant="h4" align="left"/>
 
             {/* Prices */}
             <Box
@@ -396,10 +341,9 @@ function ProductCard({ product }: { product: ProductResponse }) {
               }}
             >
               <Typography
-                variant="h6"
+                variant="h5"
                 sx={{
-                  fontWeight: 700,
-                  fontSize: { xs: 24, sm: 28, md: 34 },
+                  fontWeight: "bold",
                   color: "#77A787",
                 }}
               >
@@ -407,11 +351,10 @@ function ProductCard({ product }: { product: ProductResponse }) {
               </Typography>
               {product.originalPrice && (
                 <Typography
-                  variant="body2"
+                  variant="body1"
                   sx={{
                     textDecoration: "line-through",
                     color: "#999",
-                    fontSize: { xs: 18, sm: 22, md: 34, lg: 26 },
                   }}
                 >
                   ${product.originalPrice.toFixed(2)}
@@ -437,6 +380,13 @@ function ProductCard({ product }: { product: ProductResponse }) {
               />
             </Box>
           </Box>
+          <AddToCartControl
+          productId={product.productId}
+          productName={product.name}
+          unitPrice={product.discountedPrice}
+          availableStock={product.stock}
+          imageUrl={product.productImages?.[0]?.url}
+        />
         </Box>
       </CardContent>
     </Card>

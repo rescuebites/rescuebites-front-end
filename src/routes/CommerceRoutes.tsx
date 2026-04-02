@@ -7,8 +7,8 @@ export function CommerceRoutes() {
   return (
     <Routes>
       <Route element={<AuthLayout />}>
-        <Route index element={<RegisterForm />} />
-        <Route path='/schedule' element={<BusinessHoursPage />} />
+        <Route path={"register-commerce"} element={<RegisterForm />} />
+        <Route path={"schedule"} element={<BusinessHoursPage />} />
       </Route>
     </Routes>
   );

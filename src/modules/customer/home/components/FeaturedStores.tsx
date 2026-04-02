@@ -7,6 +7,7 @@ import { StoreCard } from "./StoreCard";
 const FEATURED_LIMIT = 10;
 
 export default function FeaturedStores() {
+  const navigate = useNavigate();
   const selectedCategory = useFilterStore((state) => state.selectedCategory);
   const categoryToFetch = selectedCategory || "Panadería";
 
@@ -19,8 +20,6 @@ export default function FeaturedStores() {
     : (allData?.content ?? []);
 
   const commerces = allCommerces.slice(0, FEATURED_LIMIT);
-
-  const navigate = useNavigate();
 
   if (isLoading) return <StoresSkeleton />;
 
@@ -53,7 +52,7 @@ export default function FeaturedStores() {
           <StoreCard
             key={commerce.commerceId}
             commerce={commerce}
-            onClick={() => navigate(`/customer/stores/${commerce.commerceId}`)}
+            onClick={() => navigate(`/stores/${commerce.commerceId}`)}
           />
         ))}
       </Box>

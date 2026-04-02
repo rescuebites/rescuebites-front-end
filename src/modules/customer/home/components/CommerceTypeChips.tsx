@@ -37,7 +37,7 @@ const commerceTypeData: Record<string, { icon: ReactElement; color: string }> = 
   },
 };
 
-export default function CategoryChips() {
+export default function CommerceTypeChips() {
   
   const selectedCategory = useFilterStore((state) => state.selectedCategory);
   const setSelectedCategory = useFilterStore((state) => state.setSelectedCategory);
@@ -59,16 +59,6 @@ export default function CategoryChips() {
         justifyContent="space-between" 
         alignItems="center"
       >
-        <Typography 
-          variant="h6" 
-          sx={{ 
-            fontWeight: 700, 
-            color: '#2D2D2D',
-            fontSize: { xs: 18, sm: 20 }
-          }}
-        >
-          Categorías
-        </Typography>
         {selectedCategory && (
           <Typography 
             onClick={() => setSelectedCategory(null)}
@@ -76,11 +66,11 @@ export default function CategoryChips() {
               color: '#757575', 
               fontSize: 14,
               cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            '&:hover': { color: '#77A787' }
-          }}
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              '&:hover': { color: '#77A787' }
+            }}
         >
             Limpiar filtros
         </Typography>

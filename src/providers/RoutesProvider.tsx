@@ -1,28 +1,25 @@
 import { AuthRoutes } from "@/routes/AuthRoutes";
 import { UserRoutes } from "@/routes/UserRoutes";
-import {CustomerRoutes} from "@/routes/CustomerRoutes";
-import { Navigate, Route, Routes } from "react-router-dom";
+import { CustomerRoutes } from "@/routes/CustomerRoutes";
 import { CommerceRoutes } from "@/routes/CommerceRoutes";
-import { PublicRoutes } from "@/routes/PublicRoutes";
+import { Navigate, Route, Routes } from "react-router-dom";
+import LoadLocalityPage from "@/modules/catalog/pages/LoadLocalityPage";
 
 export default function RoutesProvider() {
   return (
     <Routes>
-      {/* redirige "/" a "/auth/login" */}
-      <Route path="/" element={<Navigate to="/auth/login" replace />} />
-
-      {/* Acá van las rutas de /auth */}
       <Route path="/auth/*" element={<AuthRoutes />} />
-
       <Route path="/api/users/*" element={<UserRoutes />} />
+      <Route path="/commerce/*" element={<CommerceRoutes />} />
 
-      <Route path="/register-commerce/*" element={<CommerceRoutes />} />
-      {/* Acá van las rutas de /customer */}
-      <Route path="/customer/*" element={<CustomerRoutes />} />
+      {/* Selector de localidad — fuera de AppLayout, sin barra de navegación */}
+      <Route path="locality" element={<LoadLocalityPage />} />
 
-      {/* Rutas de invitado */}
-      <Route path="/public/*" element={<PublicRoutes />} />
+      <Route path="/*" element={<CustomerRoutes />} />
 
+      {/* Redirecciones heredadas para que los enlaces antiguos no den 404 */}
+      <Route path="/customer/*" element={<Navigate to="/" replace />} />
+      <Route path="/public/*" element={<Navigate to="/" replace />} /> 
     </Routes>
   );
 }
