@@ -6,9 +6,12 @@ import { usePendingRegistrationStore } from "@/modules/users/hooks/usePendingReg
 import CustomTitle from "@/shared/components/CustomTitle";
 import CustomButton from "@/shared/components/CustomButton";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import { useCreateCommerce } from "@/modules/commerce/hooks/useCreateCommerce";
 import {
   getProfileImageFile,
   clearProfileImage,
+  clearCommerceProfileImage,
+  getCommerceProfileImageFile,
 } from "@/shared/utils/profileImage";
 
 export function ActivateAccountPage() {
@@ -20,12 +23,17 @@ export function ActivateAccountPage() {
   const { mutate: createClient, isPending: isCreatingClient } =
     useCreateClient();
 
-  const { clientData, clearData } = usePendingRegistrationStore();
+   const { clientData, commerceData, clearData } = usePendingRegistrationStore();
+
+  const { mutateAsync: createCommerce, isPending: isCreatingCommerce } = useCreateCommerce();
 
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
 
   const handleVerify = async () => {
+
+    console.log("commerceData al verificar:", commerceData);
+    console.log("clientData al verificar:", clientData);
     if (!userId || !token) return;
 
     verifyAccount(
@@ -34,21 +42,21 @@ export function ActivateAccountPage() {
         onSuccess: async () => {
           showMessage("Tu cuenta ha sido verificada correctamente.", "success");
 
-          if (!clientData) {
-            navigate("/auth/login", { replace: true });
-            return;
-          }
-
-          const imageFile = await getProfileImageFile();
-
-          const payload = { ...clientData.createClientRequest, userId };
-          createClient({
-            createClientRequest: payload,
-            profilePicture: imageFile,
-          });
-
-          clearData();
-          clearProfileImage();
+          if (clientData) {
+            const imageFile = await getProfileImageFile();
+            const payload = { ...clientData.createClientRequest, userId };
+            createClient({ createClientRequest: payload, profilePicture: imageFile });
+            clearData();
+            clearProfileImage();
+          } else if (commerceData) {
+              const imageFile = await getCommerceProfileImageFile();
+              await createCommerce({
+              createCommerceRequest: { ...commerceData.createCommerceRequest, userId },
+              profilePicture: imageFile,
+            });
+            clearCommerceProfileImage();
+            clearData();
+  }
           navigate("/auth/login", { replace: true });
         },
       }
@@ -68,8 +76,8 @@ export function ActivateAccountPage() {
         type="submit"
         text="Activate account"
         onClick={handleVerify}
-        disabled={isVerifying || isCreatingClient || !userId || !token}
-        isLoading={isVerifying || isCreatingClient}
+        disabled={isVerifying || isCreatingClient || isCreatingCommerce || !userId || !token}
+        isLoading={isVerifying || isCreatingClient || isCreatingCommerce}
         fullWidth
       />
     </>

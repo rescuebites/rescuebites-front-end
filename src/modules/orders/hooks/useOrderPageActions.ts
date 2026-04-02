@@ -4,7 +4,7 @@ export const useOrderPageActions = () => {
   const navigate = useNavigate();
 
   const handleCommerceClick = (commerceId: string) => {
-    navigate(`/customer/stores/${commerceId}`);
+    navigate(`/stores/${commerceId}`);
   };
 
   const handleProductClick = (
@@ -17,7 +17,7 @@ export const useOrderPageActions = () => {
   };
 
   const handleBackToOrders = () => {
-    navigate("/customer/orders");
+    navigate("/orders");
   };
 
   return {

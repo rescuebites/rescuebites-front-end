@@ -5,6 +5,9 @@ interface CustomTitleProps {
   color?: string;
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "body2";
   align?: "inherit" | "left" | "center" | "right" | "justify";
+  fontWeight?: string | number;
+  fontSize?: string | number;
+  fontStyle?: string;
 }
 
 export default function CustomTitle({
@@ -12,13 +15,16 @@ export default function CustomTitle({
   color = "#77A787",
   variant = "h5",
   align = "center",
+  fontWeight = "bold",
+  fontSize,
+  fontStyle,
 }: CustomTitleProps) {
   return (
     <Typography
       variant={variant}
       align={align}
       gutterBottom
-      sx={{ fontWeight: "bold", color }}
+      sx={{ fontWeight, color, fontSize, fontStyle }}
     >
       {text}
     </Typography>

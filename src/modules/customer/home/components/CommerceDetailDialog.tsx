@@ -105,7 +105,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
       }}
     >
       <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
-        <BackButton onClick={() => navigate("/customer", { replace: true })} />
+        <BackButton  />
       </Box>
       <Box
         sx={{

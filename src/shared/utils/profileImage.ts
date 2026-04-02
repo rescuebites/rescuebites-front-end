@@ -28,3 +28,21 @@ export async function getProfileImageFile(): Promise<File> {
 export function clearProfileImage() {
   localStorage.removeItem("profilePictureBase64");
 }
+
+export async function getCommerceProfileImageFile(): Promise<File | undefined> {
+  const base64Image = localStorage.getItem("commerceProfilePictureBase64");
+  if (!base64Image) return undefined;
+
+  const arr = base64Image.split(",");
+  const mime = arr[0].match(/:(.*?);/)?.[1] || "image/png";
+  const bstr = atob(arr[1]);
+  const u8arr = new Uint8Array(bstr.length);
+  for (let i = 0; i < bstr.length; i++) u8arr[i] = bstr.charCodeAt(i);
+  return new File([u8arr], "commerce-profile.jpg", { type: mime });
+}
+
+export function clearCommerceProfileImage() {
+  localStorage.removeItem("commerceProfilePictureBase64");
+}
+
+

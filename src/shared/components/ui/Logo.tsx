@@ -7,7 +7,7 @@ interface LogoProps {
     sx?: SxProps<Theme>;
 }   
 
-export function Logo({ width, height, elevation = 3, sx }: LogoProps) {
+export function Logo({ width, height, elevation = 3 }: LogoProps) {
     return (
         <Paper
             elevation={elevation}

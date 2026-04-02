@@ -31,7 +31,10 @@ export default function DateField({ control, name, label, error, minDate, size, 
             placeholder: "dd/mm/aaaa",
             style: { cursor: "text" },
           }}
-          sx={{ "& input": { color: field.value ? "black" : "gray" }, ...sx }}
+          sx={{ 
+            "& input": { color: field.value ? "black" : "gray" }, 
+            ...sx 
+          }}
         />
       )}
     />

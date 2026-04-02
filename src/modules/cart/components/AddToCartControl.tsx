@@ -1,8 +1,5 @@
-import { useState } from "react";
 import { useCartStore } from "../hooks/useCartStore";
 import { useAddToCart } from "../hooks/useAddToCart";
-import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
-import { useNavigate } from "react-router-dom";
 import AddToCartButton from "./AddToCartButton";
 import AddToCartPopup from "./AddToCartPopUp";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
@@ -24,36 +21,25 @@ export default function AddToCartControl({
   unit,
   imageUrl,
 }: AddToCartControlProps) {
-  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
-  const navigate = useNavigate();
   const { getQuantity } = useCartStore();
   const quantityInCart = getQuantity(productId);
   const cart = useAddToCart(productId, quantityInCart);
-  const [loginModalOpen, setLoginModalOpen] = useState(false);
-
-  const handleAdd = () => {
-    if (!isAuthenticated) {
-      setLoginModalOpen(true);
-      return;
-    }
-    cart.handleOpenPopup();
-  };
 
   return (
     <>
       <ConfirmModal
-        open={loginModalOpen}
+        open={cart.loginModalOpen}
         title="Inicia sesión para continuar"
         description="Debes iniciar sesión para agregar productos al carrito."
         confirmText="Iniciar sesión"
         cancelText="Cancelar"
-        onConfirm={() => navigate("/auth/login")}
-        onCancel={() => setLoginModalOpen(false)}
+        onConfirm={cart.navigateToLogin}
+        onCancel={cart.closeLoginModal}
       />
       <AddToCartButton
         inCart={cart.inCart}
         quantityInCart={quantityInCart}
-        onAdd={handleAdd}
+        onAdd={cart.handleOpenPopup}
         onRemove={cart.handleRemove}
       />
       <AddToCartPopup

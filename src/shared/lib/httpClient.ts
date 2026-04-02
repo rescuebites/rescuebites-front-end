@@ -4,8 +4,9 @@ import { EXCLUDED_BEARER_ROUTES } from "@/shared/lib/constants.ts";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore.ts";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore.ts";
 
+
 export const httpClient = axios.create({
-  baseURL: import.meta.env.VITE_BACKEND_URL,
+   baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
 });
 
 httpClient.interceptors.response.use(
@@ -38,8 +39,10 @@ httpClient.interceptors.request.use((config) => {
     return urlWithoutBase === path || urlWithoutBase === `${path}/`;
   });
 
+
   if (!shouldExclude && token) {
     config.headers?.set("Authorization", `Bearer ${token}`);
+  } else {
   }
 
   return config;

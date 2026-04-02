@@ -37,7 +37,7 @@ export default function AllProductsPage() {
     console.log("navegando con term:", term);
     if (!term) return;
     confirmSearch(term);
-    navigate(`/customer/search?q=${encodeURIComponent(term)}`);
+    navigate(`/search?q=${encodeURIComponent(term)}`);
   };
   
 

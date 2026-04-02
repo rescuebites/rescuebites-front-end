@@ -1,1 +1,5 @@
-export const EXCLUDED_BEARER_ROUTES = ["/auth/login", "/auth/register", "/api/v1/clients"];
+export const EXCLUDED_BEARER_ROUTES = [
+  "/auth/login",
+  "/auth/register",
+  "/api/v1/clients",
+];

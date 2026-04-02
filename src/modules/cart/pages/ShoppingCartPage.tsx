@@ -24,7 +24,7 @@ const CartPage: React.FC = () => {
       </Box>
 
       <Container maxWidth="lg">
-        <CustomTitle text="Tu carrito" color="#2d2d2d" variant="h4" align="left" />
+        
 
         {!commerce ? (
           <Box
@@ -51,6 +51,7 @@ const CartPage: React.FC = () => {
           </Box>
         ) : (
           <>
+          <CustomTitle text="Tu carrito" color="#2d2d2d" variant="h4" align="left" />
             <CartCommerceSection
               commerce={commerce}
               onRemove={handleRemove}
