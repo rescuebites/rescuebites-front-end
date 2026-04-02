@@ -38,7 +38,7 @@ const CartPage: React.FC = () => {
           >
             <Box
               component="img"
-              src="../../../../public/emptyBag.png" 
+              src="/emptyBag.png"
               alt="Carrito vacío"
               sx={{
                 width: { xs: 300, sm: 350, md: 400 },
