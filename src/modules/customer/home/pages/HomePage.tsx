@@ -1,3 +1,4 @@
+import { type ReactNode } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import SearchBar from "../../../catalog/components/SearchBar";
 import CommerceTypeChips from "../components/CommerceTypeChips";
@@ -125,7 +126,7 @@ export default function HomePage() {
 }
 
 type SectionHeaderProps = {
-  children: React.ReactNode;
+  children: ReactNode;
   secondary?: string;
   onSecondaryClick?: () => void;
 };
