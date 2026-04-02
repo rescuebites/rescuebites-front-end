@@ -34,13 +34,12 @@ export const useCartStore = create<CartStore>()((set, get) => ({
 
   addItem: async (productId, quantity) => {
     const clientId = getClientId();
-    console.log(clientId);
     if (!clientId) return;
     try {
       const cart = await cartApi.addToCart(clientId, productId, quantity);
       set({ cart });
     } catch (error: any) {
-      // throw error;
+      throw error;
     }
   },
 
