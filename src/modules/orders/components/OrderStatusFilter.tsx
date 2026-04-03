@@ -44,10 +44,11 @@ const OrderStatusFilter = ({ value, onChange }: OrderStatusFilterProps) => {
             onClick={() => onChange(option)}
             sx={{
               flexShrink: 0,
-              fontWeight: isActive ? 500 : 400,
+              fontWeight: isActive ? 600 : 500,
+              fontSize: 18,
               bgcolor: isActive ? "#77A787" : "transparent",
               color: isActive ? "#FFFFFF" : "text.secondary",
-              border: "1px solid",
+              border: "2px solid",
               borderColor: isActive ? "#77A787" : "divider",
               "&:hover": {
                 bgcolor: isActive ? "#77A787" : "action.hover",

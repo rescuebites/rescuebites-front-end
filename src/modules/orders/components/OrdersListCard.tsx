@@ -1,128 +1,120 @@
-import { Store, Clock } from "lucide-react";
+import { Store, Clock, ShoppingBag } from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
+import { OrderStatus } from "../enums/order-status.enum";
+import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { PaymentMethod } from "../enums/payment-method.enum";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { getStatusColor } from "../utils/order.utils";
 
-type OrderStatus = "in_preparation" | "delivered" | "cancelled";
+// const mockOrders: OrderResponse[] = [
+// //   {
+// //     orderId: "1",
+// //     orderNumber: "1234",
+// //     commerceId: "1",
+// //     commerceName: "Bakery",
+// //     commerceAddress: "Av. Siempre Viva 123",
+// //     commerceLocality: "Córdoba",
+// //     commercePhone: "351-000-0000",
+// //     commerceType: CommerceType.BAKERY,
+// //     commerceImages: [],
+// //     items: [],
+// //     subtotal: 47.0,
+// //     discountedSubtotal: 47.0,
+// //     serviceFee: 0,
+// //     total: 47.0,
+// //     status: OrderStatus.PREPARING,
+// //     paymentMethod: PaymentMethod.CASH,
+// //     createdAt: "2026-02-02T10:00:00Z",
+// //     confirmedAt: null,
+// //     scheduledPickupTime: null,
+// //     notes: null,
+// //   },
+// //   {
+// //     orderId: "2",
+// //     orderNumber: "3456",
+// //     commerceId: "2",
+// //     commerceName: "Brizha",
+// //     commerceAddress: "Av. Colón 456",
+// //     commerceLocality: "Córdoba",
+// //     commercePhone: "351-111-1111",
+// //     commerceType: CommerceType.RESTAURANT,
+// //     commerceImages: [],
+// //     items: [],
+// //     subtotal: 70.0,
+// //     discountedSubtotal: 70.0,
+// //     serviceFee: 0,
+// //     total: 70.0,
+// //     status: OrderStatus.COMPLETED,
+// //     paymentMethod: PaymentMethod.CASH,
+// //     createdAt: "2026-02-01T10:00:00Z",
+// //     confirmedAt: null,
+// //     scheduledPickupTime: null,
+// //     notes: null,
+// //   },
+// ];
 
-interface Order {
-  id: number;
-  storeName: string;
-  status: OrderStatus;
-  date: string;
-  itemCount: number;
-  total: number;
-}
+// export { mockOrders };
 
-const STATUS_CONFIG = {
-  in_preparation: { label: "In Preparation", color: "#3B6D11", bg: "#EAF3DE" },
-  delivered: { label: "Delivered", color: "#185FA5", bg: "#E6F1FB" },
-  cancelled: { label: "Cancelled", color: "#A32D2D", bg: "#FCEBEB" },
-} satisfies Record<OrderStatus, { label: string; color: string; bg: string }>;
+export const mockOrders: OrderResponse[] = [];
 
-const mockOrders: Order[] = [
-  {
-    id: 1234,
-    storeName: "Bakery",
-    status: "in_preparation",
-    date: "February 02, 2026",
-    itemCount: 3,
-    total: 47.0,
-  },
-  {
-    id: 1235,
-    storeName: "Bakery",
-    status: "delivered",
-    date: "January 28, 2026",
-    itemCount: 5,
-    total: 83.5,
-  },
-];
 
-function OrderCard({ order }: { order: Order }) {
-  const status = STATUS_CONFIG[order.status];
+function OrderCard({ order }: { order: OrderResponse }) {
+  const { bg, color } = getStatusColor(order.status);
 
   return (
-    <Card
-      variant="outlined"
-      sx={{ borderRadius: 3, maxWidth: 420, width: "100%" }}
-    >
+    <Card variant="outlined" sx={{ borderRadius: 3, maxWidth: 1500, width: "100%" }}>
       <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          mb={1.5}
-        >
+        <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
           <Box display="flex" alignItems="center" gap={1.5}>
-            <Box
-              sx={{
-                width: 44,
-                height: 44,
-                borderRadius: 2,
-                bgcolor: "#FFF0E6",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-            >
-              <Store size={22} color="#E07A30" />
+            <Box sx={{ width: 44, height: 44, borderRadius: 2, bgcolor: "#FFF0E6", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <Store size={30} color="#E07A30" />
             </Box>
             <Box>
-              <Typography fontWeight={500} fontSize={15}>
-                {order.storeName}
-              </Typography>
+              <Typography fontWeight={600} fontSize={22}>{order.commerceName}</Typography>
               <Chip
-                label={status.label}
+                label={order.status}
                 size="small"
-                sx={{
-                  mt: 0.5,
-                  height: 20,
-                  fontSize: 11,
-                  fontWeight: 500,
-                  color: status.color,
-                  bgcolor: status.bg,
-                  borderRadius: "999px",
-                }}
+                sx={{ mt: 0.5, height: 20, fontSize: 14, fontWeight: 500, color, bgcolor: bg, borderRadius: "999px" }}
               />
             </Box>
           </Box>
-          <Typography fontSize={13} color="text.secondary">
-            #{order.id}
-          </Typography>
+          <Typography fontSize={15} color="text.secondary">#{order.orderNumber}</Typography>
         </Box>
 
-        <Box
-          display="flex"
-          alignItems="center"
-          justifyContent="space-between"
-          pt={1.5}
-          borderTop="1px solid"
-          borderColor="divider"
-        >
-          <Box display="flex" alignItems="center" gap={0.75}>
-            <Clock size={14} color="gray" />
-            <Box>
-              <Typography fontSize={12} color="text.secondary">
-                {order.date}
-              </Typography>
-              <Typography fontSize={11} color="text.disabled">
-                {order.itemCount} Items
-              </Typography>
+        <Box display="flex" alignItems="center" justifyContent="space-between" pt={1.5} borderTop="1px solid" borderColor="divider">
+          <Box display="flex" flexDirection="column" gap={0.5}>
+            <Box display="flex" alignItems="center" gap={0.75}>
+              <Clock size={16} color="gray" />
+              <Typography fontSize={16} color="text.secondary">{order.createdAt}</Typography>
             </Box>
+            <Typography fontSize={16} color="text.disabled">{order.items.length} Items</Typography>
           </Box>
-          <Typography fontWeight={500} fontSize={16}>
-            ${order.total.toFixed(2)}
-          </Typography>
+          <Typography fontWeight={550} fontSize={18} color="#77A787">${order.total.toFixed(2)}</Typography>
         </Box>
       </CardContent>
     </Card>
   );
 }
 
-export default function OrderList() {
+export default function OrderList({ orders = []}: { orders: OrderResponse[] }) {
+    if (orders.length === 0) {
+    return (
+      <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" gap={0.5}>
+        <img src="/public/emptyBag.png" alt="Sin pedidos" width={400} height={300}/>
+        <Typography fontSize={20} fontWeight={500} color="#2d2d2d" textAlign="center">
+          Sin pedidos
+        </Typography>
+        <Typography fontSize={18} color="#6d6d6d" textAlign="center">
+          Todavía no realizaste ningún pedido
+        </Typography>
+      </Box>
+    );
+  }
+
   return (
     <Box display="flex" flexDirection="column" gap={2} p={2}>
-      {mockOrders.map((order) => (
-        <OrderCard key={order.id} order={order} />
+      {orders.map((order) => (
+        <OrderCard key={order.orderId} order={order} />
       ))}
     </Box>
   );
