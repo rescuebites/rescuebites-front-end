@@ -5,57 +5,59 @@ import { OrderResponse } from "../interfaces/responses/order-response.interface"
 import { PaymentMethod } from "../enums/payment-method.enum";
 import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { getStatusColor } from "../utils/order.utils";
+import { OrderStatusDisplayName } from "../utils/order-status-mapping";
+import { formatDateWithTime } from "@/shared/utils/dateFormat";
 
-// const mockOrders: OrderResponse[] = [
-// //   {
-// //     orderId: "1",
-// //     orderNumber: "1234",
-// //     commerceId: "1",
-// //     commerceName: "Bakery",
-// //     commerceAddress: "Av. Siempre Viva 123",
-// //     commerceLocality: "Córdoba",
-// //     commercePhone: "351-000-0000",
-// //     commerceType: CommerceType.BAKERY,
-// //     commerceImages: [],
-// //     items: [],
-// //     subtotal: 47.0,
-// //     discountedSubtotal: 47.0,
-// //     serviceFee: 0,
-// //     total: 47.0,
-// //     status: OrderStatus.PREPARING,
-// //     paymentMethod: PaymentMethod.CASH,
-// //     createdAt: "2026-02-02T10:00:00Z",
-// //     confirmedAt: null,
-// //     scheduledPickupTime: null,
-// //     notes: null,
-// //   },
-// //   {
-// //     orderId: "2",
-// //     orderNumber: "3456",
-// //     commerceId: "2",
-// //     commerceName: "Brizha",
-// //     commerceAddress: "Av. Colón 456",
-// //     commerceLocality: "Córdoba",
-// //     commercePhone: "351-111-1111",
-// //     commerceType: CommerceType.RESTAURANT,
-// //     commerceImages: [],
-// //     items: [],
-// //     subtotal: 70.0,
-// //     discountedSubtotal: 70.0,
-// //     serviceFee: 0,
-// //     total: 70.0,
-// //     status: OrderStatus.COMPLETED,
-// //     paymentMethod: PaymentMethod.CASH,
-// //     createdAt: "2026-02-01T10:00:00Z",
-// //     confirmedAt: null,
-// //     scheduledPickupTime: null,
-// //     notes: null,
-// //   },
-// ];
+const mockOrders: OrderResponse[] = [
+  {
+    orderId: "1",
+    orderNumber: "1234",
+    commerceId: "1",
+    commerceName: "Bakery",
+    commerceAddress: "Av. Siempre Viva 123",
+    commerceLocality: "Córdoba",
+    commercePhone: "351-000-0000",
+    commerceType: CommerceType.BAKERY,
+    commerceImages: [],
+    items: [],
+    subtotal: 47.0,
+    discountedSubtotal: 47.0,
+    serviceFee: 0,
+    total: 47.0,
+    status: OrderStatus.PREPARING,
+    paymentMethod: PaymentMethod.CASH,
+    createdAt: "2026-02-02T10:00:00Z",
+    confirmedAt: null,
+    scheduledPickupTime: null,
+    notes: null,
+  },
+  {
+    orderId: "2",
+    orderNumber: "3456",
+    commerceId: "2",
+    commerceName: "Brizha",
+    commerceAddress: "Av. Colón 456",
+    commerceLocality: "Córdoba",
+    commercePhone: "351-111-1111",
+    commerceType: CommerceType.RESTAURANT,
+    commerceImages: [],
+    items: [],
+    subtotal: 70.0,
+    discountedSubtotal: 70.0,
+    serviceFee: 0,
+    total: 70.0,
+    status: OrderStatus.COMPLETED,
+    paymentMethod: PaymentMethod.CASH,
+    createdAt: "2026-02-01T10:00:00Z",
+    confirmedAt: null,
+    scheduledPickupTime: null,
+    notes: null,
+  },
+];
 
-// export { mockOrders };
+export { mockOrders };
 
-export const mockOrders: OrderResponse[] = [];
+//export const mockOrders: OrderResponse[] = [];
 
 
 function OrderCard({ order }: { order: OrderResponse }) {
@@ -70,26 +72,26 @@ function OrderCard({ order }: { order: OrderResponse }) {
               <Store size={30} color="#E07A30" />
             </Box>
             <Box>
-              <Typography fontWeight={600} fontSize={22}>{order.commerceName}</Typography>
+              <Typography fontWeight={600} fontSize={25}>{order.commerceName}</Typography>
               <Chip
-                label={order.status}
+                label={OrderStatusDisplayName[order.status]}
                 size="small"
-                sx={{ mt: 0.5, height: 20, fontSize: 14, fontWeight: 500, color, bgcolor: bg, borderRadius: "999px" }}
+                sx={{ mt: 0.5, height: 20, fontSize: 15, fontWeight: 500, color, bgcolor: bg, borderRadius: "999px" }}
               />
             </Box>
           </Box>
-          <Typography fontSize={15} color="text.secondary">#{order.orderNumber}</Typography>
+          <Typography fontSize={20} color="text.secondary">#{order.orderNumber}</Typography>
         </Box>
 
         <Box display="flex" alignItems="center" justifyContent="space-between" pt={1.5} borderTop="1px solid" borderColor="divider">
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" alignItems="center" gap={0.75}>
-              <Clock size={16} color="gray" />
-              <Typography fontSize={16} color="text.secondary">{order.createdAt}</Typography>
+              <Clock size={20} color="gray" />
+              <Typography fontSize={18} color="text.secondary">{formatDateWithTime(order.createdAt)}</Typography>
             </Box>
-            <Typography fontSize={16} color="text.disabled">{order.items.length} Items</Typography>
+            <Typography fontSize={20} color="text.disabled">{order.items.length} Unidades</Typography>
           </Box>
-          <Typography fontWeight={550} fontSize={18} color="#77A787">${order.total.toFixed(2)}</Typography>
+          <Typography fontWeight={550} fontSize={22} color="#77A787">${order.total.toFixed(2)}</Typography>
         </Box>
       </CardContent>
     </Card>

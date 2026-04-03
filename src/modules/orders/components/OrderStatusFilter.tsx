@@ -45,7 +45,7 @@ const OrderStatusFilter = ({ value, onChange }: OrderStatusFilterProps) => {
             sx={{
               flexShrink: 0,
               fontWeight: isActive ? 600 : 500,
-              fontSize: 18,
+              fontSize: 20,
               bgcolor: isActive ? "#77A787" : "transparent",
               color: isActive ? "#FFFFFF" : "text.secondary",
               border: "2px solid",

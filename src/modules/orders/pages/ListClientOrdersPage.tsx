@@ -9,7 +9,7 @@ const ListClientOrdersPage = () => {
   const { activeStatus, setActiveStatus, filteredOrders } = useOrderFilters(mockOrders);
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto", mt: { xs: 1, sm: 2 } }}>
+    <Box mt={2} sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto"}}>
       <SearchBar onSearchChange={(value) => console.log("buscando", value)} />
       <Box mt={4}>
         <OrderStatusFilter value={activeStatus} onChange={setActiveStatus} />
