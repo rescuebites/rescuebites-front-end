@@ -4,13 +4,16 @@ import SearchBar from "../../../filterPanel/components/SearchBar";
 import CommerceTypeChips from "../components/CommerceTypeChips";
 import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
-import FilterDrawer from "../components/FilterDrawer";
+import FilterDrawer from "../../../filterPanel/components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "@/modules/filterPanel/hooks/useSearch"
 import CustomTitle from "@/shared/components/CustomTitle";
+import { useFilters } from "../../../filterPanel/hooks/useFilters";
 
 
 export default function HomePage() {
+  useFilters();
+
   const {
     query,
     setQuery,

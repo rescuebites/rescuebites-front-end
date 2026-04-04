@@ -17,7 +17,7 @@ import {
 import { MdClose, MdSearch, } from "react-icons/md";
 import { BiSolidFoodMenu } from "react-icons/bi";
 import TuneIcon from "@mui/icons-material/Tune";
-import { useFilterStore } from "../../../modules/customer/home/hooks/useFilterStore";
+import { useFilterStore } from "../hooks/useFilterStore";
 import type { SearchSuggestion } from "../interfaces/responses/search-response.interface";
 import { ShoppingBasket, Store } from "lucide-react";
 
