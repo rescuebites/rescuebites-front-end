@@ -3,10 +3,9 @@ import type {
   SearchSuggestion,
   SearchCommerceResponse,
   SearchProductResponse,
-  SearchResultResponse,
 } from "../interfaces/responses/search-response.interface";
+import { fetchSuggestions, fetchSearchResults } from "../api/search.api";
 
-const BASE_URL = "/api/v1/search";
 const DEBOUNCE_DELAY = 350;
 const DEFAULT_LOCALITY = "Villa María"; // ajustá o leelo de contexto/store
 
@@ -66,12 +65,7 @@ export function useSearch(): UseSearchReturn {
       if (abortSuggestionsRef.current) abortSuggestionsRef.current.abort();
       abortSuggestionsRef.current = new AbortController();
       try {
-        const res = await fetch(
-          `${BASE_URL}/suggestions?q=${encodeURIComponent(q.trim())}&locality=${encodeURIComponent(DEFAULT_LOCALITY)}`,
-          { signal: abortSuggestionsRef.current.signal }
-        );
-        if (!res.ok) throw new Error();
-        const data: SearchSuggestion[] = await res.json();
+        const data = await fetchSuggestions(q.trim(), DEFAULT_LOCALITY, abortSuggestionsRef.current.signal);
         setSuggestions(data);
         setShowSuggestions(data.length > 0);
       } catch (err: unknown) {
@@ -90,12 +84,7 @@ export function useSearch(): UseSearchReturn {
       setError(null);
 
       try {
-        const res = await fetch(
-          `${BASE_URL}?q=${encodeURIComponent(q.trim())}&locality=${encodeURIComponent(DEFAULT_LOCALITY)}&page=${pPage}&size=10`,
-          { signal: abortSearchRef.current.signal }
-        );
-        if (!res.ok) throw new Error("Error en la búsqueda");
-        const data: SearchResultResponse = await res.json();
+        const data = await fetchSearchResults(q.trim(), DEFAULT_LOCALITY, pPage, 10, abortSearchRef.current.signal);
 
         setCommerces((prev) => append ? [...prev, ...data.commerces.content] : data.commerces.content);
         setProducts((prev) => append ? [...prev, ...data.products.content] : data.products.content);

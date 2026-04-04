@@ -49,7 +49,7 @@ export function useTopDeals(size = 6) {
     queryFn: () =>
       clientId
         ? getTopDealsByClient(clientId, size)
-        : getTopDeals(locality || 'Córdoba Capital', size),
+        : getTopDeals(locality || 'Villa María', size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
     enabled: !!locality,
@@ -100,9 +100,9 @@ export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | nu
           : getTopDealsByClient(clientId, size);
       }
       if (!commerceType) {
-        return getTopDeals(locality || 'Córdoba Capital', size);
+        return getTopDeals(locality || 'Villa María', size);
       }
-      return getProductsByCommerceType(commerceType, locality || 'Córdoba Capital', 0, size);
+      return getProductsByCommerceType(commerceType, locality || 'Villa María', 0, size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
