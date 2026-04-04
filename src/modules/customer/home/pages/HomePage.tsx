@@ -1,11 +1,13 @@
+import { type ReactNode } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
 import SearchBar from "../../../filterPanel/components/SearchBar";
-import CategoryChips from "../components/CategoryChips";
+import CommerceTypeChips from "../components/CommerceTypeChips";
 import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
 import FilterDrawer from "../components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
 import { useSearch } from "@/modules/filterPanel/hooks/useSearch"
+import CustomTitle from "@/shared/components/CustomTitle";
 
 
 export default function HomePage() {
@@ -28,17 +30,17 @@ export default function HomePage() {
   console.log("navegando con term:", term);
   if (!term) return;
   confirmSearch(term);
-  navigate(`/customer/search?q=${encodeURIComponent(term)}`);
+  navigate(`/search?q=${encodeURIComponent(term)}`);
 };
 
   const navigate = useNavigate();
 
   const handleGoToAllStores = () => {
-    navigate("/customer/allStores");
+    navigate("/allStores");
   };
 
   const handleGoToAllDeals = () => {
-    navigate("/customer/allProducts");
+    navigate("/allProducts");
   };
 
   return (
@@ -66,7 +68,8 @@ export default function HomePage() {
             onHideSuggestions={() => setShowSuggestions(false)}
             onShowSuggestions={() => setShowSuggestions(true)}
           />
-          <CategoryChips />
+          <CustomTitle text="Tipos de comercio" variant="h5" color='#2D2D2D' align="left"/>
+          <CommerceTypeChips />
         </Stack>
       </Container>
 
@@ -82,7 +85,11 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={3}>
-          <SectionTitle primary="Locales" secondary="Ver todo" onSecondaryClick={handleGoToAllStores} />
+          <SectionHeader 
+          secondary="Ver todo" 
+          onSecondaryClick={handleGoToAllStores} >
+          <CustomTitle text="Locales" variant="h5" color='#2D2D2D'/>
+          </SectionHeader>
           <FeaturedStores />
         </Stack>
       </Container>
@@ -99,7 +106,11 @@ export default function HomePage() {
         }}
       >
         <Stack spacing={3}>
-          <SectionTitle primary="Mejores ofertas en productos" secondary="Ver todo" onSecondaryClick={handleGoToAllDeals} />
+          <SectionHeader 
+          secondary="Ver todo" 
+          onSecondaryClick={handleGoToAllDeals} >
+          <CustomTitle text="Mejores ofertas en productos" variant="h5" color='#2D2D2D'/>
+          </SectionHeader>
           <TopDeals />
         </Stack>
       </Container>
@@ -110,59 +121,42 @@ export default function HomePage() {
   );
 }
 
-type SectionTitleProps = {
-  primary: string;
+type SectionHeaderProps = {
+  children: ReactNode;
   secondary?: string;
   onSecondaryClick?: () => void;
 };
 
-
-function SectionTitle({
-  primary,
+function SectionHeader({
+  children,
   secondary,
   onSecondaryClick,
-}: SectionTitleProps) {
-
+}: SectionHeaderProps) {
   return (
     <Stack
       direction="row"
       justifyContent="space-between"
       alignItems="center"
+      sx={{ mb: 2 }}
     >
-      <Typography
-        component="h1"
-        sx={{
-          color: '#2D2D2D',
-          fontSize: { xs: 18, sm: 20, md: 22 },
-          fontWeight: 700,
-          m: 0,
-        }}
-      >
-        {primary}
-      </Typography>
+      {/* Utilizo customTitle */}
+      {children}
+      {/* Utilizo secondary para texto con propiedades extra */}
       {secondary && (
         <Typography
-            component="button"
-            onClick={onSecondaryClick}
-            sx={{
-              color: '#757575',
-              fontSize: { xs: 13, sm: 14 },
-              fontWeight: 600,
-              m: 0,
-              cursor: 'pointer',
-              background: 'none',
-              border: 'none',
-              display: 'flex',
-              alignItems: 'center',
-              gap: 0.5,
-              '&:hover': {
-                color: '#77A787',
-              },
-            }}
-          >
-            {secondary} <span>→</span>
+          component="button"
+          onClick={onSecondaryClick}
+          variant="subtitle1"
+          sx={{
+            color: '#757575',
+            fontWeight: "bold",
+            background: 'none',
+            border: 'none',
+            '&:hover': { color: '#77A787' },
+          }}
+        >
+          {secondary} <span>→</span>
         </Typography>
-
       )}
     </Stack>
   );

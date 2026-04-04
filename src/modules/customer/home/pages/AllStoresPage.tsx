@@ -1,9 +1,9 @@
-import { Box, Typography, Skeleton, Stack } from "@mui/material";
+import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
 import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import { StoreCard } from "../components/StoreCard";
-import CategoryChips from "../components/CategoryChips";
+import CategoryChips from "../components/CommerceTypeChips";
 import BackButton from "@/shared/components/ui/BackButton";
 
 export default function AllStoresPage() {
@@ -23,7 +23,7 @@ export default function AllStoresPage() {
   return (
     <Box sx={{ px: { xs: 2, sm: 4, md: 8 }, py: 3, maxWidth: 1800, mx: "auto" }}>
         <Box sx={{ pt: { xs: 0.5, sm: 1, md: 1 }, mb:3 }}>
-            <BackButton onClick={() => navigate('/customer', { replace: true })}/>
+            <BackButton onClick={() => navigate('/', { replace: true })}/>
         </Box>
       {/* Header */}
       <Typography variant="h5" sx={{ fontWeight: 700, color: "#2D2D2D", mb: 3 }}>
@@ -63,7 +63,7 @@ export default function AllStoresPage() {
             <StoreCard
               key={commerce.commerceId}
               commerce={commerce}
-              onClick={() => navigate(`/customer/stores/${commerce.commerceId}`)}
+              onClick={() => navigate(`/stores/${commerce.commerceId}`)}
             />
           ))}
         </Box>

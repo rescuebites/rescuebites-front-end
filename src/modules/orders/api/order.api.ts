@@ -22,3 +22,15 @@ export const cancelOrder = async (
   );
   return data;
 };
+
+export const createOrder = async (
+  clientId: string,
+  commerceId: string,
+  notes?: string
+): Promise<OrderResponse> => {
+  const { data } = await httpClient.post<OrderResponse>(
+    `/api/v1/clients/${clientId}/orders`,
+    { commerceId, notes }
+  );
+  return data;
+};

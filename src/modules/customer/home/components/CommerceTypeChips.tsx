@@ -37,7 +37,7 @@ const commerceTypeData: Record<string, { icon: ReactElement; color: string }> = 
   },
 };
 
-export default function CategoryChips() {
+export default function CommerceTypeChips() {
   
   const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
   const setSelectedCommerceType = useCommerceTypeStore((state) => state.setSelectedCommerceType);
@@ -76,11 +76,11 @@ export default function CategoryChips() {
               color: '#757575', 
               fontSize: 14,
               cursor: 'pointer',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 0.5,
-            '&:hover': { color: '#77A787' }
-          }}
+              display: 'flex',
+              alignItems: 'center',
+              gap: 0.5,
+              '&:hover': { color: '#77A787' }
+            }}
         >
             Limpiar filtros
         </Typography>

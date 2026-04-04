@@ -53,7 +53,7 @@ export default function FeaturedStores() {
           <StoreCard
             key={commerce.commerceId}
             commerce={commerce}
-            onClick={() => navigate(`/customer/stores/${commerce.commerceId}`)}
+            onClick={() => navigate(`/stores/${commerce.commerceId}`)}
           />
         ))}
       </Box>

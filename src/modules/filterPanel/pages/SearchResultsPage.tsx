@@ -13,10 +13,14 @@ import { useSearch } from "../hooks/useSearch";
 import SearchBar from "../components/SearchBar";
 import { ProductCard } from "../../catalog/components/ProductCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import BackButton from "@/shared/components/ui/BackButton";
 import type { SearchCommerceResponse } from "../interfaces/responses/search-response.interface";
 import { SearchX, Store } from "lucide-react";
+import { CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
+import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import CustomTitle from "@/shared/components/CustomTitle";
+import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
 
 
 
@@ -66,16 +70,16 @@ function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse;
           {!commerce.images?.[0]?.url && commerce.name.charAt(0).toUpperCase()}
         </Avatar>
         <Box flex={1} minWidth={0}>
-          <Typography fontWeight={700} fontSize={16} color="#2D2D2D" noWrap>
+          <Typography fontWeight={700} fontSize={22} color="#2D2D2D" noWrap>
             {commerce.name}
           </Typography>
-          <Typography fontSize={13} color="#9E9E9E" noWrap>
+          <Typography fontSize={18} color="#9E9E9E" noWrap>
             {commerce.address}
           </Typography>
           <Stack direction="row" spacing={0.5} alignItems="center" mt={0.5}>
-            <Store size={13} color="#77A787" />
-            <Typography fontSize={12} color="#77A787" fontWeight={600}>
-              {commerce.commerceType}
+            <Store size={18} color="#77A787" />
+            <Typography fontSize={16} color="#77A787" fontWeight={600}>
+              {CommerceTypeDisplayName[commerce.commerceType as CommerceType]}
             </Typography>
           </Stack>
         </Box>
@@ -87,8 +91,8 @@ function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse;
 function SectionHeader({ title, count }: { title: string; count: number }) {
   return (
     <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", mb: 2 }}>
-      <Typography fontWeight={700} fontSize={18} color="#2D2D2D">{title}</Typography>
-      <Typography fontSize={13} color="#9E9E9E">
+      <CustomTitle text={title} variant="h4" color="#2D2D2D" />
+      <Typography fontSize={16} color="#9E9E9E">
         {count} resultado{count !== 1 ? "s" : ""}
       </Typography>
     </Box>
@@ -128,6 +132,7 @@ function LoadMoreButton({ onClick }: { onClick: () => void }) {
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
   const {
     query, setQuery,
@@ -184,7 +189,7 @@ export default function SearchResultsPage() {
               <CommerceCard
                 key={c.commerceId}
                 commerce={c}
-                onClick={() => navigate(`/customer/stores/${c.commerceId}`)}
+                onClick={() => navigate(`/stores/${c.commerceId}`)}
               />
             ))}
           </Stack>
@@ -205,7 +210,7 @@ export default function SearchResultsPage() {
               <ProductCard
                 key={p.productId}
                 product={p as any}
-                onClick={() => navigate(`/customer/stores/${p.commerceId}`)}
+                onClick={() => setSelectedProductId(p.productId)}
               />
             ))}
           </Box>
@@ -218,6 +223,12 @@ export default function SearchResultsPage() {
       )}
 
       {isEmpty && <EmptyState query={query} />}
+
+      <ProductDetailDialog
+        open={selectedProductId !== null}
+        onClose={() => setSelectedProductId(null)}
+        productId={selectedProductId}
+      />
     </Box>
   );
 }

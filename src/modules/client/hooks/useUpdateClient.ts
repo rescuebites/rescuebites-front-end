@@ -14,7 +14,7 @@ export const useUpdateClient = () => {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ["client", data.clientId] });
       showMessage("Perfil actualizado exitosamente", "success");
-      navigate("/customer/profile");
+      navigate("/profile");
     },
     onError: (error: any) => {
       const errorMessage =

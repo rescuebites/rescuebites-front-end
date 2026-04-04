@@ -2,13 +2,14 @@ import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
 import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
-import CategoryChips from "../components/CategoryChips";
 import ProductDetailDialog from "../components/ProductDetailDialog";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
 import { ProductCard } from "../../../catalog/components/ProductCard";
 import SearchBar from "@/modules/filterPanel/components/SearchBar";
 import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
+import CustomTitle from "@/shared/components/CustomTitle";
+import CommerceTypeChips from "../components/CommerceTypeChips";
 
 export default function AllProductsPage() {
   
@@ -31,7 +32,7 @@ export default function AllProductsPage() {
     console.log("navegando con term:", term);
     if (!term) return;
     confirmSearch(term);
-    navigate(`/customer/search?q=${encodeURIComponent(term)}`);
+    navigate(`/search?q=${encodeURIComponent(term)}`);
   };
   
 
@@ -62,13 +63,11 @@ export default function AllProductsPage() {
           />
         </Stack>
       {/* Header */}
-      <Typography variant="h5" sx={{ fontWeight: 700, color: "#2D2D2D", mb: 3 }}>
-        Todos los productos
-      </Typography>
+      <CustomTitle text="Productos disponibles" color="#2D2D2D" variant="h5" align="left"/>
 
       {/* Categorías */}
       <Box sx={{ mb: 5 }}>
-        <CategoryChips />
+        <CommerceTypeChips />
       </Box>
 
       {/* Contenido */}
