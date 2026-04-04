@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useCartStore } from "./useCartStore";
 import { createOrder } from "@/modules/orders/api/order.api";
+import { createPaymentPreference } from "@/modules/orders/api/payment.api";
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import type { CommerceCartSummary } from "../interfaces/responses/cart-response.interface";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
@@ -55,6 +56,11 @@ export function useCart() {
     try {
       const order = await createOrder(clientId, commerce.commerceId, notes || undefined);
       await clearCart();
+
+      if (cart.selectedPaymentMethod === PaymentMethod.MERCADO_PAGO) {
+        const { sandboxInitPoint } = await createPaymentPreference(order.orderId);
+        window.location.href = sandboxInitPoint;
+      }
       queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
       setCreatedOrderId(order.orderId);
     } catch (error) {
