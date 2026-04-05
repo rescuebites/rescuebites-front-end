@@ -12,6 +12,7 @@ import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
+import PaymentResultPage from "@/modules/orders/pages/PaymentResultPage";
 
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
@@ -44,6 +45,19 @@ export function CustomerRoutes() {
             <Route path="notifications" element={null} />
             <Route path="profile" element={null} />
           </Route>
+        </Route>
+      </Route>
+
+      {/* Rutas de resultado de pago — fuera del LocalityGuard */}
+      <Route
+        element={
+          <AppLayout navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />} />
+        }
+      >
+        <Route element={<ProtectedRoute />}>
+          <Route path="payment/success" element={<PaymentResultPage type="success" />} />
+          <Route path="payment/failure" element={<PaymentResultPage type="failure" />} />
+          <Route path="payment/pending" element={<PaymentResultPage type="pending" />} />
         </Route>
       </Route>
     </Routes>
