@@ -26,7 +26,8 @@ import { Box, CircularProgress } from "@mui/material";
  *     - Still fetching profile (locality not yet synced) → show spinner
  *     - Profile loaded but locality missing (edge case) → redirect to /locality
  *     - Locality ready → render children
- */
+ */import PaymentResultPage from "@/modules/orders/pages/PaymentResultPage";
+
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
   const { isAuthenticated, clientId } = useAuthStore();
@@ -81,6 +82,19 @@ export function CustomerRoutes() {
             <Route path="notifications" element={null} />
             <Route path="profile" element={<ClientProfilePage />} />
           </Route>
+        </Route>
+      </Route>
+
+      {/* Rutas de resultado de pago — fuera del LocalityGuard */}
+      <Route
+        element={
+          <AppLayout navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />} />
+        }
+      >
+        <Route element={<ProtectedRoute />}>
+          <Route path="payment/success" element={<PaymentResultPage type="success" />} />
+          <Route path="payment/failure" element={<PaymentResultPage type="failure" />} />
+          <Route path="payment/pending" element={<PaymentResultPage type="pending" />} />
         </Route>
       </Route>
     </Routes>
