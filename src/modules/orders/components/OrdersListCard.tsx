@@ -1,6 +1,5 @@
-import { Store, Clock, ShoppingBag } from "lucide-react";
+import { Store, Clock} from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
-import { OrderStatus } from "../enums/order-status.enum";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
 import { getStatusColor } from "../utils/order.utils";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
