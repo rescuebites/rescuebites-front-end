@@ -2,11 +2,15 @@ import SearchBar from "@/shared/components/layout/SearchBar";
 import OrderList from "../components/OrdersListCard";
 import OrderStatusFilter from "../components/OrderStatusFilter";
 import { useOrderFilters } from "../hooks/useOrderFilters";
-import { mockOrders } from "../components/OrdersListCard";
-import { Box } from "@mui/material";
+import { useClientOrders } from "../hooks/useClientOrders";
+import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
+import { Box, CircularProgress, Typography } from "@mui/material";
 
 const ListClientOrdersPage = () => {
-  const { activeStatus, setActiveStatus, filteredOrders } = useOrderFilters(mockOrders);
+  const clientId = useAuthStore((state) => state.clientId);
+  const { data, isLoading, isError } = useClientOrders(clientId);
+  const orders = data?.content ?? [];
+  const { activeStatus, setActiveStatus, filteredOrders } = useOrderFilters(orders);
 
   return (
     <Box mt={2} sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto"}}>
@@ -15,7 +19,17 @@ const ListClientOrdersPage = () => {
         <OrderStatusFilter value={activeStatus} onChange={setActiveStatus} />
       </Box>
       <Box mt={2}>
-        <OrderList orders={filteredOrders} />
+        {isLoading && (
+          <Box display="flex" justifyContent="center" mt={4}>
+            <CircularProgress />
+          </Box>
+        )}
+        {isError && (
+          <Typography color="error" textAlign="center" mt={4}>
+            Error al cargar los pedidos.
+          </Typography>
+        )}
+        {!isLoading && !isError && <OrderList orders={filteredOrders} />}
       </Box>
     </Box>
   );

@@ -2,74 +2,26 @@ import { Store, Clock, ShoppingBag } from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
 import { OrderStatus } from "../enums/order-status.enum";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
-import { PaymentMethod } from "../enums/payment-method.enum";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import { getStatusColor } from "../utils/order.utils";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
 
-const mockOrders: OrderResponse[] = [
-  {
-    orderId: "1",
-    orderNumber: "1234",
-    commerceId: "1",
-    commerceName: "Bakery",
-    commerceAddress: "Av. Siempre Viva 123",
-    commerceLocality: "Córdoba",
-    commercePhone: "351-000-0000",
-    commerceType: CommerceType.BAKERY,
-    commerceImages: [],
-    items: [],
-    subtotal: 47.0,
-    discountedSubtotal: 47.0,
-    serviceFee: 0,
-    total: 47.0,
-    status: OrderStatus.PREPARING,
-    paymentMethod: PaymentMethod.CASH,
-    createdAt: "2026-02-02T10:00:00Z",
-    confirmedAt: null,
-    scheduledPickupTime: null,
-    notes: null,
-  },
-  {
-    orderId: "2",
-    orderNumber: "3456",
-    commerceId: "2",
-    commerceName: "Brizha",
-    commerceAddress: "Av. Colón 456",
-    commerceLocality: "Córdoba",
-    commercePhone: "351-111-1111",
-    commerceType: CommerceType.RESTAURANT,
-    commerceImages: [],
-    items: [],
-    subtotal: 70.0,
-    discountedSubtotal: 70.0,
-    serviceFee: 0,
-    total: 70.0,
-    status: OrderStatus.COMPLETED,
-    paymentMethod: PaymentMethod.CASH,
-    createdAt: "2026-02-01T10:00:00Z",
-    confirmedAt: null,
-    scheduledPickupTime: null,
-    notes: null,
-  },
-];
-
-export { mockOrders };
-
-//export const mockOrders: OrderResponse[] = [];
-
 
 function OrderCard({ order }: { order: OrderResponse }) {
   const { bg, color } = getStatusColor(order.status);
+  const commerceImageUrl = order.commerceImages?.[0]?.url;
 
   return (
     <Card variant="outlined" sx={{ borderRadius: 3, maxWidth: 1500, width: "100%" }}>
       <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
           <Box display="flex" alignItems="center" gap={1.5}>
-            <Box sx={{ width: 44, height: 44, borderRadius: 2, bgcolor: "#FFF0E6", display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <Store size={30} color="#E07A30" />
+            <Box sx={{ width: 44, height: 44, borderRadius: 2, bgcolor: "#FFF0E6", overflow: "hidden", display: "flex", alignItems: "center", justifyContent: "center" }}>
+              {commerceImageUrl ? (
+                <img src={commerceImageUrl} alt={order.commerceName} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              ) : (
+                <Store size={30} color="#E07A30" />
+              )}
             </Box>
             <Box>
               <Typography fontWeight={600} fontSize={25}>{order.commerceName}</Typography>
