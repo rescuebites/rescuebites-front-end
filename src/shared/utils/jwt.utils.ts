@@ -1,4 +1,4 @@
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 
 export interface JwtPayload {
   sub?: string;
