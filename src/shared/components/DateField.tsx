@@ -7,19 +7,12 @@ interface DateFieldProps<T extends FieldValues = FieldValues> {
   label?: string;
   error?: string;
   minDate?: string;
+  maxDate?: string;
   size?: "small" | "medium";
   sx?: object;
 }
 
-export default function DateField<T extends FieldValues = FieldValues>({ 
-  control, 
-  name, 
-  label, 
-  error, 
-  minDate, 
-  size, 
-  sx 
-}: DateFieldProps<T>) {
+export default function DateField<T extends FieldValues = FieldValues>({ control, name, label, error, minDate, maxDate, size, sx }: DateFieldProps<T>) {
   return (
     <Controller
       name={name}
@@ -36,6 +29,7 @@ export default function DateField<T extends FieldValues = FieldValues>({
           {...field}
           inputProps={{
             min: minDate,
+            max: maxDate,
             placeholder: "dd/mm/aaaa",
             style: { cursor: "text" },
           }}

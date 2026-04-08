@@ -5,7 +5,7 @@ import {
   CommerceTypeDisplay,
 } from "@/shared/utils/commerce-mapping";
 import { COMMERCE_TYPE_STYLES } from "@/shared/config/commerce-styles";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import CustomTitle from "./CustomTitle";
 
 interface CommerceInfoCardProps {
