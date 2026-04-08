@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Chip,
   Dialog,
 } from "@mui/material";
 import { CollapsibleSection } from "@/shared/components/CollapsibleSection";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 import { ProductCondition} from "@/modules/products/enums/product-condition.enum";
 import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
@@ -42,6 +42,12 @@ export const FilterBottomSheet = ({
 }: FilterBottomSheetProps) => {
   const [localValues, setLocalValues] = useState<FilterValues>(currentValues);
 
+  useEffect(() => {
+    if (open) {
+      setLocalValues(currentValues);
+    }
+  }, [open]);
+
   const allowedCategories = getAllowedProductCategories(commerceType);
   const allowedConditions = getAllowedProductConditions(commerceType);
 
@@ -75,13 +81,10 @@ export const FilterBottomSheet = ({
     onClose();
   };
 
-  const handleOpen = () => setLocalValues(currentValues);
-
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      onTransitionEnter={handleOpen}
       scroll="body"
       PaperProps={{
         sx: {
