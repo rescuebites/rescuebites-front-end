@@ -1,10 +1,10 @@
-import {
-  Dialog, IconButton, Box, CircularProgress,
-} from "@mui/material";
+import { Dialog, IconButton, Box } from "@mui/material";
 import { MdClose } from "react-icons/md";
 import { useState } from "react";
 import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
+import LoadingState from "@/shared/components/LoadingState";
+import EmptyState from "@/shared/components/EmptyState";
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 import { ProductCategoryDisplayName } from "@/modules/products/utils/category-mapping";
 import { ProductDetailHeader } from "./ProductDetailHeader";
@@ -48,8 +48,7 @@ export default function ProductDetailDialog({
     return null;
   }
 
-  // Mostrar loading mientras se carga el detalle
-  if (isLoading || !productDetail) {
+  if (isLoading) {
     return (
       <Dialog
         open={open}
@@ -63,9 +62,26 @@ export default function ProductDetailDialog({
           },
         }}
       >
-        <Box display="flex" justifyContent="center" alignItems="center" py={8}>
-          <CircularProgress sx={{ color: "#5FB574" }} />
-        </Box>
+        <LoadingState message="Cargando producto..." />
+      </Dialog>
+    );
+  }
+
+  if (!productDetail) {
+    return (
+      <Dialog
+        open={open}
+        onClose={onClose}
+        maxWidth="sm"
+        fullWidth
+        PaperProps={{
+          sx: {
+            borderRadius: 4,
+            bgcolor: "#FFFFFF",
+          },
+        }}
+      >
+        <EmptyState message="No se encontró el producto" />
       </Dialog>
     );
   }
@@ -73,11 +89,6 @@ export default function ProductDetailDialog({
   const handleGoToCommerce = () => {
     onClose(); 
     navigate(`/stores/${productDetail.commerceId}`, { replace: true });
-  };
-
-  const handleEditProduct = () => {
-    onClose();
-    navigate(`/create-product?productId=${productId}`, { replace: true });
   };
 
   const handleAddToCart = async () => {
@@ -137,34 +148,26 @@ export default function ProductDetailDialog({
       </Box>
 
       {/* Contenedor scrolleable*/}
-    <Box
-      sx={{
-        flex: 1,
-        overflow: "auto",
-        paddingBottom: mode !== "viewOnly" ? "88px" : "16px",
-        "&::-webkit-scrollbar": {
-          width: "8px",
-        },
-        "&::-webkit-scrollbar-track": {
-          background: "#f1f1f1",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          background: "#888",
-          borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": {
-          background: "#555",
-        },
-      }}
-    >
+      <Box
+        sx={{
+          flex: 1,
+          overflow: "auto",
+          paddingBottom: mode !== "viewOnly" ? "88px" : "16px",
+          scrollbarWidth: "none", 
+          msOverflowStyle: "none", 
+          "&::-webkit-scrollbar": {
+            display: "none", 
+          },
+        }}
+      >
         {/* Imagen del producto */}
         <ProductDetailHeader
-          imageUrl={productDetail.productImages?.[0]?.url}
+          images={productDetail.productImages?.map((img) => img.url) ?? []}
           discountPercentage={productDetail.discountPercentage}
         />
 
         {/* Contenido del producto */}
-        <Box sx={{ px: 3, py: 3, pb: 3 }}>
+        <Box sx={{ px: 3, py: 3, pb: 5 }}>
           {/* Información del producto */}
           <ProductDetailInfo
             name={productDetail.name}
@@ -173,13 +176,16 @@ export default function ProductDetailDialog({
             originalPrice={productDetail.originalPrice}
             expirationDate={productDetail.expirationDate}
             stock={productDetail.stock}
-            condition={productDetail.condition}
-            conditionDisplayName={productDetail.conditionDisplayName}
-            categoryDisplayName={ProductCategoryDisplayName[productDetail.category as ProductCategory]}
+            conditions={productDetail.conditions}
+            categoryDisplayName={
+              ProductCategoryDisplayName[
+                productDetail.category as ProductCategory
+              ]
+            }
           />
 
-          {/* Información del comercio */}
-          {productDetail.commerceName && (
+          {/* Información del comercio (oculta en modo edición) */}
+          {mode !== "edit" && productDetail.commerceName && (
             <ProductDetailCommerce
               commerceName={productDetail.commerceName}
               commerceOpeningHours={productDetail.commerceOpeningHours}
@@ -192,7 +198,7 @@ export default function ProductDetailDialog({
           <ProductDetailQuantity
             mode={mode}
             stock={productDetail.stock}
-            quantity={mode === "viewOnly" ? (fixedQuantity || 1) : quantity}
+            quantity={mode === "viewOnly" ? fixedQuantity || 1 : quantity}
             onQuantityChange={setQuantity}
           />
         </Box>
@@ -202,7 +208,7 @@ export default function ProductDetailDialog({
       <ProductDetailActions
         mode={mode}
         onAddToCart={handleAddToCart}
-        onEdit={onEdit || handleEditProduct}
+        onEdit={onEdit}
       />
     </Dialog>
   );

@@ -1,6 +1,7 @@
-import { Box, Typography, Stack, Divider } from "@mui/material";
+import { Box, Stack } from "@mui/material";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { formatCurrency } from "@/shared/utils/currency.utils";
+import CustomTitle from "@/shared/components/CustomTitle";
 
 interface ProductDetailInfoProps {
   name: string;
@@ -9,8 +10,7 @@ interface ProductDetailInfoProps {
   originalPrice?: number;
   expirationDate?: string | null;
   stock: number;
-  condition: string;
-  conditionDisplayName: string;
+  conditions: string[];
   categoryDisplayName?: string;
 }
 
@@ -21,75 +21,59 @@ export const ProductDetailInfo = ({
   originalPrice,
   expirationDate,
   stock,
-  condition,
-  conditionDisplayName,
+  conditions,
   categoryDisplayName,
 }: ProductDetailInfoProps) => {
   return (
     <Stack spacing={2.5}>
       <Box>
-        <Typography
-          variant="h5"
-          sx={{
-            fontWeight: 700,
-            color: "#2D2D2D",
-            mb: 1,
-            fontSize: 24,
-          }}
-        >
-          {name}
-        </Typography>
+        <CustomTitle
+          text={name}
+          fontSize={24}
+          variant="h6"
+          color="#2D2D2D"
+          align="left"
+        />
 
         <Stack direction="row" spacing={2} alignItems="baseline" mb={1.5}>
-          <Typography
-            variant="h4"
-            sx={{
-              fontWeight: 700,
-              color: "#5FB574",
-              fontSize: 32,
-            }}
-          >
-            {formatCurrency(discountedPrice)}
-          </Typography>
+          <CustomTitle
+            text={`$${formatCurrency(discountedPrice)}`}
+            fontSize={28}
+            variant="h6"
+            align="left"
+          />
 
           {originalPrice && (
-            <Typography
-              sx={{
-                textDecoration: "line-through",
-                color: "#BDBDBD",
-                fontSize: 18,
-                fontWeight: 500,
-              }}
-            >
-              ${formatCurrency(originalPrice)}
-            </Typography>
+            <CustomTitle
+              text={`$${formatCurrency(originalPrice)}`}
+              fontSize={18}
+              variant="h6"
+              align="left"
+              textDecoration="line-through"
+              color="#BDBDBD"
+              fontStyle="italic"
+            />
           )}
         </Stack>
 
         {description && (
-          <Typography
-            sx={{
-              color: "#666666",
-              lineHeight: 1.6,
-              fontSize: 15,
-              mb: 1,
-            }}
-          >
-            {description}
-          </Typography>
+          <CustomTitle
+            text={description}
+            fontSize={16}
+            variant="body1"
+            align="left"
+            color="#585858"
+          />
         )}
       </Box>
 
       <ProductChips
         expirationDate={expirationDate}
         stock={stock}
-        condition={condition}
-        conditionDisplayName={conditionDisplayName}
+        conditions={conditions}
         categoryDisplayName={categoryDisplayName}
         showDiscount={false}
       />
-
-      <Divider sx={{ my: 1 }} />
     </Stack>
   );
 };
