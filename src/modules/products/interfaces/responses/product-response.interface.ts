@@ -1,4 +1,4 @@
-import { CommerceResponse } from "@/modules/customer/home/interfaces/responses";
+import { CommerceResponse } from "@/modules/commerce/interfaces/responses/commerce.response";
 import { ImageResponse } from "@/shared/interfaces/image-response.interface";
 
 export interface ProductResponse {
@@ -16,8 +16,7 @@ export interface ProductResponse {
   discountedPrice: number;
   category: string;
   categoryDisplayName: string;
-  condition: string;
-  conditionDisplayName: string;
+  conditions: string[];
   expirationDate: string | null;
   productImages: ImageResponse[];
   active: boolean;
