@@ -11,7 +11,7 @@ export default function Header() {
     if (clientId) {
       navigate("/customer");
     } else if (commerceId) {
-      navigate("/auth/create-product");
+      navigate("/commerce");
     }
   };
 
