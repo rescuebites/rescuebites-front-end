@@ -3,7 +3,7 @@ import { ProductCategory } from "@/modules/products/enums/product-category.enum"
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
 
-export const createProductSchema = z.object({
+export const updateProductSchema = z.object({
   name: z.string().min(3, "El nombre debe tener al menos 3 caracteres").max(100),
   description: z.string().max(500, "La descripción no puede superar los 500 caracteres").optional(),
   category: z.nativeEnum(ProductCategory, {
@@ -20,7 +20,7 @@ export const createProductSchema = z.object({
     return selected > today;
   }, "La fecha de vencimiento debe ser posterior al día de hoy"),
   preferences: z.array(z.nativeEnum(PreferenceType)).optional(),
-  images: z.array(z.instanceof(File)).min(1, "Agrega al menos una imagen"),
+  images: z.array(z.instanceof(File)).optional(), // Opcional porque en edición ya existen
 });
 
-export type CreateProductSchema = z.infer<typeof createProductSchema>;
+export type UpdateProductSchema = z.infer<typeof updateProductSchema>;
