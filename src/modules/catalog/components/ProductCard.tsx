@@ -1,28 +1,29 @@
 import { Box, Card, CardContent, Stack, Typography } from "@mui/material";
 import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
+import { formatCurrency } from "@/shared/utils/currency.utils";
 
 interface ProductCardProps {
   product: ProductResponse;
   onClick: () => void;
 }
 
-function formatPrice(price: number) {
-  return price.toLocaleString("es-AR", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  });
-}
-
 function getExpirationText(date: string) {
   const today = new Date();
-  const exp = new Date(date);
+  today.setHours(0, 0, 0, 0);
+  
+  // Parsear la fecha en zona horaria local para evitar problemas con UTC
+  const [year, month, day] = date.split('T')[0].split('-').map(Number);
+  const exp = new Date(year, month - 1, day);
+  exp.setHours(0, 0, 0, 0);
 
-  const diff = Math.ceil(
-    (exp.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
+  const diff = Math.floor(
+    (exp.getTime() - today.getTime()) / (1000 * 60 * 60 * 24),
   );
 
-  if (diff <= 1) return "Expires in one day";
-  return `Expires in ${diff} days`;
+  if (diff < 0) return "Expirado";
+  if (diff === 0) return "Expira hoy";
+  if (diff === 1) return "Expira mañana";
+  return `Expira en ${diff} días`;
 }
 
 export function ProductCard({ product, onClick }: ProductCardProps) {
@@ -32,23 +33,34 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       sx={{
         borderRadius: 4,
         overflow: "hidden",
-        bgcolor: "#F3F3F3", // 👈 fondo gris como en la imagen
         boxShadow: "none",
         cursor: "pointer",
-        p: 1.5,
+        display: "flex",
+        flexDirection: "column",
       }}
     >
       {/* Imagen */}
-      <Box sx={{ position: "relative" }}>
+      <Box
+        sx={{
+          position: "relative",
+          overflow: "hidden",
+          width: "100%",
+          aspectRatio: "1 / 1",
+          "&:hover img": {
+            transform: "scale(1.12)",
+          },
+        }}
+      >
         <Box
           component="img"
           src={product.productImages?.[0]?.url || "/placeholder.jpg"}
           alt={product.name}
           sx={{
             width: "100%",
-            aspectRatio: "1 / 1",
+            height: "100%",
             objectFit: "cover",
-            borderRadius: 3,
+            display: "block",
+            transition: "transform 0.3s ease-in-out",
           }}
         />
 
@@ -73,7 +85,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
       </Box>
 
       {/* Contenido */}
-      <CardContent sx={{ p: 1.5 }}>
+      <CardContent sx={{ p: 1.5, flexGrow: 1 }}>
         <Typography
           sx={{
             fontWeight: 600,
@@ -88,7 +100,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
         {/* Precios */}
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography sx={{ fontWeight: 700, fontSize: 24 }}>
-            ${formatPrice(product.discountedPrice)}
+            ${formatCurrency(product.discountedPrice)}
           </Typography>
 
           {product.originalPrice && (
@@ -99,7 +111,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
                 fontSize: 18,
               }}
             >
-              ${formatPrice(product.originalPrice)}
+              ${formatCurrency(product.originalPrice)}
             </Typography>
           )}
         </Stack>
