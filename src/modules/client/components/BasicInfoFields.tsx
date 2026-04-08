@@ -17,7 +17,12 @@ export default function BasicInfoFields({
   return (
     <>
       {/* Nombre */}
-      <CustomTitle variant="body2" align="left" text="Nombre *" color="#333" />
+      <CustomTitle
+        variant="body2"
+        align="left"
+        text="Nombre *"
+        color="#585858"
+      />
       <TextField
         {...register("firstName")}
         placeholder="Ingrese su nombre"
@@ -29,7 +34,12 @@ export default function BasicInfoFields({
       />
 
       {/* Apellido */}
-      <CustomTitle variant="body2" align="left" text="Apellido *" color="#333" />
+      <CustomTitle
+        variant="body2"
+        align="left"
+        text="Apellido *"
+        color="#585858"
+      />
       <TextField
         {...register("lastName")}
         placeholder="Ingrese su apellido"
@@ -45,18 +55,24 @@ export default function BasicInfoFields({
         variant="body2"
         align="left"
         text="Fecha de nacimiento *"
-        color="#333"
+        color="#585858"
       />
       <DateField
         control={control}
         name="birthDate"
+        maxDate={new Date().toISOString().split("T")[0]}
         error={errors.birthDate?.message as string}
         sx={fieldSx}
         size="small"
       />
 
       {/* Dirección */}
-      <CustomTitle variant="body2" align="left" text="Dirección *" color="#333" />
+      <CustomTitle
+        variant="body2"
+        align="left"
+        text="Dirección *"
+        color="#585858"
+      />
       <TextField
         {...register("address")}
         placeholder="Ingrese su dirección"
@@ -68,7 +84,12 @@ export default function BasicInfoFields({
       />
 
       {/* Localidad */}
-      <CustomTitle variant="body2" align="left" text="Localidad *" color="#333" />
+      <CustomTitle
+        variant="body2"
+        align="left"
+        text="Localidad *"
+        color="#585858"
+      />
       <TextField
         {...register("locality")}
         placeholder="Ingrese su localidad"
@@ -80,7 +101,12 @@ export default function BasicInfoFields({
       />
 
       {/* Teléfono */}
-      <CustomTitle variant="body2" align="left" text="Teléfono *" color="#333" />
+      <CustomTitle
+        variant="body2"
+        align="left"
+        text="Teléfono *"
+        color="#585858"
+      />
       <TextField
         {...register("phone")}
         placeholder="Ingrese su teléfono"
