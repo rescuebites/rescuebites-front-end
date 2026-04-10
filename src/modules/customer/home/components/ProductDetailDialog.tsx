@@ -40,9 +40,9 @@ export default function ProductDetailDialog({
 
   const { getQuantity } = useCartStore();
   const quantityInCart = productId ? getQuantity(productId) : 0;
-  const cart = useAddToCart(productId ?? "", quantityInCart);
 
   const { data: productDetail, isLoading } = useProductDetail(productId);
+  const cart = useAddToCart(productId ?? "", quantityInCart, productDetail?.commerceId, productDetail?.commerceName);
 
   if (!open || !productId) {
     return null;
@@ -120,6 +120,16 @@ export default function ProductDetailDialog({
         cancelText="Cancelar"
         onConfirm={cart.navigateToLogin}
         onCancel={cart.closeLoginModal}
+      />
+      <ConfirmModal
+        open={cart.commerceConflictOpen}
+        title="¿Cambiar comercio?"
+        description={`Tu carrito tiene productos de ${cart.cartCommerceName ?? "otro comercio"}. Si continuás, se vaciará el carrito y se agregarán productos de ${cart.productCommerceName ?? "este comercio"}.`}
+        confirmText="Vaciar y agregar"
+        cancelText="Cancelar"
+        variant="danger"
+        onConfirm={async () => { await cart.handleConflictConfirm(); onClose(); }}
+        onCancel={cart.closeCommerceConflict}
       />
 
       {/* Botón cerrar */}

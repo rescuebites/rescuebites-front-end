@@ -112,15 +112,16 @@ export default function NavbarUI({
             >
               <Badge
                 badgeContent={cartCount}
-                color="error"
                 sx={{
                   '& .MuiBadge-badge': {
-                    top: { xs: 8, md: 10, lg: 12 },
-                    right: { xs: 8, md: 10, lg: 12 },
+                    top: { xs: -13, md: -15, lg: -20 },
+                    right: { xs: -3, md: -5, lg: -6 },
                     fontSize: { xs: 11, md: 13, lg: 14 },
                     fontWeight: 700,
                     minWidth: { xs: 20, md: 24, lg: 26 },
                     height: { xs: 20, md: 24, lg: 26 },
+                    bgcolor: '#77a77c',
+                    color: '#fff',
                   },
                 }}
               >

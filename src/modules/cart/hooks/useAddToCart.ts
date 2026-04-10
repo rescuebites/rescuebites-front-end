@@ -4,16 +4,31 @@ import { useNavigate } from "react-router-dom";
 import { useCartStore } from "./useCartStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 
-export function useAddToCart(productId: string, quantityInCart: number) {
+export function useAddToCart(productId: string, quantityInCart: number, productCommerceId?: string, productCommerceName?: string) {
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
+  const [commerceConflictOpen, setCommerceConflictOpen] = useState(false);
+  const [pendingQty, setPendingQty] = useState<number | null>(null);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
-  const { addItem, updateItem, removeItem, getCartItemId } = useCartStore();
+  const { addItem, updateItem, removeItem, getCartItemId, clearCart, cart } = useCartStore();
   const cartItemId = getCartItemId(productId);
   const inCart = quantityInCart > 0;
+
+  const cartCommerceId = Object.keys(cart?.commerceSummaries ?? {})[0];
+  const cartCommerceName = cartCommerceId
+    ? cart?.commerceSummaries[cartCommerceId]?.commerceName
+    : undefined;
+
+  function hasCommerceConflict() {
+    return (
+      !!productCommerceId &&
+      !!cartCommerceId &&
+      cartCommerceId !== productCommerceId
+    );
+  }
 
   function handleOpenPopup() {
     if (!isAuthenticated) {
@@ -25,25 +40,44 @@ export function useAddToCart(productId: string, quantityInCart: number) {
   }
 
   async function handleConfirm() {
-    if (cartItemId) {
-      await updateItem(cartItemId, qty);
-    } else {
-      await addItem(productId, qty);
+    if (hasCommerceConflict()) {
+      setPendingQty(qty);
+      setOpen(false);
+      setCommerceConflictOpen(true);
+      return;
     }
+    await doAddOrUpdate(qty);
     setOpen(false);
   }
 
-  /** For consumers that manage their own quantity UI (e.g. ProductDetailDialog). */
+  async function handleConflictConfirm() {
+    await clearCart();
+    await doAddOrUpdate(pendingQty ?? qty);
+    setPendingQty(null);
+    setCommerceConflictOpen(false);
+  }
+
+  async function doAddOrUpdate(quantity: number) {
+    const currentCartItemId = getCartItemId(productId);
+    if (currentCartItemId) {
+      await updateItem(currentCartItemId, quantity);
+    } else {
+      await addItem(productId, quantity);
+    }
+  }
+
+  /** For consumers that manage their own quantity UI (ej ProductDetailDialog). */
   async function handleAddWithQuantity(quantity: number): Promise<boolean> {
     if (!isAuthenticated) {
       setLoginModalOpen(true);
       return false;
     }
-    if (cartItemId) {
-      await updateItem(cartItemId, quantity);
-    } else {
-      await addItem(productId, quantity);
+    if (hasCommerceConflict()) {
+      setPendingQty(quantity);
+      setCommerceConflictOpen(true);
+      return false;
     }
+    await doAddOrUpdate(quantity);
     return true;
   }
 
@@ -63,5 +97,10 @@ export function useAddToCart(productId: string, quantityInCart: number) {
     loginModalOpen,
     closeLoginModal: () => setLoginModalOpen(false),
     navigateToLogin: () => navigate("/auth/login"),
+    commerceConflictOpen,
+    closeCommerceConflict: () => setCommerceConflictOpen(false),
+    handleConflictConfirm,
+    cartCommerceName,
+    productCommerceName,
   };
 }
