@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import CommerceDashboardPage from "@/modules/commerce/components/CommerceDashboardPage";
+import CommerceDashboardPage from "@/modules/commerce/pages/CommerceDashboardPage";
 import SearchResultsPage from "@/modules/commerce/components/SearchResultsPage";
 import ExpiringProductsPage from "@/modules/products/pages/ExpiringProductsPage";
 import AppLayout from "@/shared/pages/layouts/AppLayout";
@@ -9,15 +9,18 @@ import EditCommercePage from "@/modules/commerce/pages/EditCommercePage";
 import { EditProductPage } from "@/modules/products/pages/EditProductPage";
 import RegisterCommercePage from "@/modules/commerce/pages/registerCommercePage";
 import BusinessHoursPage from "@/modules/commerce/pages/BusinessHoursPage";
+import CommerceProfilePage from "@/modules/commerce/pages/CommerceProfilePage";
+import CommerceNavbar from "@/modules/navbar/components/CommerceNavbar";
 
 export function CommerceRoutes() {
   return (
     <Routes>
       {/* Layout principal del comercio */}
-      <Route element={<AppLayout />}>
+      <Route element={<AppLayout navbar={<CommerceNavbar />} />}>
         {/* Dashboard principal */}
         <Route index element={<CommerceDashboardPage />} />
         <Route path="search" element={<SearchResultsPage />} />
+        <Route path="profile" element={<CommerceProfilePage />} />
 
         <Route path="products/expiring" element={<ExpiringProductsPage />} />
       </Route>

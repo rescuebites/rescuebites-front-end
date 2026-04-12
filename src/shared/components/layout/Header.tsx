@@ -4,14 +4,14 @@ import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
 
 export default function Header() {
-  const { clientId, commerceId } = useAuthStore();
+  const { commerceId } = useAuthStore();
   const navigate = useNavigate();
 
   const handleLogoClick = () => {
-    if (clientId) {
-      navigate("/customer");
-    } else if (commerceId) {
+    if (commerceId) {
       navigate("/commerce");
+    } else {
+      navigate("/");
     }
   };
 
