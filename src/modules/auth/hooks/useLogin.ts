@@ -5,6 +5,7 @@ import { loginUser } from "@/modules/auth/api/auth.api";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import { decodeJwtPayload } from "@/shared/utils/jwt.utils";
 
 export function useLogin() {
   const { login } = useAuthStore();
@@ -18,7 +19,12 @@ export function useLogin() {
     onSuccess: (authResponse) => {
       setServerError(null);
       login(authResponse);
-      navigate("/commerce");
+      const payload = decodeJwtPayload(authResponse.token);
+      if (payload?.commerceId) {
+        navigate("/commerce");
+      } else {
+        navigate("/");
+      }
     },
     
     onError: (error: any) => {
