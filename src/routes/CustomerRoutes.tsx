@@ -12,6 +12,7 @@ import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
+import NotificationsPage from "@/modules/notification/pages/NotificationPage";
 
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
@@ -41,7 +42,7 @@ export function CustomerRoutes() {
             <Route path="cart" element={<ShoppingCartPage />} />
             <Route path="orders" element={null} />
             <Route path="orders/:orderId" element={<OrderDetailPage />} />
-            <Route path="notifications" element={null} />
+            <Route path="notifications" element={<NotificationsPage role="CLIENT" />} />
             <Route path="profile" element={null} />
           </Route>
         </Route>
