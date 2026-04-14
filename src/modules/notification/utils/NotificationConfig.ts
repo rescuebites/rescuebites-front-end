@@ -8,7 +8,7 @@ import {
   Warning,
 } from '@mui/icons-material';
 import { SvgIconComponent } from '@mui/icons-material';
-import { NotificationStatus } from '../interfaces/responses/Notification.response';
+import { NotificationStatus } from '../interfaces/responses/notification.response';
 
 export interface StatusConfig {
   label: string;

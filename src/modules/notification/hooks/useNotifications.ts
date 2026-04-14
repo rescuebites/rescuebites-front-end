@@ -1,10 +1,10 @@
 import { useState, useEffect, useCallback } from 'react';
-import { NotificationResponse, UserRole } from '../interfaces/responses/Notification.response';
+import { NotificationResponse, UserRole } from '../interfaces/responses/notification.response';
 import {
   fetchNotifications,
   markAllAsRead,
   markOneAsRead,
-} from '../api/Notifications.api';
+} from '../api/notifications.api';
 
 interface UseNotificationsReturn {
   notifications: NotificationResponse[];

@@ -1,4 +1,4 @@
-import { NotificationResponse } from '../interfaces/responses/Notification.response';
+import { NotificationResponse } from '../interfaces/responses/notification.response';
 
 const now = new Date();
 const minutesAgo = (m: number) => new Date(now.getTime() - m * 60000);

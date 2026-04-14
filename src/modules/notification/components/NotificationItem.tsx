@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Typography, Avatar, Tooltip } from '@mui/material';
 import { CheckCircleOutline } from '@mui/icons-material';
-import { NotificationResponse } from '../interfaces/responses/Notification.response';
+import { NotificationResponse } from '../interfaces/responses/notification.response';
 import { getStatusConfig, formatTimestamp } from '../utils/NotificationConfig';
 
 interface NotificationItemProps {
@@ -24,7 +24,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
         mb: 1.5,
         bgcolor: notification.read ? '#FAFAFA' : '#FFFFFF',
         border: '1px solid',
-        borderColor: notification.read ? '#F0F0F0' : '#E8E8E8',
+        borderColor: notification.read ? '#dddddd' : '#c7c5c5',
         boxShadow: notification.read ? 'none' : '0 2px 8px rgba(0,0,0,0.06)',
         cursor: 'pointer',
         transition: 'all 0.2s ease',

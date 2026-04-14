@@ -1,4 +1,4 @@
-import { NotificationResponse, UserRole } from '../interfaces/responses/Notification.response';
+import { NotificationResponse, UserRole } from '../interfaces/responses/notification.response';
 import { CLIENT_NOTIFICATIONS, COMMERCE_NOTIFICATIONS } from '../utils/NotificationsMock';
 
 // Simula un delay de red

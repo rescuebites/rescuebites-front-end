@@ -9,7 +9,7 @@ import {
 } from '@mui/material';
 import { useNotifications } from '../hooks/useNotifications';
 import NotificationList from '../components/NotificationList';
-import { UserRole } from '../interfaces/responses/Notification.response';
+import { UserRole } from '../interfaces/responses/notification.response';
 import CustomTitle from '@/shared/components/CustomTitle';
 
 interface NotificationsPageProps {

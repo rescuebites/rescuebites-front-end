@@ -1,6 +1,6 @@
 import React from 'react';
 import { Box, Skeleton } from '@mui/material';
-import { NotificationResponse } from '../interfaces/responses/Notification.response';
+import { NotificationResponse } from '../interfaces/responses/notification.response';
 import NotificationItem from './NotificationItem';
 
 interface NotificationListProps {
