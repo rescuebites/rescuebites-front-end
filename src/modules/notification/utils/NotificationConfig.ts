@@ -63,15 +63,3 @@ export const STATUS_CONFIG: Record<NotificationStatus, StatusConfig> = {
 
 export const getStatusConfig = (status: NotificationStatus): StatusConfig =>
   STATUS_CONFIG[status];
-
-export const formatTimestamp = (date: Date): string => {
-  const now = new Date();
-  const diffMs = now.getTime() - new Date(date).getTime();
-  const diffMin = Math.floor(diffMs / 60000);
-  const diffHrs = Math.floor(diffMin / 60);
-
-  if (diffMin < 1) return 'Ahora';
-  if (diffMin < 60) return `${diffMin}min atrás`;
-  if (diffHrs < 24) return `${diffHrs}h atrás`;
-  return new Intl.DateTimeFormat('es-AR', { day: '2-digit', month: 'short' }).format(date);
-};

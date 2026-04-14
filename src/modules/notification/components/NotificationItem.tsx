@@ -2,7 +2,8 @@ import React from 'react';
 import { Box, Typography, Avatar, Tooltip } from '@mui/material';
 import { CheckCircleOutline } from '@mui/icons-material';
 import { NotificationResponse } from '../interfaces/responses/notification.response';
-import { getStatusConfig, formatTimestamp } from '../utils/NotificationConfig';
+import { getStatusConfig } from '../utils/NotificationConfig';
+import { formatTimestamp } from '@/shared/utils/dateFormat';
 
 interface NotificationItemProps {
   notification: NotificationResponse;
