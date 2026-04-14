@@ -10,7 +10,7 @@ interface NotificationItemProps {
 }
 
 const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onClick }) => {
-  const { label, color, bgColor, Icon } = getStatusConfig(notification.status);
+  const { label, color, bgColor, Icon, defaultMessage } = getStatusConfig(notification.status);
 
   return (
     <Box
@@ -39,12 +39,12 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
       <Avatar
         sx={{
           bgcolor: bgColor,
-          width: 55,
-          height: 55,
+          width: 70,
+          height: 70,
           flexShrink: 0,
         }}
       >
-        <Icon sx={{ color, fontSize: 30 }} />
+        <Icon size={30} color={color} />
       </Avatar>
 
       {/* Content */}
@@ -98,7 +98,7 @@ const NotificationItem: React.FC<NotificationItemProps> = ({ notification, onCli
           variant="body2"
           sx={{ color: '#424242', mt: 0.3, fontSize: '18px', lineHeight: 1.4 }}
         >
-          {notification.message}
+          {defaultMessage}
         </Typography>
       </Box>
     </Box>

@@ -29,7 +29,7 @@ const NotificationsPage: React.FC<NotificationsPageProps> = ({ role }) => {
         pt: 3,
         pb: 10,
         minHeight: '100vh',
-        bgcolor: '#F5F5F5',
+        bgcolor: "#FAFAFA",
       }}
     >
       {/* Header */}
