@@ -4,9 +4,11 @@ import { createOrder } from "@/modules/orders/api/order.api";
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import type { CommerceCartSummary } from "../interfaces/responses/cart-response.interface";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useCart() {
   const clientId = useAuthStore((state) => state.clientId);
+  const queryClient = useQueryClient();
 
   const {
     cart,
@@ -51,6 +53,7 @@ export function useCart() {
     try {
       await createOrder(clientId, commerce.commerceId);
       await clearCart();
+      queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
       // navigate("/orders");
     } catch (error) {
       console.error("Error al confirmar pedido:", error);

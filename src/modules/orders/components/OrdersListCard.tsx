@@ -1,7 +1,7 @@
 import { Store, Clock} from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
-import { getStatusColor } from "../utils/order.utils";
+import { getStatusColor, getShortOrderNumber } from "../utils/order.utils";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
 
@@ -31,7 +31,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
               />
             </Box>
           </Box>
-          <Typography fontSize={20} color="text.secondary">#{order.orderNumber}</Typography>
+          <Typography fontSize={20} color="text.secondary">#{getShortOrderNumber(order.orderNumber)}</Typography>
         </Box>
 
         <Box display="flex" alignItems="center" justifyContent="space-between" pt={1.5} borderTop="1px solid" borderColor="divider">
@@ -40,7 +40,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
               <Clock size={20} color="gray" />
               <Typography fontSize={18} color="text.secondary">{formatDateWithTime(order.createdAt)}</Typography>
             </Box>
-            <Typography fontSize={20} color="text.disabled">{order.items.length} Unidades</Typography>
+            <Typography fontSize={20} color="text.disabled">{order.items.length} {order.items.length === 1 ? 'Producto' : 'Productos'}</Typography>
           </Box>
           <Typography fontWeight={550} fontSize={22} color="#77A787">${order.total.toFixed(2)}</Typography>
         </Box>
