@@ -11,7 +11,7 @@ export function useAllCommerces() {
 
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
     queryKey: ['all-commerces', locality], 
-    queryFn: () => getAllCommerces(locality || 'Villa María', 0),  
+    queryFn: () => getAllCommerces(locality!, 0),  
     staleTime: 5 * 60 * 1000, 
     retry: 2,
     enabled: !!locality,
@@ -29,7 +29,7 @@ export function useCommercesByType(commerceType: CommerceTypeDisplay, size = 6) 
   const locality = useLocalityStore((state) => state.locality);
   return useQuery<PaginatedResponse<CommercePublicResponse>, Error>({
     queryKey: ['commerces', commerceType, locality, size],
-    queryFn: () => getCommercesByType(locality || 'Villa María', commerceType, 0, size),
+    queryFn: () => getCommercesByType(locality!, commerceType, 0, size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
     enabled: !!commerceType && !!locality,

@@ -5,9 +5,9 @@ import type {
   SearchProductResponse,
 } from "../interfaces/responses/search-response.interface";
 import { fetchSuggestions, fetchSearchResults } from "../api/search.api";
+import { useLocalityStore } from "@/modules/customer/home/hooks/useLocalityStore";
 
 const DEBOUNCE_DELAY = 350;
-const DEFAULT_LOCALITY = "Villa María"; // ajustá o leelo de contexto/store
 
 interface UseSearchReturn {
   query: string;
@@ -31,6 +31,7 @@ interface UseSearchReturn {
 }
 
 export function useSearch(): UseSearchReturn {
+  const locality = useLocalityStore((state) => state.locality);
   const [query, setQueryState] = useState("");
   const [confirmedQuery, setConfirmedQuery] = useState("");
   const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);
@@ -65,7 +66,7 @@ export function useSearch(): UseSearchReturn {
       if (abortSuggestionsRef.current) abortSuggestionsRef.current.abort();
       abortSuggestionsRef.current = new AbortController();
       try {
-        const data = await fetchSuggestions(q.trim(), DEFAULT_LOCALITY, abortSuggestionsRef.current.signal);
+        const data = await fetchSuggestions(q.trim(), locality ?? "", abortSuggestionsRef.current.signal);
         setSuggestions(data);
         setShowSuggestions(data.length > 0);
       } catch (err: unknown) {
@@ -84,7 +85,7 @@ export function useSearch(): UseSearchReturn {
       setError(null);
 
       try {
-        const data = await fetchSearchResults(q.trim(), DEFAULT_LOCALITY, pPage, 10, abortSearchRef.current.signal);
+        const data = await fetchSearchResults(q.trim(), locality ?? "", pPage, 10, abortSearchRef.current.signal);
 
         setCommerces((prev) => append ? [...prev, ...data.commerces.content] : data.commerces.content);
         setProducts((prev) => append ? [...prev, ...data.products.content] : data.products.content);
