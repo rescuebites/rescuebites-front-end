@@ -3,6 +3,7 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import AddToCartButton from "./AddToCartButton";
 import AddToCartPopup from "./AddToCartPopUp";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
+import ClosedCommercePopup from "./ClosedCommercePopup";
 
 interface AddToCartControlProps {
   productId: string;
@@ -11,6 +12,8 @@ interface AddToCartControlProps {
   availableStock: number;
   unit?: string;
   imageUrl?: string;
+  commerceId?: string;
+  commerceName?: string;
 }
 
 export default function AddToCartControl({
@@ -20,10 +23,12 @@ export default function AddToCartControl({
   availableStock,
   unit,
   imageUrl,
+  commerceId,
+  commerceName,
 }: AddToCartControlProps) {
   const { getQuantity } = useCartStore();
   const quantityInCart = getQuantity(productId);
-  const cart = useAddToCart(productId, quantityInCart);
+  const cart = useAddToCart(productId, quantityInCart, commerceId, commerceName);
 
   return (
     <>
@@ -35,6 +40,15 @@ export default function AddToCartControl({
         cancelText="Cancelar"
         onConfirm={cart.navigateToLogin}
         onCancel={cart.closeLoginModal}
+      />
+      <ConfirmModal
+        open={cart.commerceConflictOpen}
+        title="¿Cambiar comercio?"
+        description={`Tu carrito tiene productos de ${cart.cartCommerceName ?? "otro comercio"}. Si continuás, se vaciará el carrito y se agregarán productos de ${cart.productCommerceName ?? "este comercio"}.`}
+        confirmText="Vaciar y agregar"
+        cancelText="Cancelar"
+        onConfirm={cart.handleConflictConfirm}
+        onCancel={cart.closeCommerceConflict}
       />
       <AddToCartButton
         inCart={cart.inCart}
@@ -54,6 +68,10 @@ export default function AddToCartControl({
         availableStock={availableStock}
         unit={unit}
         imageUrl={imageUrl}
+      />
+      <ClosedCommercePopup
+        open={cart.closedCommerceOpen}
+        onClose={cart.closeClosedCommercePopup}
       />
     </>
   );

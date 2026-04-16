@@ -1,11 +1,13 @@
-import { TextField, InputAdornment, IconButton, Box, Badge } from "@mui/material";
+import {
+  TextField,
+  InputAdornment,
+  IconButton,
+  Box,
+} from "@mui/material";
 import { useState } from "react";
 import { MdClose, MdSearch } from "react-icons/md";
-import TuneIcon from "@mui/icons-material/Tune";
-import { useFilterStore } from '../../../modules/customer/home/hooks/useFilterStore';
 
-
-export default function SearchBar({ 
+export default function SearchBar({
   onSearchChange,
 }: {
   onSearchChange: (value: string) => void;
@@ -23,101 +25,65 @@ export default function SearchBar({
     onSearchChange("");
   };
 
-  const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
-  const activeFiltersCount = getActiveFiltersCount();
-
-
   return (
     <Box
       sx={{
-        display: 'flex',
+        display: "flex",
         gap: 3.5,
-        alignItems: 'center',
+        alignItems: "center",
       }}
     >
-    <TextField
-      fullWidth
-      placeholder="Buscar productos..."
-      value={value}
-      onChange={handleChange}
-      onKeyDown={(e) => {
-        if (e.key === "Enter") {
-          onSearchChange(value);
-        }
-      }}
-      sx={{
-        bgcolor: '#F5F5F5',
-        borderRadius: 3,
-        '& .MuiOutlinedInput-root': {
-          fontSize: { xs: 18, sm: 18 },
-          '& .MuiOutlinedInput-input': {
-            py: { xs: 2, sm: 2.5 },
-          },    
-          '& fieldset': {
-            border: 'none',
-          },
-          '&:hover fieldset': {
-            border: 'none',
-          },
-          '&.Mui-focused fieldset': {
-            border: '4px solid #77A787',
-          },
-        },
-      }}
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">
-            <MdSearch size={32} color="#757575" />
-          </InputAdornment>
-        ),
-        endAdornment: value && (
-          <InputAdornment position="end">
-            <IconButton 
-              onClick={clearSearch}
-              size="small"
-              sx={{ 
-                color: '#757575',
-                '&:hover': { color: '#2D2D2D' }
-              }}
-            >
-              <MdClose size={28} />
-            </IconButton>
-          </InputAdornment>
-          
-        ),
-      }}
-    />
-    <IconButton
-        onClick={openFilterDrawer}
+      <TextField
+        fullWidth
+        placeholder="Search Anything..."
+        value={value}
+        onChange={handleChange}
+        variant="outlined"
         sx={{
-          bgcolor: '#FFF',
-          border: '1px solid #E0E0E0',
-          borderRadius: 2,
-          width: { xs: 56, sm: 48 },
-          height: { xs: 56, sm: 48 },
-          '&:hover': {
-            bgcolor: '#F5F5F5',
-            borderColor: '#77A787',
+          bgcolor: "#E0E3E7",
+          borderRadius: "20px",
+          "& .MuiOutlinedInput-root": {
+            borderRadius: "20px",
+            fontSize: 18,
+            color: "#5F6F86",
+
+            "& .MuiOutlinedInput-input": {
+              py: 2.2,
+            },
+
+            "& fieldset": {
+              border: "none",
+            },
+
+            "&:hover fieldset": {
+              border: "none",
+            },
+
+            "&.Mui-focused fieldset": {
+              border: "none",
+            },
+          },
+
+          "& input::placeholder": {
+            color: "#7A8CA5",
+            opacity: 1,
           },
         }}
-      >
-        <Badge
-          badgeContent={activeFiltersCount}
-          color="primary"
-          sx={{
-            '& .MuiBadge-badge': {
-              bgcolor: '#77A787',
-              color: '#FFF',
-              fontSize: { xs: 18, sm: 11 },
-              fontWeight: 700,
-              minWidth: { xs: 26, sm: 18 },
-              height: { xs: 26, sm: 18 },
-            },
-          }}
-        >
-          <TuneIcon sx={{ color: '#77A787', fontSize: 24 }} />
-        </Badge>
-      </IconButton>
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <MdSearch size={28} color="#7A8CA5" />
+            </InputAdornment>
+          ),
+          endAdornment: value && (
+            <InputAdornment position="end">
+              <IconButton onClick={clearSearch}>
+                <MdClose size={22} color="#7A8CA5" />
+              </IconButton>
+            </InputAdornment>
+          ),
+        }}
+      />
     </Box>
   );
 }

@@ -10,8 +10,8 @@ import { useCreateCommerce } from "@/modules/commerce/hooks/useCreateCommerce";
 import {
   getProfileImageFile,
   clearProfileImage,
-  clearCommerceProfileImage,
-  getCommerceProfileImageFile,
+  clearCommerceProfileImages,
+  getCommerceProfileImageFiles,
 } from "@/shared/utils/profileImage";
 
 export function ActivateAccountPage() {
@@ -49,12 +49,12 @@ export function ActivateAccountPage() {
             clearData();
             clearProfileImage();
           } else if (commerceData) {
-              const imageFile = await getCommerceProfileImageFile();
+              const imageFiles = await getCommerceProfileImageFiles();
               await createCommerce({
               createCommerceRequest: { ...commerceData.createCommerceRequest, userId },
-              profilePicture: imageFile,
+              profilePictures: imageFiles,
             });
-            clearCommerceProfileImage();
+            clearCommerceProfileImages();
             clearData();
   }
           navigate("/auth/login", { replace: true });
@@ -65,7 +65,7 @@ export function ActivateAccountPage() {
 
   return (
     <>
-      <CustomTitle text="Welcome to RescueBites!" />
+      <CustomTitle text="¡Bienvenido a RescueBites!" />
       <Typography variant="body1" sx={{ color: "#555", mb: 3 }}>
         Estamos encantados de que te unas a nuestra comunidad. Haz clic en el
         botón de abajo para activar tu cuenta y comenzar a explorar todo lo que
@@ -74,7 +74,7 @@ export function ActivateAccountPage() {
 
       <CustomButton
         type="submit"
-        text="Activate account"
+        text="Activar cuenta"
         onClick={handleVerify}
         disabled={isVerifying || isCreatingClient || isCreatingCommerce || !userId || !token}
         isLoading={isVerifying || isCreatingClient || isCreatingCommerce}

@@ -377,7 +377,7 @@ export default function CommerceBusinessHours({ days, onDaysChange }: BusinessHo
   };
 
   return (
-    <Box sx={{ maxWidth: 340, mx: "auto", pb: 2, px: 2 }}>
+    <Box sx={{ maxWidth: 600, mx: "auto", pb: 1}}>
 
       <Stack spacing={1.5}>
         {days.map((day) => (

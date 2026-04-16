@@ -1,12 +1,11 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
-import { 
-  CommerceResponse,
-  CommercePublicResponse, 
-  PaginatedResponse 
-} from "../interfaces/responses";
+
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { getCommerceTypeFromDisplay } from "@/shared/utils/commerce.utils";
+import { PaginatedResponse } from "../interfaces/responses/paginated.response";
+import { CommercePublicResponse } from "@/modules/commerce/interfaces/responses/commerce-public.response";
+import { CommerceResponse } from "@/modules/commerce/interfaces/responses/commerce.response";
 
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (locality: string, size = 12): Promise<ProductResponse[]> => {

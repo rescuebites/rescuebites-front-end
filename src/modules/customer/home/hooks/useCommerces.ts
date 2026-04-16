@@ -1,11 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
-import { getAllCommerces, getCommerceDetail, getCommercesByType } from "../api/home.api";
-import { CommercePublicResponse, PaginatedResponse } from "../interfaces/responses";
-import type { CommerceResponse } from "../interfaces/responses";
+import { getAllCommerces, getCommercesByType } from "../api/home.api";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
+import { PaginatedResponse } from "../interfaces/responses/paginated.response";
+import { CommercePublicResponse } from "@/modules/commerce/interfaces/responses/commerce-public.response";
 import { useLocalityStore } from "./useLocalityStore";
 
-//hook para obtener todos los comercios sin importar su tipo, para sección de tiendas
 export function useAllCommerces() {
   const locality = useLocalityStore((state) => state.locality);
 
@@ -42,14 +41,3 @@ export function useCommercesByType(commerceType: CommerceTypeDisplay, size = 6) 
     },
   });
 }
-
-
-//hook para obtener la información de un comercio en específico
-export const useCommerceDetail = (commerceId: string | null) => {
-  return useQuery<CommerceResponse, Error>({
-    queryKey: ["commerce-detail", commerceId],
-    queryFn: () => getCommerceDetail(commerceId!),
-    enabled: !!commerceId, // Solo ejecuta si commerceId existe
-    staleTime: 5 * 60 * 1000,
-  });
-};

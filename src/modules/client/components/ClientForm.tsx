@@ -1,6 +1,7 @@
 import { Box } from "@mui/material";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
 import CustomButton from "@/shared/components/CustomButton";
 import { registerClientSchema } from "@/modules/auth/schemas/registerClientSchema";
 import { updateClientSchema } from "@/modules/client/schemas/updateClientSchema";
@@ -17,10 +18,14 @@ import { ClientResponse } from "../interfaces/responses/client.response";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useFormChangeDetection } from "../hooks/useFormChangeDetection";
 import { useEditFormInit } from "../hooks/useEditFormInit";
-import PreferencesCheckboxList from "./PreferencesCheckboxList";
 import PasswordFields from "./PasswordFields";
 import BasicInfoFields from "./BasicInfoFields";
 import EmailField from "./EmailField";
+import CheckboxList from "@/shared/components/CheckboxList";
+
+type RegisterClientForm = z.infer<typeof registerClientSchema>;
+type UpdateClientForm = z.infer<typeof updateClientSchema>;
+type ClientFormData = RegisterClientForm | UpdateClientForm;
 
 const dietaryOptions = (
   Object.keys(PreferenceTypeDisplayName) as PreferenceType[]
@@ -53,7 +58,7 @@ export default function ClientForm({
     reset,
     register,
     formState: { errors },
-  } = useForm({
+  } = useForm<ClientFormData>({
     resolver: zodResolver(
       isEditMode ? updateClientSchema : registerClientSchema,
     ),
@@ -154,19 +159,34 @@ export default function ClientForm({
   return (
     <Box component="form" onSubmit={handleSubmit(onSubmit)}>
       {/* Información básica */}
-      <BasicInfoFields register={register} control={control} errors={errors} />
+      <BasicInfoFields
+        register={register as any}
+        control={control as any}
+        errors={errors}
+      />
 
       {/* Email */}
-      <EmailField register={register} errors={errors} isEditMode={isEditMode} />
+      <EmailField
+        register={register as any}
+        errors={errors}
+        isEditMode={isEditMode}
+      />
 
       {/* Contraseñas */}
-      <PasswordFields register={register} errors={errors} isEditMode={isEditMode} />
+      <PasswordFields
+        register={register as any}
+        errors={errors}
+        isEditMode={isEditMode}
+      />
 
-      {/* Preferencias alimenticias */}
-      <PreferencesCheckboxList
-        preferences={watch("preferences") ?? []}
+      <CheckboxList
+        title="Preferencias alimenticias"
+        titleVariant="h6"
         options={dietaryOptions}
+        selectedValues={watch("preferences") ?? []}
         onChange={handleCheckboxChange}
+        color="#77A787"
+        gridSpacing={2}
       />
 
       {/* Botón de envío */}
