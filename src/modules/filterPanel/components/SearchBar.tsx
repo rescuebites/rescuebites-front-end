@@ -1,4 +1,3 @@
-// components/SearchBar.tsx
 import {
   TextField,
   InputAdornment,
@@ -15,7 +14,6 @@ import {
   ClickAwayListener,
 } from "@mui/material";
 import { MdClose, MdSearch, } from "react-icons/md";
-import { BiSolidFoodMenu } from "react-icons/bi";
 import TuneIcon from "@mui/icons-material/Tune";
 import { useFilterStore } from "../hooks/useFilterStore";
 import type { SearchSuggestion } from "../interfaces/responses/search-response.interface";

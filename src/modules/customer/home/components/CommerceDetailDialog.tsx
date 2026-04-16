@@ -5,8 +5,9 @@ import {
   CardMedia,
   Typography,
   Avatar,
-  CircularProgress,
 } from "@mui/material";
+import LoadingState from "@/shared/components/LoadingState";
+import EmptyState from "@/shared/components/EmptyState";
 import {
   LocationOn,
   Schedule,
@@ -15,7 +16,7 @@ import {
 } from "@mui/icons-material";
 
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
-import { useCommerceDetail } from "../hooks/useCommerces";
+import { useCommerceDetail } from "@/modules/commerce/hooks/useCommerceDetail";
 import { useProducts } from "../hooks/useProducts";
 import BackButton from "../../../../shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
@@ -25,6 +26,7 @@ import CustomTitle from "@/shared/components/CustomTitle";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useEffect } from "react";
 import AddToCartControl from "@/modules/cart/components/AddToCartControl";
+import { formatBusinessHours } from "@/modules/commerce/utils/businessHoursMapper";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -48,7 +50,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   // Función para ordenar productos
   const getSortedProducts = (products: ProductResponse[]) => {
     const sorted = [...products];
-    return sorted; // Ya vienen ordenados por más nuevo desde el backend
+    return sorted;
   };
 
     //función para probar si funciona el agregado de productos a carrito
@@ -60,16 +62,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   // Loading state
   if (isLoadingCommerce || isLoadingProducts) {
     return (
-      <Box
-        sx={{
-          backgroundColor: "#FAFAFA",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <CircularProgress sx={{ color: "#77A787" }} />
+      <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh" }}>
+        <LoadingState message="Cargando comercio y productos..." />
       </Box>
     );
   }
@@ -77,18 +71,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   // Error state
   if (!commerce || !productsData) {
     return (
-      <Box
-        sx={{
-          backgroundColor: "#FAFAFA",
-          minHeight: "100vh",
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Typography color="error">
-          Error al cargar la información del comercio
-        </Typography>
+      <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh" }}>
+        <EmptyState message="Error al cargar la información del comercio" />
       </Box>
     );
   }
@@ -188,7 +172,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             )}
 
             {/* Horario */}
-            {commerce.openingHours && (
+            {commerce.businessHours && commerce.businessHours.length > 0 && (
               <Box
                 sx={{
                   display: "flex",
@@ -202,7 +186,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <CustomTitle text={commerce.openingHours} color="#757575" variant="h6" align="left"/>
+                <CustomTitle text={formatBusinessHours(commerce.businessHours)} color="#757575" variant="body2" align="left"/>
               </Box>
             )}
 
@@ -260,7 +244,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             }}
           >
             {products.map((item: ProductResponse) => (
-              <ProductCard key={item.productId} product={item} />
+              <ProductCard key={item.productId} product={item} commerceId={commerceId} commerceName={commerce?.name} />
             ))}
           </Box>
         )}
@@ -270,7 +254,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 };
 
 // Componente separado para las tarjetas de producto
-function ProductCard({ product }: { product: ProductResponse }) {
+function ProductCard({ product, commerceId, commerceName }: { product: ProductResponse; commerceId: string; commerceName?: string }) {
   return (
     <Card
       sx={{
@@ -373,8 +357,7 @@ function ProductCard({ product }: { product: ProductResponse }) {
               <ProductChips
                 expirationDate={product.expirationDate}
                 stock={product.stock}
-                condition={product.condition}
-                conditionDisplayName={product.conditionDisplayName}
+                conditions={product.conditions}
                 categoryDisplayName={product.categoryDisplayName}
                 showDiscount={false}
               />
@@ -386,6 +369,8 @@ function ProductCard({ product }: { product: ProductResponse }) {
           unitPrice={product.discountedPrice}
           availableStock={product.stock}
           imageUrl={product.productImages?.[0]?.url}
+          commerceId={commerceId}
+          commerceName={commerceName}
         />
         </Box>
       </CardContent>

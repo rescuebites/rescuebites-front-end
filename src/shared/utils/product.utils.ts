@@ -1,6 +1,6 @@
 import { ProductCategory } from "../../modules/products/enums/product-category.enum";
 import { ProductCondition } from "../../modules/products/enums/product-condition.enum";
-import { CommerceType } from "../enums/commerce-type.enum";
+import { CommerceType } from "../../modules/commerce/enums/commerce-type.enum";
 
 export function getProductCategoryGroups(): Array<{ key: string; title: string; categories: ProductCategory[] }> {
   return [

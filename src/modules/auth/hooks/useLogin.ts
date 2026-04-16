@@ -1,32 +1,37 @@
 import { useMutation } from "@tanstack/react-query";
+import { useState } from "react";
 import { AUTH_LOGIN_KEY } from "@/modules/auth/constants";
 import { loginUser } from "@/modules/auth/api/auth.api";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import { decodeJwtPayload } from "@/shared/utils/jwt.utils";
 
 export function useLogin() {
   const { login } = useAuthStore();
   const navigate = useNavigate();
+  const [serverError, setServerError] = useState<string | null>(null);
   const showMessage = useSnackbarStore((state) => state.showMessage);
 
   const { isPending, mutate } = useMutation({
-    mutationFn: loginUser, //Se dice que funcion va a ejecutar la mutación
+    mutationFn: loginUser,
     mutationKey: [AUTH_LOGIN_KEY],
     onSuccess: (authResponse) => {
+      setServerError(null);
       login(authResponse);
-      navigate("/");
+      const payload = decodeJwtPayload(authResponse.token);
+      if (payload?.commerceId) {
+        navigate("/commerce");
+      } else {
+        navigate("/");
+      }
     },
+    
     onError: (error: any) => {
-      showMessage(
-        error.response?.data?.message || "Error al iniciar sesión.",
-        "error"
-      );
+      const message = error.response?.data?.message || "Ocurrió un error inesperado. Intentá de nuevo.";
+      showMessage(message, "error");
     },
   });
 
-  return {
-    isPending,
-    mutate,
-  };
+  return { isPending, mutate, serverError };
 }

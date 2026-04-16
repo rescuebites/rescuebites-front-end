@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Box, Typography, Chip } from "@mui/material";
 import TuneIcon from "@mui/icons-material/Tune";
 import { FilterBottomSheet } from "@/modules/products/components/FilterBottomSheet";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { ProductConditionDisplayName } from "@/modules/products/utils/condition-mapping";
@@ -79,22 +79,24 @@ export const ProductFilterPicker = ({
               sx={chipSx}
             />
           )}
-          {conditionsValue.map((c) => (
-            <Chip
-              key={c}
-              label={ProductConditionDisplayName[c as ProductCondition]}
-              size="small"
-              sx={chipSx}
-            />
-          ))}
-          {preferencesValue.map((p) => (
-            <Chip
-              key={p}
-              label={PreferenceTypeDisplayName[p as PreferenceType]}
-              size="small"
-              sx={chipSx}
-            />
-          ))}
+          {Array.isArray(conditionsValue) &&
+            conditionsValue.map((c) => (
+              <Chip
+                key={c}
+                label={ProductConditionDisplayName[c as ProductCondition]}
+                size="small"
+                sx={chipSx}
+              />
+            ))}
+          {Array.isArray(preferencesValue) &&
+            preferencesValue.map((p) => (
+              <Chip
+                key={p}
+                label={PreferenceTypeDisplayName[p as PreferenceType]}
+                size="small"
+                sx={chipSx}
+              />
+            ))}
         </Box>
       )}
 

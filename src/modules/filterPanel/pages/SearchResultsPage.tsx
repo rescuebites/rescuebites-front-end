@@ -18,7 +18,7 @@ import BackButton from "@/shared/components/ui/BackButton";
 import type { SearchCommerceResponse } from "../interfaces/responses/search-response.interface";
 import { SearchX, Store } from "lucide-react";
 import { CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import CustomTitle from "@/shared/components/CustomTitle";
 import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
 import FilterDrawer from "../components/FilterDrawer";

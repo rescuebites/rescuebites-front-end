@@ -1,19 +1,16 @@
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Box,
-  TextField,
-  Typography,
-  InputAdornment,
-} from "@mui/material";
+import { Box, TextField, Typography, InputAdornment } from "@mui/material";
 
 import {
   createProductSchema,
   CreateProductSchema,
 } from "../schemas/createProductSchema";
+
+export type ProductFormSchema = CreateProductSchema | UpdateProductSchema;
 import CustomTitle from "@/shared/components/CustomTitle";
 import { MultiImageUpload } from "@/shared/components/MultiImageUpload";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
@@ -23,12 +20,20 @@ import { fieldSx } from "@/shared/styles/fieldSx";
 import { QuantityInput } from "@/shared/components/QuantityInput";
 import DateField from "@/shared/components/DateField";
 import { ProductFilterPicker } from "./ProductFilterPicker";
+import { ProductResponse } from "../interfaces/responses/product-response.interface";
+import {
+  updateProductSchema,
+  UpdateProductSchema,
+} from "../schemas/updateProductSchema";
 
 interface CreateProductFormProps {
   commerceType: CommerceType;
   isPending: boolean;
   canCreateProduct: boolean;
-  onSubmit: (data: CreateProductSchema) => void;
+  onSubmit: (data: ProductFormSchema) => void;
+  onDeleteImage?: (imageId: string) => Promise<void>;
+  initialData?: ProductResponse;
+  isEditMode?: boolean;
 }
 
 export const CreateProductForm = ({
@@ -36,29 +41,52 @@ export const CreateProductForm = ({
   isPending,
   canCreateProduct,
   onSubmit,
+  onDeleteImage,
+  initialData,
+  isEditMode = false,
 }: CreateProductFormProps) => {
   const {
     handleSubmit,
     setValue,
     watch,
     control,
-    formState: { errors },
+    formState: { errors, isDirty },
     register,
-  } = useForm<CreateProductSchema>({
-    resolver: zodResolver(createProductSchema) as any,
+  } = useForm<ProductFormSchema>({
+    resolver: zodResolver(
+      isEditMode ? updateProductSchema : createProductSchema,
+    ),
     mode: "onBlur",
-    defaultValues: {
-      stock: 1,
-      originalPrice: 0,
-      discountPercentage: 0,
-      name: "",
-      description: "",
-      category: "" as ProductCategory,
-      conditions: [],
-      preferences: [],
-      expirationDate: "",
-      images: [],
-    },
+    defaultValues:
+      isEditMode && initialData
+        ? {
+            name: initialData.name,
+            description: initialData.description ?? "",
+            stock: initialData.stock,
+            originalPrice: initialData.originalPrice,
+            discountPercentage: initialData.discountPercentage,
+            category: initialData.category as ProductCategory,
+            conditions: Array.isArray(initialData.conditions)
+              ? (initialData.conditions as ProductCondition[])
+              : [],
+            expirationDate: initialData.expirationDate ?? "",
+            preferences: Array.isArray(initialData.preferences)
+              ? (initialData.preferences as PreferenceType[])
+              : [],
+            images: [],
+          }
+        : {
+            stock: 1,
+            originalPrice: 0,
+            discountPercentage: 0,
+            name: "",
+            description: "",
+            category: "" as ProductCategory,
+            conditions: [],
+            preferences: [],
+            expirationDate: "",
+            images: [],
+          },
   });
 
   const stockValue = watch("stock");
@@ -70,7 +98,12 @@ export const CreateProductForm = ({
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
         {/* Nombre */}
-        <CustomTitle variant="body2" align="left" text="Nombre *" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Nombre *"
+          color="#585858"
+        />
         <TextField
           {...register("name")}
           placeholder="Ingrese nombre del producto"
@@ -82,7 +115,12 @@ export const CreateProductForm = ({
         />
 
         {/* Descripción */}
-        <CustomTitle variant="body2" align="left" text="Descripción" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Descripción"
+          color="#585858"
+        />
         <TextField
           {...register("description")}
           placeholder="Ingrese descripción del producto"
@@ -98,7 +136,12 @@ export const CreateProductForm = ({
         {/* Precio + Descuento */}
         <Box sx={{ display: "flex", gap: 2 }}>
           <Box sx={{ flex: 1 }}>
-            <CustomTitle variant="body2" align="left" text="Precio Original ($) *" color="#333" />
+            <CustomTitle
+              variant="body2"
+              align="left"
+              text="Precio Original ($) *"
+              color="#585858"
+            />
             <CurrencyTextField
               name="originalPrice"
               control={control}
@@ -107,9 +150,14 @@ export const CreateProductForm = ({
             />
           </Box>
           <Box sx={{ flex: 1 }}>
-            <CustomTitle variant="body2" align="left" text="% Descuento *" color="#333" />
+            <CustomTitle
+              variant="body2"
+              align="left"
+              text="% Descuento *"
+              color="#585858"
+            />
             <TextField
-              {...register("discountPercentage")}
+              {...register("discountPercentage", { valueAsNumber: true })}
               placeholder="0"
               type="number"
               fullWidth
@@ -120,7 +168,9 @@ export const CreateProductForm = ({
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    <Typography color="#999" fontSize={14}>%</Typography>
+                    <Typography color="#999" fontSize={14}>
+                      %
+                    </Typography>
                   </InputAdornment>
                 ),
                 inputProps: { min: 0, max: 100 },
@@ -129,7 +179,12 @@ export const CreateProductForm = ({
           </Box>
         </Box>
 
-        <CustomTitle variant="body2" align="left" text="Fecha de vencimiento *" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Fecha de vencimiento *"
+          color="#585858"
+        />
 
         {/* Fecha de vencimiento */}
         <DateField
@@ -141,13 +196,24 @@ export const CreateProductForm = ({
           sx={fieldSx}
         />
 
-        <CustomTitle variant="body2" align="left" text="Stock *" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Stock *"
+          color="#585858"
+        />
 
         {/* Stock */}
         <QuantityInput
           value={stockValue}
-          onIncrement={() => setValue("stock", stockValue + 1)}
-          onDecrement={() => setValue("stock", Math.max(1, stockValue - 1))}
+          onIncrement={() =>
+            setValue("stock", stockValue + 1, { shouldDirty: true })
+          }
+          onDecrement={() =>
+            setValue("stock", Math.max(1, stockValue - 1), {
+              shouldDirty: true,
+            })
+          }
           register={register("stock", { valueAsNumber: true })}
           error={errors.stock}
           min={1}
@@ -167,7 +233,12 @@ export const CreateProductForm = ({
           }}
         />
 
-        <CustomTitle variant="body2" align="left" text="Filtros *" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Filtros *"
+          color="#585858"
+        />
 
         {/* Filtros */}
         <ProductFilterPicker
@@ -179,24 +250,36 @@ export const CreateProductForm = ({
           conditionsError={errors.conditions?.message}
           onApply={(values) => {
             setValue("category", values.category as ProductCategory, {
-              shouldValidate: true,
+              shouldDirty: true,
             });
             setValue("conditions", values.conditions as ProductCondition[], {
-              shouldValidate: true,
+              shouldDirty: true,
             });
             setValue("preferences", values.preferences as PreferenceType[], {
-              shouldValidate: true,
+              shouldDirty: true,
             });
           }}
         />
 
         {/* Imágenes */}
-        <CustomTitle variant="body2" align="left" text="Foto/s del Producto *" color="#333" />
+        <CustomTitle
+          variant="body2"
+          align="left"
+          text="Foto/s del Producto *"
+          color="#585858"
+        />
         <Box sx={{ mb: errors.images ? 1 : 3 }}>
           <MultiImageUpload
             maxImages={5}
+            initialImages={
+              isEditMode ? (initialData?.productImages ?? []) : undefined
+            }
+            onDeleteExisting={isEditMode ? onDeleteImage : undefined}
             onChange={(files) =>
-              setValue("images", files ?? undefined, { shouldValidate: true })
+              setValue("images", files, {
+                shouldValidate: true,
+                shouldDirty: true,
+              })
             }
             error={errors.images ? String(errors.images.message) : undefined}
           />
@@ -204,9 +287,17 @@ export const CreateProductForm = ({
 
         <CustomButton
           type="submit"
-          text={isPending ? "Registrando..." : "Registrar Producto"}
+          text={
+            isPending
+              ? isEditMode
+                ? "Actualizando..."
+                : "Registrando..."
+              : isEditMode
+                ? "Actualizar Producto"
+                : "Registrar Producto"
+          }
           fullWidth
-          disabled={isPending || !canCreateProduct}
+          disabled={isPending || !canCreateProduct || (isEditMode && !isDirty)}
           isLoading={isPending}
           sx={{
             mt: 0,

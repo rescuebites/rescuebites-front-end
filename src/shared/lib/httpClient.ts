@@ -39,10 +39,8 @@ httpClient.interceptors.request.use((config) => {
     return urlWithoutBase === path || urlWithoutBase === `${path}/`;
   });
 
-
   if (!shouldExclude && token) {
-    config.headers?.set("Authorization", `Bearer ${token}`);
-  } else {
+    config.headers.Authorization = `Bearer ${token}`;
   }
 
   return config;

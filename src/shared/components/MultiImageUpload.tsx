@@ -1,26 +1,59 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Box, Button, Typography, IconButton, Grid } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageIcon from '@mui/icons-material/Image';
+import { ImageResponse } from '@/shared/interfaces/image-response.interface';
 
 interface MultiImageUploadProps {
   maxImages?: number;
   onChange: (files: File[]) => void;
+  onDeleteExisting?: (imageId: string) => Promise<void>;
+  onImagesChange?: () => void; // Notifica cuando hay cualquier cambio (agregar/eliminar)
   error?: string;
+  initialImages?: ImageResponse[];
+  /** Archivos File ya subidos; se muestran como previews al volver de otra página */
+  initialFiles?: File[];
 }
 
 interface ImagePreview {
-  file: File;
+  file?: File;
   url: string;
+  isExisting?: boolean;
+  imageId?: string;
 }
 
 export const MultiImageUpload = ({
   maxImages = 5,
   onChange,
+  onDeleteExisting,
+  onImagesChange,
   error,
+  initialImages,
+  initialFiles,
 }: MultiImageUploadProps) => {
-  const [previews, setPreviews] = useState<ImagePreview[]>([]);
+  const [previews, setPreviews] = useState<ImagePreview[]>(() => {
+    const existingPreviews = (initialImages ?? []).map((img) => ({
+      url: img.url,
+      isExisting: true,
+      imageId: img.imageId,
+    }));
+    const filePreviews = (initialFiles ?? []).map((file) => ({
+      file,
+      url: URL.createObjectURL(file),
+      isExisting: false,
+    }));
+    return [...existingPreviews, ...filePreviews];
+  });
+
+  // Notificar al padre sobre archivos iniciales para sincronizar su estado
+  useEffect(() => {
+    if (initialFiles && initialFiles.length > 0) {
+      onChange(initialFiles);
+    }
+    // Solo en el mount
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -31,19 +64,46 @@ export const MultiImageUpload = ({
       const newPreviews = filesToAdd.map((file) => ({
         file,
         url: URL.createObjectURL(file),
+        isExisting: false,
       }));
 
       const updatedPreviews = [...previews, ...newPreviews];
       setPreviews(updatedPreviews);
-      onChange(updatedPreviews.map((p) => p.file));
+      const newFiles = updatedPreviews.filter((p) => !p.isExisting).map((p) => p.file!);
+      onChange(newFiles);
+      onImagesChange?.(); // Notificar cambio
+      
+      // Limpiar el input para permitir seleccionar el mismo archivo de nuevo y evitar duplicaciones
+      e.target.value = '';
     }
   };
 
-  const handleRemoveImage = (index: number) => {
-    URL.revokeObjectURL(previews[index].url);
-    const updatedPreviews = previews.filter((_, i) => i !== index);
-    setPreviews(updatedPreviews);
-    onChange(updatedPreviews.map((p) => p.file));
+  const handleRemoveImage = async (index: number) => {
+    const preview = previews[index];
+    
+    // Si es una imagen existente guardada, llamar al callback de eliminación
+    if (preview.isExisting && preview.imageId && onDeleteExisting) {
+      try {
+        await onDeleteExisting(preview.imageId);
+        // Solo actualizar el estado local si la eliminación fue exitosa
+        const updatedPreviews = previews.filter((_, i) => i !== index);
+        setPreviews(updatedPreviews);
+        onChange(updatedPreviews.filter((p) => !p.isExisting).map((p) => p.file!));
+        onImagesChange?.(); // Notificar cambio
+      } catch (error) {
+        // El error ya se maneja en el componente padre
+        console.error('Error al eliminar imagen:', error);
+      }
+    } else {
+      // Es una imagen nueva (File), solo eliminarla del estado local
+      if (!preview.isExisting && preview.url) {
+        URL.revokeObjectURL(preview.url);
+      }
+      const updatedPreviews = previews.filter((_, i) => i !== index);
+      setPreviews(updatedPreviews);
+      onChange(updatedPreviews.filter((p) => !p.isExisting).map((p) => p.file!));
+      onImagesChange?.(); // Notificar cambio
+    }
   };
 
   return (
@@ -127,23 +187,25 @@ export const MultiImageUpload = ({
                       objectFit: "cover",
                     }}
                   />
-                  {/* Botón eliminar */}
-                  <IconButton
-                    onClick={() => handleRemoveImage(index)}
-                    size="small"
-                    sx={{
-                      position: "absolute",
-                      top: 4,
-                      right: 4,
-                      bgcolor: "rgba(0,0,0,0.55)",
-                      color: "#fff",
-                      width: 24,
-                      height: 24,
-                      "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
-                    }}
-                  >
-                    <CloseIcon sx={{ fontSize: 14 }} />
-                  </IconButton>
+                  {/* Botón eliminar - solo mostrar si se puede eliminar */}
+                  {(!preview.isExisting || onDeleteExisting) && (
+                    <IconButton
+                      onClick={() => handleRemoveImage(index)}
+                      size="small"
+                      sx={{
+                        position: "absolute",
+                        top: 4,
+                        right: 4,
+                        bgcolor: "rgba(0,0,0,0.55)",
+                        color: "#fff",
+                        width: 24,
+                        height: 24,
+                        "&:hover": { bgcolor: "rgba(0,0,0,0.8)" },
+                      }}
+                    >
+                      <CloseIcon sx={{ fontSize: 14 }} />
+                    </IconButton>
+                  )}
                   {/* Badge principal */}
                   {index === 0 && (
                     <Box
@@ -162,6 +224,26 @@ export const MultiImageUpload = ({
                       }}
                     >
                       Principal
+                    </Box>
+                  )}
+                  {/* Badge imagen existente */}
+                  {preview.isExisting && index !== 0 && (
+                    <Box
+                      sx={{
+                        position: "absolute",
+                        bottom: 4,
+                        left: 4,
+                        bgcolor: "rgba(0,0,0,0.45)",
+                        color: "#fff",
+                        px: 0.8,
+                        py: 0.3,
+                        borderRadius: "6px",
+                        fontSize: "0.6rem",
+                        fontWeight: 600,
+                        lineHeight: 1.4,
+                      }}
+                    >
+                      Guardada
                     </Box>
                   )}
                 </Box>

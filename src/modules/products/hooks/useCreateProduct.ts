@@ -33,7 +33,7 @@ export const useCreateProduct = (commerceId: string | undefined) => {
     onSuccess: () => {
       showMessage("Producto publicado exitosamente", "success");
       queryClient.invalidateQueries({ queryKey: ["products", commerceId] });
-      navigate("/");
+      navigate("/commerce");
     },
     onError: (error: any) => {
       showMessage(error?.response?.data?.message ?? "Error al crear producto", "error");

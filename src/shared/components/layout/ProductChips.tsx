@@ -1,5 +1,6 @@
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { ProductConditionDisplayName } from "@/modules/products/utils/condition-mapping";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { CommerceTypeDisplay, CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
 import { COMMERCE_TYPE_STYLES } from "@/shared/config/commerce-styles";
 import { Box, Chip } from "@mui/material";
@@ -126,6 +127,7 @@ interface ProductChipsProps {
   stock?: number;
   condition?: ProductCondition | string;
   conditionDisplayName?: string | null;
+  conditions?: string[];         // array de condiciones (nuevo)
   category?: string;             // tipo de comercio: "KIOSK", "Kiosco", etc.
   categoryDisplayName?: string;  // categoría de producto: "Golosinas", "Fruta", etc.
   // Visibilidad
@@ -145,6 +147,7 @@ export function ProductChips({
   stock,
   condition,
   conditionDisplayName,
+  conditions,
   category,
   categoryDisplayName,
   showDiscount = true,
@@ -221,8 +224,20 @@ export function ProductChips({
           />
         )}
 
-        {/* Condición */}
-        {hasStyledCondition ? (
+        {/* Condiciones (múltiples) */}
+        {showCondition && conditions && conditions.length > 0 ? (
+          conditions.map((cond) => {
+            const conditionEnum = cond as ProductCondition;
+            const displayName = ProductConditionDisplayName[conditionEnum] || cond;
+            return (
+              <ConditionChip
+                key={cond}
+                condition={conditionEnum}
+                conditionDisplayName={displayName}
+              />
+            );
+          })
+        ) : hasStyledCondition ? (
           <ConditionChip
             condition={conditionEnum}
             conditionDisplayName={conditionDisplayName!}
