@@ -1,9 +1,7 @@
 import { Box, Chip } from "@mui/material";
 import { OrderStatus } from "../enums/order-status.enum";
+import type { FilterValue } from "../hooks/useOrderFilters";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
-
-type FilterValue = OrderStatus | "ALL";
-
 interface OrderStatusFilterProps {
   value: FilterValue;
   onChange: (status: FilterValue) => void;
