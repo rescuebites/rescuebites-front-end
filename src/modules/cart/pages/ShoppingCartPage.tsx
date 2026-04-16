@@ -24,7 +24,7 @@ const CartPage: React.FC = () => {
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
 
   return (
-    <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh", py: { xs: 0.2, sm: 0.4 }, px: { xs: 2, sm: 5, md: 6 } }}>
+    <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh", py: { xs: 0.2, sm: 0.4 }, px: { xs: 2, sm: 5, md: 6 } , pb:{ xs: 8, sm: 10 } }}>
       <Box sx={{ pt: 1, mb: 3 }}>
         <BackButton />
       </Box>

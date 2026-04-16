@@ -120,7 +120,7 @@ export default function NavbarUI({
                     fontWeight: 700,
                     minWidth: { xs: 20, md: 24, lg: 26 },
                     height: { xs: 20, md: 24, lg: 26 },
-                    bgcolor: '#77a77c',
+                    bgcolor: '#a1a879',
                     color: '#fff',
                   },
                 }}
