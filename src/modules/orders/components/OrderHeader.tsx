@@ -4,9 +4,9 @@ import { OrderStatus } from "@/modules/orders/enums/order-status.enum";
 import { OrderStatusDisplayName } from "@/modules/orders/utils/order-status-mapping";
 import {
   getShortOrderNumber,
-  getStatusColor,
   getProgressPercentage,
 } from "@/modules/orders/utils/order.utils";
+import { OrderStatusStyles } from "@/modules/orders/config/order-status-styles.config";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
 
 interface OrderHeaderProps {
@@ -16,7 +16,9 @@ interface OrderHeaderProps {
 }
 
 const OrderHeader = ({ orderNumber, status, createdAt }: OrderHeaderProps) => {
-  const statusStyle = getStatusColor(status);
+  const statusStyle = OrderStatusStyles[status];
+  const statusBg = statusStyle.backgroundColor;
+  const statusColor = statusStyle.textColor;
 
   return (
     <Card
@@ -48,14 +50,14 @@ const OrderHeader = ({ orderNumber, status, createdAt }: OrderHeaderProps) => {
                 width: 8,
                 height: 8,
                 borderRadius: "50%",
-                bgcolor: statusStyle.color,
+                bgcolor: statusColor,
               }}
             />
           }
           label={OrderStatusDisplayName[status]}
           sx={{
-            backgroundColor: statusStyle.bg,
-            color: statusStyle.color,
+            backgroundColor: statusBg,
+            color: statusColor,
             fontWeight: 600,
             fontSize: { xs: 13, sm: 14 },
             height: { xs: 32, sm: 36 },
@@ -83,7 +85,7 @@ const OrderHeader = ({ orderNumber, status, createdAt }: OrderHeaderProps) => {
           sx={{
             width: `${getProgressPercentage(status)}%`,
             height: "100%",
-            bgcolor: statusStyle.color,
+            bgcolor: statusColor,
             borderRadius: 3,
             transition: "width 0.3s ease",
           }}

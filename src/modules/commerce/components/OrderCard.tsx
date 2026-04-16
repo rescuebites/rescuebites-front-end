@@ -12,6 +12,7 @@ interface Props {
   status: OrderStatus;
   image: string;
   orderNumber: string;
+  onClick?: () => void;
 }
 
 export default function OrderCard({
@@ -21,15 +22,19 @@ export default function OrderCard({
   status,
   image,
   orderNumber,
+  onClick,
 }: Props) {
   return (
     <Paper
       elevation={0}
+      onClick={onClick}
       sx={{
         borderRadius: 3,
         display: "flex",
         overflow: "hidden",
         cursor: "pointer",
+        transition: "box-shadow 0.2s",
+        "&:hover": { boxShadow: "0 4px 12px rgba(0,0,0,0.12)" },
       }}
     >
       <Box

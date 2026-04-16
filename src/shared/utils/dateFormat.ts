@@ -12,7 +12,11 @@ export const formatDateShort = (dateString: string): string => {
   return `${day}/${month}/${year}`;
 };
 
-// Formatea una fecha ISO como fecha y hora legible en español 
+// Formatea "HH:mm:ss" o "HH:mm" a "HH:mm"
+export const formatTime = (time: string | null | undefined): string => {
+  if (!time) return "";
+  return time.length > 5 ? time.slice(0, 5) : time;
+};
 
 export const formatDateWithTime = (dateString: string): string => {
   const date = new Date(dateString);

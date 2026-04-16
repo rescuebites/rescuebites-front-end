@@ -8,7 +8,8 @@ import { INITIAL_DAYS } from "../components/BusinessHours";
 import type { Day } from "../components/BusinessHours";
 import { registerUser } from "@/modules/auth/api/auth.api";
 import { Role } from "@/shared/enums/role.enum";
-import { mapDaysToBusinessHours } from "../utils/businessHoursMapper";
+import { mapDaysToBusinessHours, validateBusinessHoursLogic } from "../utils/businessHoursMapper";
+import { validateCommerceBusinessHours } from "../api/commerce.api";
 
 export function useCommerceScheduleForm() {
   const [days, setDays] = useState<Day[]>(INITIAL_DAYS);
@@ -34,12 +35,10 @@ export function useCommerceScheduleForm() {
   });
 
   const handleSubmit = async (): Promise<void> => {
-    const hasAtLeastOneShift = days.some(
-      (d) =>
-        !d.closed && (d.shifts.morning.enabled || d.shifts.afternoon.enabled),
-    );
-    if (!hasAtLeastOneShift) {
-      showMessage("Debe configurar al menos un turno de atención.", "error");
+    // 1. Validación local rápida (sin red)
+    const localError = validateBusinessHoursLogic(days);
+    if (localError) {
+      showMessage(localError, "error");
       return;
     }
     if (!commerceData) {
@@ -50,19 +49,32 @@ export function useCommerceScheduleForm() {
       return;
     }
 
-    // 1. Guardar horarios en el store
+    // 2. Validación en el backend
+    const mappedHours = mapDaysToBusinessHours(days);
+    try {
+      const hoursValidation = await validateCommerceBusinessHours(mappedHours);
+      if (!hoursValidation.valid) {
+        hoursValidation.errors.forEach((msg) => showMessage(msg, "error"));
+        return;
+      }
+    } catch {
+      // Error already shown by httpClient interceptor
+      return;
+    }
+
+    // 3. Guardar horarios en el store
     setCommerceData({
       ...commerceData,
       createCommerceRequest: {
         ...commerceData.createCommerceRequest,
-        businessHours: mapDaysToBusinessHours(days),
+        businessHours: mappedHours,
       },
     });
 
-    // 2. Registrar usuario y disparar el mail de verificación
+    // 4. Registrar usuario y disparar el mail de verificación
     await registerUserMutation();
 
-    // 3. Navegar solo si el registro fue exitoso
+    // 5. Navegar solo si el registro fue exitoso
     navigate("/auth/register/email-confirm", { replace: true });
   };
 

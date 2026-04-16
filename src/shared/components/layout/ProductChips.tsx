@@ -192,10 +192,11 @@ export function ProductChips({
           }}
         >
           {Math.round(Number(discountPercentage))}%
+          {/*{`${Math.round(Number(discountPercentage))}% Menos`} */}
         </Box>
       )}
 
-      <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
 
         {/* Descuento */}
         {hasDiscount && !discountAsImageBadge && (
