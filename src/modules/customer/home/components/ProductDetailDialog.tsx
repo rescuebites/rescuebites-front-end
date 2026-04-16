@@ -15,6 +15,7 @@ import { ProductDetailActions } from "./ProductDetailActions";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useAddToCart } from "@/modules/cart/hooks/useAddToCart";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
+import ClosedCommercePopup from "@/modules/cart/components/ClosedCommercePopup";
 
 type DialogMode = "addToCart" | "viewOnly" | "edit";
 
@@ -141,6 +142,10 @@ export default function ProductDetailDialog({
         variant="danger"
         onConfirm={async () => { await cart.handleConflictConfirm(); onClose(); }}
         onCancel={cart.closeCommerceConflict}
+      />
+      <ClosedCommercePopup
+        open={cart.closedCommerceOpen}
+        onClose={cart.closeClosedCommercePopup}
       />
 
       {/* Botón cerrar */}

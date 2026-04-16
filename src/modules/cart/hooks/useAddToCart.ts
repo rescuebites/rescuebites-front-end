@@ -3,12 +3,23 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCartStore } from "./useCartStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
+import { AxiosError } from "axios";
+import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+
+function isClosedForDayError(error: unknown): boolean {
+  if (error instanceof AxiosError) {
+    const detail: string | undefined = error.response?.data?.detail;
+    return !!detail && detail.includes("cerrado por hoy");
+  }
+  return false;
+}
 
 export function useAddToCart(productId: string, quantityInCart: number, productCommerceId?: string, productCommerceName?: string) {
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [commerceConflictOpen, setCommerceConflictOpen] = useState(false);
+  const [closedCommerceOpen, setClosedCommerceOpen] = useState(false);
   const [pendingQty, setPendingQty] = useState<number | null>(null);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
@@ -46,23 +57,34 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
       setCommerceConflictOpen(true);
       return;
     }
-    await doAddOrUpdate(qty);
-    setOpen(false);
+    const success = await doAddOrUpdate(qty);
+    if (success) setOpen(false);
   }
 
   async function handleConflictConfirm() {
     await clearCart();
-    await doAddOrUpdate(pendingQty ?? qty);
+    const success = await doAddOrUpdate(pendingQty ?? qty);
     setPendingQty(null);
-    setCommerceConflictOpen(false);
+    if (success) setCommerceConflictOpen(false);
   }
 
-  async function doAddOrUpdate(quantity: number) {
+  async function doAddOrUpdate(quantity: number): Promise<boolean> {
     const currentCartItemId = getCartItemId(productId);
-    if (currentCartItemId) {
-      await updateItem(currentCartItemId, quantity);
-    } else {
-      await addItem(productId, quantity);
+    try {
+      if (currentCartItemId) {
+        await updateItem(currentCartItemId, quantity);
+      } else {
+        await addItem(productId, quantity);
+      }
+      return true;
+    } catch (error: unknown) {
+      if (isClosedForDayError(error)) {
+        useSnackbarStore.getState().close();
+        setOpen(false);
+        setCommerceConflictOpen(false);
+        setClosedCommerceOpen(true);
+      }
+      return false;
     }
   }
 
@@ -77,8 +99,7 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
       setCommerceConflictOpen(true);
       return false;
     }
-    await doAddOrUpdate(quantity);
-    return true;
+    return await doAddOrUpdate(quantity);
   }
 
   async function handleRemove() {
@@ -102,5 +123,7 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
     handleConflictConfirm,
     cartCommerceName,
     productCommerceName,
+    closedCommerceOpen,
+    closeClosedCommercePopup: () => setClosedCommerceOpen(false),
   };
 }

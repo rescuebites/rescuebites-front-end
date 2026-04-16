@@ -3,6 +3,7 @@ import { useAddToCart } from "../hooks/useAddToCart";
 import AddToCartButton from "./AddToCartButton";
 import AddToCartPopup from "./AddToCartPopUp";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
+import ClosedCommercePopup from "./ClosedCommercePopup";
 
 interface AddToCartControlProps {
   productId: string;
@@ -67,6 +68,10 @@ export default function AddToCartControl({
         availableStock={availableStock}
         unit={unit}
         imageUrl={imageUrl}
+      />
+      <ClosedCommercePopup
+        open={cart.closedCommerceOpen}
+        onClose={cart.closeClosedCommercePopup}
       />
     </>
   );
