@@ -1,6 +1,7 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { OrderStatus } from "../enums/order-status.enum";
 
 export const getClientOrders = async (
   clientId: string,
@@ -19,6 +20,28 @@ export const getOrderDetail = async (clientId: string, orderId: string): Promise
     `/api/v1/clients/${clientId}/orders/${orderId}`
   );
   return data;
+};
+
+export const getCommerceOrderDetail = async (
+  commerceId: string,
+  orderId: string
+): Promise<OrderResponse> => {
+  const { data } = await httpClient.get<OrderResponse>(
+    `/api/v1/commerces/${commerceId}/orders/${orderId}`
+  );
+  return data;
+};
+
+export const updateOrderStatus = async (
+  commerceId: string,
+  orderId: string,
+  newStatus: OrderStatus,
+  reason?: string
+): Promise<void> => {
+  await httpClient.patch(
+    `/api/v1/commerces/${commerceId}/orders/${orderId}/status`,
+    { newStatus, ...(reason ? { reason } : {}) }
+  );
 };
 
 export const cancelOrder = async (

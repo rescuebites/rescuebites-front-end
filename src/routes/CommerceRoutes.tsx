@@ -11,6 +11,7 @@ import RegisterCommercePage from "@/modules/commerce/pages/registerCommercePage"
 import BusinessHoursPage from "@/modules/commerce/pages/BusinessHoursPage";
 //import CommerceProfilePage from "@/modules/commerce/pages/CommerceProfilePage";
 import CommerceNavbar from "@/modules/navbar/components/CommerceNavbar";
+import CommerceOrderDetailPage from "@/modules/orders/pages/CommerceOrderDetailPage";
 
 export function CommerceRoutes() {
   return (
@@ -23,13 +24,15 @@ export function CommerceRoutes() {
         <Route path="search" element={<SearchResultsPage />} />
 
         <Route path="products/expiring" element={<ExpiringProductsPage />} />
+        <Route path="orders/:orderId" element={<CommerceOrderDetailPage />} />
       </Route>
 
       <Route element={<AuthLayout />}>
-        <Route path="/register-commerce" element={<RegisterCommercePage />} />
-        <Route path={"create-product"} element={<CreateProductPage />} />
-        <Route path={"edit-commerce-profile"} element={<EditCommercePage />} />
-        <Route path={"edit-commerce-profile/business-hours"} element={<BusinessHoursPage />} />
+        <Route path="register-commerce" element={<RegisterCommercePage />} />
+        <Route path="register-commerce/business-hours" element={<BusinessHoursPage />} />
+        <Route path="create-product" element={<CreateProductPage />} />
+        <Route path="edit-commerce-profile" element={<EditCommercePage />} />
+        <Route path="edit-commerce-profile/business-hours" element={<BusinessHoursPage />} />
         <Route
           path={"products/:productId/edit-product"}
           element={<EditProductPage />}

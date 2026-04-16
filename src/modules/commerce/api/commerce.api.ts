@@ -1,11 +1,47 @@
 //funciones para realizar peticiones HTTP relacionadas con comercios
 import { httpClient } from "@/shared/lib/httpClient";
 import { CreateCommerceParams } from "../interfaces/requests/create-commerce.interface";
+
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 import { UpdateCommerceParams } from "../interfaces/requests/update-commerce.interface";
 import { Page } from "@/modules/catalog/interfaces/types";
 import { OrderSummaryForCommerceResponse } from "@/modules/orders/interfaces/responses/order-summary-commerce-response.interface";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { ProductExpirationFilter } from "@/modules/products/enums/product-expiration-filter.enum";
+import { BusinessHoursRequest } from "../interfaces/requests/business-hours.request";
+
+export interface CommerceIdentityCheckResponse {
+  available: boolean;
+  error: string | null;
+}
+
+export interface BusinessHoursValidationResponse {
+  valid: boolean;
+  errors: string[];
+}
+
+export const checkCommerceIdentityAvailability = async (
+  name: string,
+  address: string,
+  locality: string,
+  excludeCommerceId?: string
+): Promise<CommerceIdentityCheckResponse> => {
+  const { data } = await httpClient.get<CommerceIdentityCheckResponse>(
+    `/api/v1/commerces/identity/availability`,
+    { params: { name, address, locality, ...(excludeCommerceId ? { excludeCommerceId } : {}) } }
+  );
+  return data;
+};
+
+export const validateCommerceBusinessHours = async (
+  businessHours: BusinessHoursRequest[]
+): Promise<BusinessHoursValidationResponse> => {
+  const { data } = await httpClient.post<BusinessHoursValidationResponse>(
+    `/api/v1/commerces/validate-business-hours`,
+    businessHours
+  );
+  return data;
+};
 
 export const createCommerce = async (
   params: CreateCommerceParams
@@ -21,7 +57,7 @@ export const createCommerce = async (
   );
 
   (params.profilePictures ?? []).forEach((img) => formData.append("images", img));
-  await httpClient.post<void>("/api/v1/commerces", formData);
+  await httpClient.post<void>(`${BACKEND_URL}/api/v1/commerces`, formData);
 };
 
 export const updateCommerce = async (
@@ -75,6 +111,10 @@ export const getCommerceProductsByExpiration = async (
     }
   );
   return data;
+};
+
+export const deleteCommerce = async (commerceId: string): Promise<void> => {
+  await httpClient.delete<void>(`/api/v1/commerces/${commerceId}`);
 };
 
 export const deleteCommerceImage = async (

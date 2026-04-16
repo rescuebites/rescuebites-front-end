@@ -9,6 +9,7 @@ import {
 import { usePendingRegistrationStore } from "@/modules/users/hooks/usePendingRegistrationStore";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 import { useNavigate } from "react-router-dom";
+import { checkCommerceIdentityAvailability } from "../api/commerce.api";
 
 export const useCommerceRegistrationForm = () => {
   const {
@@ -27,6 +28,16 @@ export const useCommerceRegistrationForm = () => {
 
   const { mutateAsync, isPending } = useMutation({
     mutationFn: async (data: RegisterCommerceSchema) => {
+      // 1. Verificar que no exista un comercio con el mismo nombre, dirección y localidad
+      const identityCheck = await checkCommerceIdentityAvailability(
+        data.name,
+        data.address,
+        data.locality
+      );
+      if (!identityCheck.available) {
+        throw new Error(identityCheck.error ?? "Ya existe un comercio con esos datos.");
+      }
+
       setPendingUserCredentials({
         //se guardan las credenciales por separado para no mezclar lógica de user y commerce
         email: data.email,
@@ -49,11 +60,11 @@ export const useCommerceRegistrationForm = () => {
       });
     },
     onSuccess: () => {
-      navigate("/commerce/schedule", { replace: true });
+      navigate("/commerce/register-commerce/business-hours", { replace: true });
     },
     onError: (error: any) => {
       const message =
-        error.response?.data?.message || "Error al guardar los datos.";
+        error.response?.data?.message ?? error.message ?? "Error al guardar los datos.";
       showMessage(message, "error");
     },
   });

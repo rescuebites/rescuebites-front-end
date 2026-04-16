@@ -23,15 +23,15 @@ export function ActivateAccountPage() {
   const { mutate: createClient, isPending: isCreatingClient } =
     useCreateClient();
 
-   const { clientData, commerceData, clearData } = usePendingRegistrationStore();
+  const { clientData, commerceData, clearData } = usePendingRegistrationStore();
 
-  const { mutateAsync: createCommerce, isPending: isCreatingCommerce } = useCreateCommerce();
+  const { mutateAsync: createCommerce, isPending: isCreatingCommerce } =
+    useCreateCommerce();
 
   const userId = searchParams.get("userId");
   const token = searchParams.get("token");
 
   const handleVerify = async () => {
-
     console.log("commerceData al verificar:", commerceData);
     console.log("clientData al verificar:", clientData);
     if (!userId || !token) return;
@@ -45,21 +45,27 @@ export function ActivateAccountPage() {
           if (clientData) {
             const imageFile = await getProfileImageFile();
             const payload = { ...clientData.createClientRequest, userId };
-            createClient({ createClientRequest: payload, profilePicture: imageFile });
+            createClient({
+              createClientRequest: payload,
+              profilePicture: imageFile,
+            });
             clearData();
             clearProfileImage();
           } else if (commerceData) {
-              const imageFiles = await getCommerceProfileImageFiles();
-              await createCommerce({
-              createCommerceRequest: { ...commerceData.createCommerceRequest, userId },
+            const imageFiles = await getCommerceProfileImageFiles();
+            await createCommerce({
+              createCommerceRequest: {
+                ...commerceData.createCommerceRequest,
+                userId,
+              },
               profilePictures: imageFiles,
             });
             clearCommerceProfileImages();
             clearData();
-  }
-          navigate("/auth/login", { replace: true });
+            navigate("/auth/login", { replace: true });
+          }
         },
-      }
+      },
     );
   };
 
@@ -76,7 +82,13 @@ export function ActivateAccountPage() {
         type="submit"
         text="Activar cuenta"
         onClick={handleVerify}
-        disabled={isVerifying || isCreatingClient || isCreatingCommerce || !userId || !token}
+        disabled={
+          isVerifying ||
+          isCreatingClient ||
+          isCreatingCommerce ||
+          !userId ||
+          !token
+        }
         isLoading={isVerifying || isCreatingClient || isCreatingCommerce}
         fullWidth
       />
