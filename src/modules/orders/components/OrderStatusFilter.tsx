@@ -13,6 +13,7 @@ const ALL_OPTION: FilterValue = "ALL";
 
 const FILTER_OPTIONS: FilterValue[] = [
   ALL_OPTION,
+  OrderStatus.PENDING,
   OrderStatus.CONFIRMED,
   OrderStatus.PREPARING,
   OrderStatus.READY,

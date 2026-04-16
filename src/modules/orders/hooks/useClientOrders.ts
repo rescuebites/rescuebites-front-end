@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses";
+import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { getClientOrders } from "../api/order.api";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
 
