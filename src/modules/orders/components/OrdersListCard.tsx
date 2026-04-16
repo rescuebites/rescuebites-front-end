@@ -4,14 +4,20 @@ import { OrderResponse } from "../interfaces/responses/order-response.interface"
 import { getStatusColor, getShortOrderNumber } from "../utils/order.utils";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
+import { useNavigate } from "react-router-dom";
 
 
 function OrderCard({ order }: { order: OrderResponse }) {
   const { bg, color } = getStatusColor(order.status);
   const commerceImageUrl = order.commerceImages?.[0]?.url;
+  const navigate = useNavigate();
 
   return (
-    <Card variant="outlined" sx={{ borderRadius: 3, maxWidth: 1500, width: "100%" }}>
+    <Card
+      variant="outlined"
+      onClick={() => navigate(`/orders/${order.orderId}`)}
+      sx={{ borderRadius: 3, maxWidth: 1500, width: "100%", cursor: "pointer", "&:hover": { boxShadow: 3 }, transition: "box-shadow 0.2s" }}
+    >
       <CardContent sx={{ p: 2, "&:last-child": { pb: 2 } }}>
         <Box display="flex" alignItems="center" justifyContent="space-between" mb={1.5}>
           <Box display="flex" alignItems="center" gap={1.5}>
@@ -40,7 +46,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
               <Clock size={20} color="gray" />
               <Typography fontSize={18} color="text.secondary">{formatDateWithTime(order.createdAt)}</Typography>
             </Box>
-            <Typography fontSize={20} color="text.disabled">{order.items.length} {order.items.length === 1 ? 'Producto' : 'Productos'}</Typography>
+            <Typography fontSize={20} color="text.disabled">{(order.items ?? []).length} {(order.items ?? []).length === 1 ? 'Producto' : 'Productos'}</Typography>
           </Box>
           <Typography fontWeight={550} fontSize={22} color="#77A787">${order.total.toFixed(2)}</Typography>
         </Box>
