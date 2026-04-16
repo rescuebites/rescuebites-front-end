@@ -21,6 +21,7 @@ import { CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
 import { CommerceType } from "@/shared/enums/commerce-type.enum";
 import CustomTitle from "@/shared/components/CustomTitle";
 import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
+import FilterDrawer from "../components/FilterDrawer";
 
 
 
@@ -158,6 +159,7 @@ export default function SearchResultsPage() {
 
   return (
     <Box sx={{ px: { xs: 2, sm: 3 }, pt: 0.5, pb: 10, maxWidth: 1600, mx: "auto" }}>
+      <FilterDrawer />
       <Box sx={{ pt: { xs: 0.5, sm: 1 }, mb: 3 }}>
         <BackButton />
       </Box>

@@ -57,6 +57,7 @@ export default function SearchBar({
           <TextField
             fullWidth
             placeholder="Buscar productos..."
+            autoComplete="off"
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
             onKeyDown={(e) => {
