@@ -55,7 +55,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
   );
 }
 
-export default function OrderList({ orders = []}: { orders: OrderResponse[] }) {
+export default function OrdersListCard({ orders = []}: { orders: OrderResponse[] }) {
     if (orders.length === 0) {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" gap={0.5}>
