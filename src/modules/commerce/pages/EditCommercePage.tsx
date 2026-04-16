@@ -21,15 +21,19 @@ import { MultiImageUpload } from "@/shared/components/MultiImageUpload";
 import { usePendingCommerceUpdateStore } from "../hooks/usePendingCommerceUpdateStore";
 import { useState, useEffect } from "react";
 import { useDeleteImage } from "@/shared/hooks/useDeleteImage";
+import { checkCommerceIdentityAvailability } from "../api/commerce.api";
+import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 
 export default function EditCommercePage() {
   const navigate = useNavigate();
   const commerceId = useAuthStore((state) => state.commerceId);
+  const showMessage = useSnackbarStore((state) => state.showMessage);
   const { data: commerceData, isLoading } = useCommerceDetail(commerceId);
   const {
     setUpdateData,
     setCommerceId,
     setImages,
+    setHasFormChanges,
     updateData,
     images: pendingImages,
   } = usePendingCommerceUpdateStore();
@@ -99,8 +103,25 @@ export default function EditCommercePage() {
     } as any);
   }, [commerceData, hasPendingData]);
 
-  const onSubmit = (data: UpdateCommerceSchema) => {
+  const onSubmit = async (data: UpdateCommerceSchema) => {
     if (!commerceId) return;
+
+    // Verificar que no exista otro comercio con el mismo nombre, dirección y localidad
+    try {
+      const identityCheck = await checkCommerceIdentityAvailability(
+        data.name,
+        data.address,
+        data.locality,
+        commerceId
+      );
+      if (!identityCheck.available) {
+        showMessage(identityCheck.error ?? "Ya existe un comercio con esos datos.", "error");
+        return;
+      }
+    } catch {
+      // Error already shown by httpClient interceptor
+      return;
+    }
 
     const updateData = {
       ...data,
@@ -111,6 +132,7 @@ export default function EditCommercePage() {
     // Guardar datos y navegar a editar horarios
     setCommerceId(commerceId);
     setUpdateData(updateData);
+    setHasFormChanges(isDirty || hasImageChanges);
     // Solo guardar imágenes si hubo cambios
     setImages(hasImageChanges ? newImages : []);
     navigate("/commerce/edit-commerce-profile/business-hours");
@@ -186,7 +208,6 @@ export default function EditCommercePage() {
             text="Siguiente"
             type="submit"
             fullWidth
-            disabled={!isDirty && !hasImageChanges && !hasPendingData}
             isLoading={isDeletingImage}
             sx={{ mt: 2 }}
           />

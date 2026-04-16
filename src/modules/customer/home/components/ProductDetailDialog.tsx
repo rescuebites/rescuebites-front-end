@@ -26,6 +26,7 @@ interface ProductDetailDialogProps {
   mode?: DialogMode;
   fixedQuantity?: number;
   onEdit?: () => void;
+  hideCommerceInfo?: boolean;
 }
 
 export default function ProductDetailDialog({
@@ -35,6 +36,7 @@ export default function ProductDetailDialog({
   mode = "addToCart",
   fixedQuantity,
   onEdit,
+  hideCommerceInfo = false,
 }: ProductDetailDialogProps) {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
@@ -182,7 +184,7 @@ export default function ProductDetailDialog({
         />
 
         {/* Contenido del producto */}
-        <Box sx={{ px: 3, py: 3, pb: 5 }}>
+        <Box sx={{ px: 3, py: 3, pb: 2 }}>
           {/* Información del producto */}
           <ProductDetailInfo
             name={productDetail.name}
@@ -199,8 +201,8 @@ export default function ProductDetailDialog({
             }
           />
 
-          {/* Información del comercio (oculta en modo edición) */}
-          {mode !== "edit" && productDetail.commerceName && (
+          {/* Información del comercio (oculta en modo edición o cuando se solicita) */}
+          {mode !== "edit" && !hideCommerceInfo && productDetail.commerceName && (
             <ProductDetailCommerce
               commerceName={productDetail.commerceName}
               commerceOpeningHours={productDetail.commerceOpeningHours}

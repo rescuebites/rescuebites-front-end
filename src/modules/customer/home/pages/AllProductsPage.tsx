@@ -47,7 +47,7 @@ export default function AllProductsPage() {
     <Box sx={{ px: { xs: 2, sm: 4, md:8 },  mx: "auto" }}>
       {/* Botón volver para atras */}
       <Box sx={{ pt: { xs: 0.5, sm: 1, md: 1 }, mb:3 }}>
-        <BackButton onClick={() => navigate('/customer', { replace: true })}/>
+        <BackButton onClick={() => navigate('/', { replace: true })}/>
       </Box>
       {/* Buscador de productos */}
       <Stack spacing={{ xs: 3, sm: 4 }} sx={{mb:5}} >

@@ -1,3 +1,4 @@
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from "@/shared/lib/constants";
 import { z } from "zod";
 
 export const registerCommerceSchema = z
@@ -42,9 +43,19 @@ export const registerCommerceSchema = z
         /^\+54(9)?[0-9]{10}$/,
         "Formato inválido. Ejemplo: +5493512345678",
       ),
+
     profilePhotos: z
       .array(z.instanceof(File))
-      .min(1, "La imagen del comercio es obligatoria"),
+      .min(1, "La imagen del comercio es obligatoria")
+      .max(5, "No podés cargar más de 5 imágenes")
+      .refine(
+        (files) => files.every((f) => ALLOWED_IMAGE_TYPES.includes(f.type)),
+        "Las imágenes deben estar en formato JPG o PNG"
+      )
+      .refine(
+        (files) => files.every((f) => f.size <= MAX_IMAGE_SIZE),
+        "Cada imagen no debe superar los 2MB"
+      ),
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Las contraseñas no coinciden",

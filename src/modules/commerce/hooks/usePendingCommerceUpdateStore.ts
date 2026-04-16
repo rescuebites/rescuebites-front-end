@@ -5,9 +5,11 @@ interface PendingCommerceUpdateState {
   commerceId: string | null;
   updateData: Partial<UpdateCommerceRequest>;
   images: File[];
+  hasFormChanges: boolean;
   setUpdateData: (data: Partial<UpdateCommerceRequest>) => void;
   setCommerceId: (id: string) => void;
   setImages: (images: File[]) => void;
+  setHasFormChanges: (value: boolean) => void;
   clearPendingUpdate: () => void;
 }
 
@@ -16,9 +18,11 @@ export const usePendingCommerceUpdateStore = create<PendingCommerceUpdateState>(
     commerceId: null,
     updateData: {},
     images: [],
+    hasFormChanges: false,
     setUpdateData: (data) => set({ updateData: data }),
     setCommerceId: (id) => set({ commerceId: id }),
     setImages: (images) => set({ images }),
-    clearPendingUpdate: () => set({ commerceId: null, updateData: {}, images: [] }),
+    setHasFormChanges: (value) => set({ hasFormChanges: value }),
+    clearPendingUpdate: () => set({ commerceId: null, updateData: {}, images: [], hasFormChanges: false }),
   })
 );

@@ -11,6 +11,7 @@ import { useBusinessHoursUpdate } from "../hooks/useBusinessHoursUpdate";
 import { useCommerceDetail } from "@/modules/commerce/hooks/useCommerceDetail";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { mapBusinessHoursToDay } from "../utils/businessHoursMapper";
+import { usePendingCommerceUpdateStore } from "../hooks/usePendingCommerceUpdateStore";
 
 export default function BusinessHoursPage() {
   const navigate = useNavigate();
@@ -44,11 +45,19 @@ export default function BusinessHoursPage() {
     setEditDays(initialEditDays);
   }, [initialEditDays]);
 
-  const handleSubmit = () => {
+  // Detectar cambios en horarios respecto a los valores iniciales
+  const hasHoursChanges = JSON.stringify(editDays) !== JSON.stringify(initialEditDays);
+
+  // Cambios en campos del comercio (viene de EditCommercePage)
+  const hasFormChanges = usePendingCommerceUpdateStore((s) => s.hasFormChanges);
+
+  const hasAnyChanges = hasFormChanges || hasHoursChanges;
+
+  const handleSubmit = async () => {
     if (isEditMode) {
-      updateBusinessHours(editDays);
+      await updateBusinessHours(editDays);
     } else {
-      registrationForm.handleSubmit();
+      await registrationForm.handleSubmit();
     }
   };
 
@@ -88,6 +97,7 @@ export default function BusinessHoursPage() {
           fullWidth
           onClick={handleSubmit}
           isLoading={isPending}
+          disabled={isEditMode ? !hasAnyChanges : false}
         />
       </Box>
     </Box>

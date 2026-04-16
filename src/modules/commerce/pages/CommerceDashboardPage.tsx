@@ -1,15 +1,16 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import SearchBar from "@/shared/components/layout/SearchBar";
-import ProductsSection from "./ProductsSection";
-import OrdersSection from "./OrdersSection";
-import QuickActions from "./QuickActions";
-import CollapsibleSection from "./CollapsibleSection";
+import ProductsSection from "../components/ProductsSection";
+import OrdersSection from "../components/OrdersSection";
+import QuickActions from "../components/QuickActions";
+import CollapsibleSection from "../components/CollapsibleSection";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import {
   useCommerceOrders,
   useCommerceProductsByStock,
 } from "../hooks/useCommerceData";
 import LoadingState from "@/shared/components/LoadingState";
+import CustomTitle from "@/shared/components/CustomTitle";
 
 export default function CustomerDashboardPage() {
   const commerceId = useAuthStore((state) => state.commerceId);
@@ -20,12 +21,13 @@ export default function CustomerDashboardPage() {
 
   if (!commerceId) {
     return (
-      <Box sx={{ px: 2.5, pt: 4, textAlign: "center" }}>
-        <Typography variant="h6" color="error">
-          No se encontró información del comercio. Por favor, inicia sesión como
-          comercio.
-        </Typography>
-      </Box>
+      <CustomTitle
+        text="No se encontró información del comercio. Por favor, inicia sesión como
+          comercio."
+        variant="h6"
+        align="center"
+        color="error"
+      />
     );
   }
 
