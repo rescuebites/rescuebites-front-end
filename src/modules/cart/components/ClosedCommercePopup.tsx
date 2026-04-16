@@ -24,7 +24,7 @@ export default function ClosedCommercePopup({ open, onClose }: ClosedCommercePop
           sx={{ width: 160, height: "auto", mx: "auto", display: "block" }}
         />
         <CustomTitle
-          text="¡El comercio cerrado por hoy!"
+          text="¡El comercio está cerrado por hoy!"
           color="#2d2d2d"
           variant="h5"
           align="center"
