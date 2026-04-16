@@ -1,15 +1,17 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import type { CreateClientParams } from "@/modules/client/interfaces/requests/createClient.interface";
-import type { CreateCommerceParams } from "@/modules/commerce/interfaces/createCommerce.interface";
+import type { CreateCommerceParams } from "@/modules/commerce/interfaces/requests/create-commerce.interface";
 
 interface PendingRegistrationState {
   clientData?: CreateClientParams;
   profilePicture?: File | null;
   commerceData?: CreateCommerceParams;
+  pendingCommerceImages: File[];
   setClientData: (data: CreateClientParams) => void;
   setCommerceData: (data: CreateCommerceParams) => void;
-  pendingUserCredentials?: {  //campo para guardar laas credenciales de usuario en las <> paginas de registro de comercio
+  setPendingCommerceImages: (images: File[]) => void;
+  pendingUserCredentials?: {  
     email: string;
     password: string;
     confirmPassword: string;
@@ -25,15 +27,17 @@ export const usePendingRegistrationStore = create<PendingRegistrationState>()(
       clientData: undefined,
       profilePicture: null,
       commerceData: undefined,
+      pendingCommerceImages: [],
 
       setClientData: (data) => set({ clientData: data }),
       setCommerceData: (data) => set({ commerceData: data }),  
       setProfilePicture: (file) => set({ profilePicture: file }),
+      setPendingCommerceImages: (images) => set({ pendingCommerceImages: images }),
 
       pendingUserCredentials: undefined,
       setPendingUserCredentials: (credentials) => set({ pendingUserCredentials: credentials }),
       clearData: () =>
-        set({ clientData: undefined, profilePicture: null, commerceData: undefined }),
+        set({ clientData: undefined, profilePicture: null, commerceData: undefined, pendingCommerceImages: [] }),
     }),
     {
       name: "pending-registration-store",
@@ -42,7 +46,7 @@ export const usePendingRegistrationStore = create<PendingRegistrationState>()(
           ? { ...state.clientData, profilePicture: undefined }
           : undefined,
         commerceData: state.commerceData
-          ? { ...state.commerceData, profilePicture: undefined } 
+          ? { ...state.commerceData, profilePictures: undefined }
           : undefined,
           pendingUserCredentials: state.pendingUserCredentials, //persistir credenciales
       }),

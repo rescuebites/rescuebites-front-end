@@ -1,4 +1,3 @@
-// components/SearchBar.tsx
 import {
   TextField,
   InputAdornment,

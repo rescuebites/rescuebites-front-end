@@ -1,17 +1,18 @@
 import { TextField } from "@mui/material";
-import { Control, Controller } from "react-hook-form";
+import { Control, Controller, FieldValues, Path } from "react-hook-form";
 
-interface DateFieldProps {
-  control: Control<any>;
-  name: string;
+interface DateFieldProps<T extends FieldValues = FieldValues> {
+  control: Control<T>;
+  name: Path<T>;
   label?: string;
   error?: string;
   minDate?: string;
+  maxDate?: string;
   size?: "small" | "medium";
   sx?: object;
 }
 
-export default function DateField({ control, name, label, error, minDate, size, sx }: DateFieldProps) {
+export default function DateField<T extends FieldValues = FieldValues>({ control, name, label, error, minDate, maxDate, size, sx }: DateFieldProps<T>) {
   return (
     <Controller
       name={name}
@@ -28,6 +29,7 @@ export default function DateField({ control, name, label, error, minDate, size, 
           {...field}
           inputProps={{
             min: minDate,
+            max: maxDate,
             placeholder: "dd/mm/aaaa",
             style: { cursor: "text" },
           }}

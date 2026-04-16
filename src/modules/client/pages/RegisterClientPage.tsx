@@ -3,8 +3,11 @@ import { useState } from "react";
 import CustomTitle from "@/shared/components/CustomTitle";
 import ClientForm from "@/modules/client/components/ClientForm";
 import ProfileImageUpload from "@/modules/client/components/ProfileImageUpload"; 
+import BackButton from "@/shared/components/ui/BackButton";
+import { useNavigate } from "react-router-dom";
 
 export function RegisterClientPage() {
+  const navigate = useNavigate();
   const [profilePicture, setProfilePicture] = useState<File | null>(null);
 
   const handleImageChange = (file: File | null) => {
@@ -18,7 +21,12 @@ export function RegisterClientPage() {
   };
 
   return (
-    <Box sx={{ px: 2 }}>
+    <Box >
+      <BackButton
+        sx={{ position: "absolute", left: 14, top: 14 }}
+        onClick={() => navigate("/auth/login", { replace: true })}
+      />
+
       <CustomTitle text="Registrar Cliente" />
 
       <ProfileImageUpload

@@ -5,7 +5,7 @@ import { fieldSx } from "@/shared/styles/fieldSx";
 
 interface EmailFieldProps {
   register: UseFormRegister<any>;
-  errors: FieldErrors;
+  errors: FieldErrors<any>;
   isEditMode?: boolean;
 }
 
@@ -25,7 +25,7 @@ export default function EmailField({
         variant="body2"
         align="left"
         text="Correo electrónico *"
-        color="#333"
+        color="#585858"
       />
       <TextField
         {...register("email")}

@@ -1,4 +1,4 @@
-import { CommerceType } from "../enums/commerce-type.enum";
+import { CommerceType } from "../../modules/commerce/enums/commerce-type.enum";
 import { CommerceTypeDisplayName } from "./commerce-mapping";
 
 /**
