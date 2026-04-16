@@ -1,6 +1,6 @@
 import { Box, Chip } from "@mui/material";
 import { OrderStatus } from "../enums/order-status.enum";
-import { OrderStatusDisplayName } from "../utils/order-status-mapping"
+import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 
 type FilterValue = OrderStatus | "ALL";
 

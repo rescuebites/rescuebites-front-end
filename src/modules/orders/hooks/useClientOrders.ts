@@ -6,7 +6,13 @@ import { OrderResponse } from "../interfaces/responses/order-response.interface"
 export const useClientOrders = (clientId: string | null | undefined) => {
   return useQuery<PaginatedResponse<OrderResponse>, Error>({
     queryKey: ["client-orders", clientId],
-    queryFn: () => getClientOrders(clientId!),
+    queryFn: () => {
+      if (!clientId) {
+        throw new Error("clientId is required to fetch client orders");
+      }
+
+      return getClientOrders(clientId);
+    },
     enabled: !!clientId,
     staleTime: 30 * 1000,
     retry: 2,
