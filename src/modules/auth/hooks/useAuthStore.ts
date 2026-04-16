@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { AuthResponse } from "@/modules/auth/interfaces/responses/auth.interface";
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { decodeJwtPayload } from "@/shared/utils/jwt.utils";
 
 interface AuthStore {

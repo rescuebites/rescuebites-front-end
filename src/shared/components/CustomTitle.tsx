@@ -8,6 +8,7 @@ interface CustomTitleProps {
   fontWeight?: string | number;
   fontSize?: string | number;
   fontStyle?: string;
+  textDecoration?: string;
 }
 
 export default function CustomTitle({
@@ -18,13 +19,14 @@ export default function CustomTitle({
   fontWeight = "bold",
   fontSize,
   fontStyle,
+  textDecoration,
 }: CustomTitleProps) {
   return (
     <Typography
       variant={variant}
       align={align}
       gutterBottom
-      sx={{ fontWeight, color, fontSize, fontStyle }}
+      sx={{ fontWeight, color, fontSize, fontStyle, textDecoration }}
     >
       {text}
     </Typography>

@@ -1,15 +1,14 @@
 import NavbarUI from "./NavbarUI";
 import { navbarRoutes } from "../config/routes";
+import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 
 export default function ClientNavbar() {
-  // ver si implementar nro para cant de prod agregados al carrito o cantidad de notificaciones
-  // const { cartCount } = useCart();
-  // const { notificationCount } = useNotifications();
-  
+  const cartCount = useCartStore((state) => state.cart?.totalItems ?? 0);
+
   return (
     <NavbarUI 
       routes={navbarRoutes.client}
-      cartCount={0}
+      cartCount={cartCount}
       notificationCount={0}
     />
   );

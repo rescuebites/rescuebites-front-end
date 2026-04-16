@@ -123,7 +123,7 @@ export default function ClientProfilePage() {
           <ProfileActionButton
             icon={<EditIcon />}
             label="Modificar perfil"
-            onClick={() => navigate("/auth/edit-profile")}
+            onClick={() => navigate("/auth/edit-client-profile")}
           />
 
           <ProfileActionButton

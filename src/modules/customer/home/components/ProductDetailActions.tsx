@@ -1,6 +1,6 @@
-import { Box, Button } from "@mui/material";
-import { MdShoppingCart } from "react-icons/md";
-import { primaryButtonSx } from "@/shared/styles/buttonSx";
+import { Box } from "@mui/material";
+import { MdShoppingCart, MdEdit } from "react-icons/md";
+import CustomButton from "@/shared/components/CustomButton";
 
 type DialogMode = "addToCart" | "viewOnly" | "edit";
 
@@ -27,58 +27,37 @@ export const ProductDetailActions = ({
         left: 0,
         right: 0,
         bgcolor: "#FFFFFF",
-        borderTop: "1px solid #E0E0E0",
-        px: 3,
+        px: 5,
         py: 2,
-        boxShadow: "0 -4px 12px rgba(0, 0, 0, 0.08)",
         zIndex: 10,
       }}
     >
       {mode === "addToCart" && (
-        <Button
+        <CustomButton
           fullWidth
-          variant="contained"
+          text="Agregar a carrito"
+          onClick={onAddToCart}
+          variant="primary"
           size="large"
-          startIcon={<MdShoppingCart size={22} />}
+          startIcon={<MdShoppingCart size={26} />}
           sx={{
-            ...primaryButtonSx,
-            bgcolor: "#5FB574",
-            py: 2,
-            borderRadius: 3,
-            fontSize: 16,
             boxShadow: "0 4px 12px rgba(95, 181, 116, 0.3)",
             "&:hover": {
-              bgcolor: "#4E9A5F",
               boxShadow: "0 6px 16px rgba(95, 181, 116, 0.4)",
             },
-            "&:active": {
-              transform: "scale(0.98)",
-            },
           }}
-          onClick={onAddToCart}
-        >
-          Agregar a carrito
-        </Button>
+        />
       )}
 
       {mode === "edit" && (
-        <Button
+        <CustomButton
           fullWidth
-          variant="contained"
-          size="large"
-          sx={{
-            ...primaryButtonSx,
-            py: 2,
-            borderRadius: 3,
-            fontSize: 16,
-            "&:active": {
-              transform: "scale(0.98)",
-            },
-          }}
+          text="Modificar producto"
           onClick={onEdit}
-        >
-          Modificar producto
-        </Button>
+          variant="primary"
+          size="large"
+          startIcon={<MdEdit size={26} />}
+        />
       )}
     </Box>
   );

@@ -107,15 +107,15 @@ export default function AddToCartPopup({
           text={inCart ? "Actualizar cantidad" : "Agregar al carrito"}
           fullWidth
           onClick={onConfirm}
-          backgroundColor="#5A9A6E"
           sx={{ mt: 0 }}
+          
         />
         <CustomButton
           text="Cancelar"
           fullWidth
+          variant="danger"
           onClick={onClose}
-          backgroundColor="transparent"
-          sx={{ mt: 0, color: "text.secondary", boxShadow: "none", "&:hover": { backgroundColor: "action.hover" } }}
+          sx={{ mt: 0 }}
         />
       </Stack>
     </Dialog>

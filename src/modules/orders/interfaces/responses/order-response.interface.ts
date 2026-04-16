@@ -1,4 +1,4 @@
-import { CommerceType } from "@/shared/enums/commerce-type.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import { ImageResponse } from "@/shared/interfaces/image-response.interface";
 import { OrderStatus } from "../../enums/order-status.enum";
 import { PaymentMethod } from "../../enums/payment-method.enum";
