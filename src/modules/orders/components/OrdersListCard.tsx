@@ -59,7 +59,7 @@ export default function OrderList({ orders = []}: { orders: OrderResponse[] }) {
     if (orders.length === 0) {
     return (
       <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" gap={0.5}>
-        <img src="/public/emptyBag.png" alt="Sin pedidos" width={400} height={300}/>
+        <img src="/emptyBag.png" alt="Sin pedidos" width={400} height={300}/>
         <Typography fontSize={20} fontWeight={500} color="#2d2d2d" textAlign="center">
           Sin pedidos
         </Typography>
