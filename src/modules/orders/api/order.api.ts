@@ -1,7 +1,7 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
-import { OrderStatus } from "../enums/order-status.enum";
+import { UpdateOrderStatusRequest } from "../interfaces/requests/update-order-status.request";
 
 export const getClientOrders = async (
   clientId: string,
@@ -35,12 +35,11 @@ export const getCommerceOrderDetail = async (
 export const updateOrderStatus = async (
   commerceId: string,
   orderId: string,
-  newStatus: OrderStatus,
-  reason?: string
+  body: UpdateOrderStatusRequest
 ): Promise<void> => {
   await httpClient.patch(
     `/api/v1/commerces/${commerceId}/orders/${orderId}/status`,
-    { newStatus, ...(reason ? { reason } : {}) }
+    body
   );
 };
 
