@@ -1,5 +1,5 @@
 import { httpClient } from "@/shared/lib/httpClient";
-import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses";
+import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
 
 export const getClientOrders = async (
