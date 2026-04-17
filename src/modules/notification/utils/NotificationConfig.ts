@@ -40,24 +40,24 @@ export const STATUS_CONFIG: Record<NotificationStatus, StatusConfig> = {
   },
   CANCELLED: {
     label: 'Cancelado',
-    color: '#C62828',
+    color: '#cf4b4b',
     bgColor: '#FFEBEE',
     Icon: XCircle,
     defaultMessage: 'Tu pedido fue cancelado. Si tenés dudas, contactate con el comercio.',
   },
   NEW_ORDER: {
     label: 'Nuevo Pedido',
-    color: '#1B5E20',
+    color: '#27642b',
     bgColor: '#E8F5E9',
     Icon: ShoppingBag,
     defaultMessage: 'Recibiste un nuevo pedido. Revisalo y confirmalo a la brevedad.',
   },
   EXPIRING_PRODUCT: {
-    label: 'Producto por Vencer',
-    color: '#E65100',
+    label: 'Producto Vencido',
+    color: '#db6627',
     bgColor: '#FFF3E0',
     Icon: AlertTriangle,
-    defaultMessage: 'Uno de tus productos está próximo a vencer. Revisá tu inventario.',
+    defaultMessage: 'Uno de tus productos se venció y fue dado de baja automáticamente. Revisá tu inventario.',
   },
 };
 
