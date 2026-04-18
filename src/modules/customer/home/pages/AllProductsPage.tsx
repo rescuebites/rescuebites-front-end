@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { ProductCard } from "../../../catalog/components/ProductCard";
 import SearchBar from "@/modules/filterPanel/components/SearchBar";
 import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
+import FilterDrawer from "@/modules/filterPanel/components/FilterDrawer";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CommerceTypeChips from "../components/CommerceTypeChips";
 
@@ -109,6 +110,8 @@ export default function AllProductsPage() {
         onClose={() => setSelectedProductId(null)}
         productId={selectedProductId}
       />
+
+      <FilterDrawer />
     </Box>
   );
 }
