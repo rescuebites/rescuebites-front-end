@@ -41,6 +41,7 @@ export default function ProductDetailDialog({
   const navigate = useNavigate();
 
   useEffect(() => {
+    setAlreadyInCartOpen(false);
     if (open) setQuantity(1);
   }, [open]);
 
