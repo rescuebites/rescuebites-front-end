@@ -14,6 +14,7 @@ import RoutesProvider from "@/providers/RoutesProvider";
 import { ErrorBoundary } from "@/shared/components/ui/ErrorBoundary";
 import { SnackbarProvider } from "./SnackbarProvider";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import { NotificationProvider } from "@/modules/navbar/contexts/NotificationContext";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -29,22 +30,25 @@ export default function AppProvider() {
   return (
     <StrictMode>
       <QueryClientProvider client={queryClient}>
+                  <NotificationProvider>
+
         <BrowserRouter>
-          <CssBaseline />
-          {/*<ConfirmModal /> */}
+            <CssBaseline />
+            {/*<ConfirmModal /> */}
 
-          <ErrorBoundary fallback={<p>Algo salió mal</p>}>
-            <RoutesProvider />
+            <ErrorBoundary fallback={<p>Algo salió mal</p>}>
+              <RoutesProvider />
 
-            {/*<AuthProvider>
+              {/*<AuthProvider>
               <RoutesProvider/>
             </AuthProvider>*/}
-          </ErrorBoundary>
+            </ErrorBoundary>
 
-          <SnackbarProvider />
-
+            <SnackbarProvider />
           {/*{process.env.NODE_ENV === "development" && <ReactQueryDevtools />}*/}
         </BrowserRouter>
+                  </NotificationProvider>
+
       </QueryClientProvider>
     </StrictMode>
   );

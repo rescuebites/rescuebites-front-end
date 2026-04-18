@@ -12,6 +12,7 @@ import BusinessHoursPage from "@/modules/commerce/pages/BusinessHoursPage";
 import CommerceNavbar from "@/modules/navbar/components/CommerceNavbar";
 import CommerceProfilePage from "@/modules/commerce/pages/CommerceProfilePage";
 import CommerceOrderDetailPage from "@/modules/orders/pages/CommerceOrderDetailPage";
+import NotificationsPage from "@/modules/notifications/NotificationsPage";
 
 export function CommerceRoutes() {
   return (
@@ -43,6 +44,7 @@ export function CommerceRoutes() {
           path={"products/:productId/edit-product"}
           element={<EditProductPage />}
         />
+        <Route path="notifications" element={<NotificationsPage />} />
       </Route>
     </Routes>
   );
