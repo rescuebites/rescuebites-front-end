@@ -20,7 +20,10 @@ export const getProductsByPreferencesForClient = async (
       `/api/v1/clients/${clientId}/products/preferences`,
       { params: { page: 0, size } }
     );
-    return data?.content ?? [];
+    return (data?.content ?? []).map((product) => ({
+      ...product,
+      productImages: (product as any).images || product.productImages || [],
+    }));
   } catch (error) {
     console.error("Error fetching products by preferences for client:", error);
     return [];
