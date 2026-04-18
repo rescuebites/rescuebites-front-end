@@ -39,7 +39,8 @@ export function useSearch(): UseSearchReturn {
 
   const [commerces, setCommerces] = useState<SearchCommerceResponse[]>([]);
   const [products, setProducts] = useState<SearchProductResponse[]>([]);
-  const [page, setPage] = useState(0);
+  const [commercePage, setCommercePage] = useState(0);
+  const [productPage, setProductPage] = useState(0);
   const [commerceTotalPages, setCommerceTotalPages] = useState(0);
   const [productTotalPages, setProductTotalPages] = useState(0);
   const [totalCommerces, setTotalCommerces] = useState(0);
@@ -52,18 +53,22 @@ export function useSearch(): UseSearchReturn {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suggestionGenRef = useRef(0);
   const searchGenRef = useRef(0);
+  const abortSuggestionsRef = useRef<AbortController | null>(null);
   const abortSearchRef = useRef<AbortController | null>(null);
 
   const setQuery = useCallback((q: string) => {
     setQueryState(q);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!q.trim()) {
+      abortSuggestionsRef.current?.abort();
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
     debounceRef.current = setTimeout(async () => {
       const gen = ++suggestionGenRef.current;
+      abortSuggestionsRef.current?.abort();
+      abortSuggestionsRef.current = new AbortController();
       try {
         const data = await fetchSuggestions(q.trim(), locality ?? "");
         if (gen !== suggestionGenRef.current) return;
@@ -76,7 +81,12 @@ export function useSearch(): UseSearchReturn {
   }, [locality]);
 
   const runSearch = useCallback(
-    async (q: string, nextPage: number, append: boolean) => {
+    async (
+      q: string,
+      nextPage: number,
+      append: boolean,
+      target: "all" | "commerces" | "products",
+    ) => {
       if (!q.trim()) return;
       const gen = ++searchGenRef.current;
 
@@ -87,13 +97,22 @@ export function useSearch(): UseSearchReturn {
         const data = await fetchSearchResults(q.trim(), locality ?? "", nextPage, 10);
         if (gen !== searchGenRef.current) return;
 
-        setCommerces((prev) => append ? [...prev, ...data.commerces.content] : data.commerces.content);
-        setProducts((prev) => append ? [...prev, ...data.products.content] : data.products.content);
-        setPage(nextPage);
-        setCommerceTotalPages(data.commerces.totalPages);
-        setProductTotalPages(data.products.totalPages);
-        setTotalCommerces(data.commerces.totalElements);
-        setTotalProducts(data.products.totalElements);
+        if (target === "all" || target === "commerces") {
+          setCommerces((prev) =>
+            append ? [...prev, ...data.commerces.content] : data.commerces.content
+          );
+          setCommercePage(nextPage);
+          setCommerceTotalPages(data.commerces.totalPages);
+          setTotalCommerces(data.commerces.totalElements);
+        }
+        if (target === "all" || target === "products") {
+          setProducts((prev) =>
+            append ? [...prev, ...data.products.content] : data.products.content
+          );
+          setProductPage(nextPage);
+          setProductTotalPages(data.products.totalPages);
+          setTotalProducts(data.products.totalElements);
+        }
       } catch {
         if (gen === searchGenRef.current)
           setError("No se pudo completar la búsqueda. Intentá de nuevo.");
@@ -119,22 +138,22 @@ export function useSearch(): UseSearchReturn {
       setQueryState(term);
       setCommerces([]);
       setProducts([]);
-      runSearch(term, 0, false);
+      runSearch(term, 0, false, "all");
     },
     [query, runSearch]
   );
 
   const loadMoreCommerces = useCallback(() => {
-    const next = page + 1;
+    const next = commercePage + 1;
     if (next >= commerceTotalPages || isLoadingMore) return;
-    runSearch(confirmedQuery, next, true);
-  }, [confirmedQuery, page, commerceTotalPages, isLoadingMore, runSearch]);
+    runSearch(confirmedQuery, next, true, "commerces");
+  }, [confirmedQuery, commercePage, commerceTotalPages, isLoadingMore, runSearch]);
 
   const loadMoreProducts = useCallback(() => {
-    const next = page + 1;
+    const next = productPage + 1;
     if (next >= productTotalPages || isLoadingMore) return;
-    runSearch(confirmedQuery, next, true);
-  }, [confirmedQuery, page, productTotalPages, isLoadingMore, runSearch]);
+    runSearch(confirmedQuery, next, true, "products");
+  }, [confirmedQuery, productPage, productTotalPages, isLoadingMore, runSearch]);
 
   const clearSearch = useCallback(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -146,7 +165,8 @@ export function useSearch(): UseSearchReturn {
     setShowSuggestions(false);
     setCommerces([]);
     setProducts([]);
-    setPage(0);
+    setCommercePage(0);
+    setProductPage(0);
     setTotalCommerces(0);
     setTotalProducts(0);
     setError(null);
@@ -170,8 +190,8 @@ export function useSearch(): UseSearchReturn {
     products,
     isLoading,
     isLoadingMore,
-    hasMoreCommerces: page + 1 < commerceTotalPages,
-    hasMoreProducts: page + 1 < productTotalPages,
+    hasMoreCommerces: commercePage + 1 < commerceTotalPages,
+    hasMoreProducts: productPage + 1 < productTotalPages,
     totalCommerces,
     totalProducts,
     error,

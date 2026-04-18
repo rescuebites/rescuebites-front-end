@@ -103,7 +103,6 @@ function SectionHeader({ title, count }: { title: string; count: number }) {
 function EmptyState({ query }: { query: string }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 10, gap: 2 }}>
-      {/* <Typography fontSize={52}>🔍</Typography> */}
       <SearchX size={60} color="#2d2d2d" />
       <Typography fontWeight={700} fontSize={20} color="#2D2D2D">Sin resultados</Typography>
       <Typography color="#9E9E9E" textAlign="center" maxWidth={280}>
