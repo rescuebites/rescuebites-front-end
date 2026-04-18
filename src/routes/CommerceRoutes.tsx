@@ -17,6 +17,7 @@ import CommerceOrderDetailPage from "@/modules/orders/pages/CommerceOrderDetailP
 import { SalesReportPage } from "@/modules/reports/pages/SalesReportPage";
 import ListCommerceOrdersPage from "@/modules/orders/pages/ListCommerceOrdersPage";
 import ListCommerceProductsPage from "@/modules/products/pages/ListCommerceProductsPage";
+import NotificationsPage from "@/modules/notifications/NotificationsPage";
 
 export function CommerceRoutes() {
   const { isAuthenticated, commerceId, clientId } = useAuthStore();
@@ -62,6 +63,7 @@ export function CommerceRoutes() {
           path={"products/:productId/edit-product"}
           element={<EditProductPage />}
         />
+        <Route path="notifications" element={<NotificationsPage />} />
       </Route>
     </Routes>
   );

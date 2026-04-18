@@ -1,38 +1,37 @@
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import NavbarUI from "./NavbarUI";
 import { navbarRoutes } from "../config/routes";
+import { useNotifications } from "../contexts/NotificationContext";
 
 export default function CommerceNavbar() {
-  const [notificationCount, setNotificationCount] = useState(0);
+  const { notifications, addNotification } = useNotifications();
 
   useEffect(() => {
-    console.log("ELFECTO")
     const eventSource = new EventSource(
-      "http://localhost:8080/subscribe/commerce",
+      "http://localhost:8080/subscribe/commerce"
     );
-    console.log(eventSource);
+
     eventSource.addEventListener("notification", (event) => {
       const data = JSON.parse(event.data);
-      console.log("🔔 Notificación recibida:", data);
 
-      // Incrementar badge
-      setNotificationCount((prev) => prev + 1);
+      addNotification({
+        orderId: data.orderId,
+        message: data.message,
+        type: data.type,
+      });
     });
 
-    eventSource.onerror = (error) => {
-      console.error("❌ Error en SSE:", error);
+    eventSource.onerror = () => {
       eventSource.close();
     };
 
-    return () => {
-      eventSource.close();
-    };
+    return () => eventSource.close();
   }, []);
 
   return (
     <NavbarUI
       routes={navbarRoutes.commerce}
-      notificationCount={notificationCount}
+      notificationCount={notifications.length}
     />
   );
 }
