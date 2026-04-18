@@ -52,22 +52,18 @@ export function useSearch(): UseSearchReturn {
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const suggestionGenRef = useRef(0);
   const searchGenRef = useRef(0);
-  const abortSuggestionsRef = useRef<AbortController | null>(null);
   const abortSearchRef = useRef<AbortController | null>(null);
 
   const setQuery = useCallback((q: string) => {
     setQueryState(q);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!q.trim()) {
-      abortSuggestionsRef.current?.abort();
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
     debounceRef.current = setTimeout(async () => {
       const gen = ++suggestionGenRef.current;
-      abortSuggestionsRef.current?.abort();
-      abortSuggestionsRef.current = new AbortController();
       try {
         const data = await fetchSuggestions(q.trim(), locality ?? "");
         if (gen !== suggestionGenRef.current) return;

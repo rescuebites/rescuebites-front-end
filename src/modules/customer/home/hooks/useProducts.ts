@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals, getTopDealsByClient, getProductsByCommerceTypeForClient } from "../api/home.api";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
-import { PaginatedResponse } from "../interfaces/responses"; 
+import { PaginatedResponse } from "../interfaces/responses/paginated.response";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { useLocalityStore } from "./useLocalityStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
