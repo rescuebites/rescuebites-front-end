@@ -18,10 +18,14 @@ export function useLogin() {
   const { isPending, mutate } = useMutation({
     mutationFn: loginUser,
     mutationKey: [AUTH_LOGIN_KEY],
-    onSuccess: (authResponse) => {
+    onSuccess: async (authResponse) => {
       setServerError(null);
       login(authResponse);
-      fetchCart();
+      try {
+        await fetchCart();
+      } catch {
+        showMessage("No se pudo cargar el carrito.", "error");
+      }
       const payload = decodeJwtPayload(authResponse.token);
       if (payload?.commerceId) {
         navigate("/commerce");

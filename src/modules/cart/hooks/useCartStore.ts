@@ -28,8 +28,12 @@ export const useCartStore = create<CartStore>()((set, get) => ({
     const clientId = getClientId();
     if (!clientId) return;
     set({ loading: true });
-    const cart = await cartApi.getCart(clientId);
-    set({ cart, loading: false });
+    try {
+      const cart = await cartApi.getCart(clientId);
+      set({ cart });
+    } finally {
+      set({ loading: false });
+    }
   },
 
   addItem: async (productId, quantity) => {
