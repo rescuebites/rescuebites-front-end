@@ -21,11 +21,7 @@ export function useLogin() {
     onSuccess: async (authResponse) => {
       setServerError(null);
       login(authResponse);
-      try {
-        await fetchCart();
-      } catch {
-        showMessage("No se pudo cargar el carrito.", "error");
-      }
+      await fetchCart();
       const payload = decodeJwtPayload(authResponse.token);
       if (payload?.commerceId) {
         navigate("/commerce");

@@ -27,10 +27,13 @@ export const useCartStore = create<CartStore>()((set, get) => ({
   fetchCart: async () => {
     const clientId = getClientId();
     if (!clientId) return;
-    set({ loading: true });
+    set({ loading: true, cart: null });
     try {
       const cart = await cartApi.getCart(clientId);
       set({ cart });
+    } catch (error) {
+      console.error("Error al cargar el carrito:", error);
+      set({ cart: null });
     } finally {
       set({ loading: false });
     }
