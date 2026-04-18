@@ -41,6 +41,7 @@ export default function ProductDetailDialog({
   const navigate = useNavigate();
 
   useEffect(() => {
+    setAlreadyInCartOpen(false);
     if (open) setQuantity(1);
   }, [open]);
 
@@ -159,8 +160,8 @@ export default function ProductDetailDialog({
       <ConfirmModal
         open={alreadyInCartOpen}
         title="Producto ya en el carrito"
-        description="Este producto ya está en el carrito. ¿Desea incrementar la cantidad pedida?"
-        confirmText="Ir al carrito"
+        description="Este producto ya está en el carrito. Podés modificar la cantidad desde el carrito."
+        confirmText="Ver carrito"
         cancelText="Cancelar"
         onConfirm={() => { setAlreadyInCartOpen(false); onClose(); navigate("/cart"); }}
         onCancel={() => setAlreadyInCartOpen(false)}
