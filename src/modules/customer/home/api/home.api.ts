@@ -27,23 +27,6 @@ export const getProductsByPreferencesForClient = async (
   }
 };
 
-// Products ordered by price (no preference filter) — used when a specific
-// commerce type is selected and the preference endpoint has no type variant.
-export const getTopDealsForClient = async (
-  clientId: string,
-  size = 12
-): Promise<ProductResponse[]> => {
-  try {
-    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
-      `/api/v1/clients/${clientId}/products/ordered-by-price`,
-      { params: { page: 0, size } }
-    );
-    return data?.content ?? [];
-  } catch (error) {
-    console.error("Error fetching top deals for client:", error);
-    return [];
-  }
-};
 
 export const getProductsByCommerceTypeForClient = async (
   clientId: string,
