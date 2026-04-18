@@ -11,6 +11,7 @@ import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
+import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
 import { Box, CircularProgress } from "@mui/material";
