@@ -1,3 +1,4 @@
+import { httpClient } from "@/shared/lib/httpClient";
 import type {
   SearchSuggestion,
   SearchResultResponse,
@@ -8,27 +9,21 @@ const BASE_URL = "/api/v1/search";
 export const fetchSuggestions = async (
   q: string,
   locality: string,
-  signal: AbortSignal
 ): Promise<SearchSuggestion[]> => {
-  const res = await fetch(
-    `${BASE_URL}/suggestions?q=${encodeURIComponent(q)}&locality=${encodeURIComponent(locality)}`,
-    { signal }
-  );
-  if (!res.ok) throw new Error("Error fetching suggestions");
-  return res.json();
+  const { data } = await httpClient.get<SearchSuggestion[]>(`${BASE_URL}/suggestions`, {
+    params: { q, locality },
+  });
+  return data;
 };
 
 export const fetchSearchResults = async (
   q: string,
   locality: string,
-  productPage: number,
+  page: number,
   size: number,
-  signal: AbortSignal
 ): Promise<SearchResultResponse> => {
-  const res = await fetch(
-    `${BASE_URL}?q=${encodeURIComponent(q)}&locality=${encodeURIComponent(locality)}&page=${productPage}&size=${size}`,
-    { signal }
-  );
-  if (!res.ok) throw new Error("Error en la búsqueda");
-  return res.json();
+  const { data } = await httpClient.get<SearchResultResponse>(BASE_URL, {
+    params: { q, locality, page, size },
+  });
+  return data;
 };

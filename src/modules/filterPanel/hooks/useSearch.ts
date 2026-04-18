@@ -39,8 +39,7 @@ export function useSearch(): UseSearchReturn {
 
   const [commerces, setCommerces] = useState<SearchCommerceResponse[]>([]);
   const [products, setProducts] = useState<SearchProductResponse[]>([]);
-  const [commercePage, setCommercePage] = useState(0);
-  const [productPage, setProductPage] = useState(0);
+  const [page, setPage] = useState(0);
   const [commerceTotalPages, setCommerceTotalPages] = useState(0);
   const [productTotalPages, setProductTotalPages] = useState(0);
   const [totalCommerces, setTotalCommerces] = useState(0);
@@ -51,6 +50,8 @@ export function useSearch(): UseSearchReturn {
   const [error, setError] = useState<string | null>(null);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const suggestionGenRef = useRef(0);
+  const searchGenRef = useRef(0);
   const abortSuggestionsRef = useRef<AbortController | null>(null);
   const abortSearchRef = useRef<AbortController | null>(null);
 
@@ -58,52 +59,56 @@ export function useSearch(): UseSearchReturn {
     setQueryState(q);
     if (debounceRef.current) clearTimeout(debounceRef.current);
     if (!q.trim()) {
+      abortSuggestionsRef.current?.abort();
       setSuggestions([]);
       setShowSuggestions(false);
       return;
     }
     debounceRef.current = setTimeout(async () => {
-      if (abortSuggestionsRef.current) abortSuggestionsRef.current.abort();
+      const gen = ++suggestionGenRef.current;
+      abortSuggestionsRef.current?.abort();
       abortSuggestionsRef.current = new AbortController();
       try {
-        const data = await fetchSuggestions(q.trim(), locality ?? "", abortSuggestionsRef.current.signal);
+        const data = await fetchSuggestions(q.trim(), locality ?? "");
+        if (gen !== suggestionGenRef.current) return;
         setSuggestions(data);
         setShowSuggestions(data.length > 0);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name !== "AbortError") setSuggestions([]);
+      } catch {
+        if (gen === suggestionGenRef.current) setSuggestions([]);
       }
     }, DEBOUNCE_DELAY);
-  }, []);
+  }, [locality]);
 
   const runSearch = useCallback(
-    async (q: string, cPage: number, pPage: number, append: boolean) => {
+    async (q: string, nextPage: number, append: boolean) => {
       if (!q.trim()) return;
-      if (abortSearchRef.current) abortSearchRef.current.abort();
-      abortSearchRef.current = new AbortController();
+      const gen = ++searchGenRef.current;
 
       append ? setIsLoadingMore(true) : setIsLoading(true);
       setError(null);
 
       try {
-        const data = await fetchSearchResults(q.trim(), locality ?? "", pPage, 10, abortSearchRef.current.signal);
+        const data = await fetchSearchResults(q.trim(), locality ?? "", nextPage, 10);
+        if (gen !== searchGenRef.current) return;
 
         setCommerces((prev) => append ? [...prev, ...data.commerces.content] : data.commerces.content);
         setProducts((prev) => append ? [...prev, ...data.products.content] : data.products.content);
-        setCommercePage(cPage);
-        setProductPage(pPage);
+        setPage(nextPage);
         setCommerceTotalPages(data.commerces.totalPages);
         setProductTotalPages(data.products.totalPages);
         setTotalCommerces(data.commerces.totalElements);
         setTotalProducts(data.products.totalElements);
-      } catch (err: unknown) {
-        if (err instanceof Error && err.name !== "AbortError")
+      } catch {
+        if (gen === searchGenRef.current)
           setError("No se pudo completar la búsqueda. Intentá de nuevo.");
       } finally {
-        setIsLoading(false);
-        setIsLoadingMore(false);
+        if (gen === searchGenRef.current) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
     },
-    []
+    [locality]
   );
 
   const confirmSearch = useCallback(
@@ -111,29 +116,29 @@ export function useSearch(): UseSearchReturn {
       const term = (q ?? query).trim();
       if (!term) return;
       if (debounceRef.current) clearTimeout(debounceRef.current);
-      abortSuggestionsRef.current?.abort();
+      suggestionGenRef.current++;
       setSuggestions([]);
       setShowSuggestions(false);
       setConfirmedQuery(term);
       setQueryState(term);
       setCommerces([]);
       setProducts([]);
-      runSearch(term, 0, 0, false);
+      runSearch(term, 0, false);
     },
     [query, runSearch]
   );
 
   const loadMoreCommerces = useCallback(() => {
-    const next = commercePage + 1;
+    const next = page + 1;
     if (next >= commerceTotalPages || isLoadingMore) return;
-    runSearch(confirmedQuery, next, productPage, true);
-  }, [confirmedQuery, commercePage, commerceTotalPages, productPage, isLoadingMore, runSearch]);
+    runSearch(confirmedQuery, next, true);
+  }, [confirmedQuery, page, commerceTotalPages, isLoadingMore, runSearch]);
 
   const loadMoreProducts = useCallback(() => {
-    const next = productPage + 1;
+    const next = page + 1;
     if (next >= productTotalPages || isLoadingMore) return;
-    runSearch(confirmedQuery, commercePage, next, true);
-  }, [confirmedQuery, productPage, productTotalPages, commercePage, isLoadingMore, runSearch]);
+    runSearch(confirmedQuery, next, true);
+  }, [confirmedQuery, page, productTotalPages, isLoadingMore, runSearch]);
 
   const clearSearch = useCallback(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -145,6 +150,7 @@ export function useSearch(): UseSearchReturn {
     setShowSuggestions(false);
     setCommerces([]);
     setProducts([]);
+    setPage(0);
     setTotalCommerces(0);
     setTotalProducts(0);
     setError(null);
@@ -168,8 +174,8 @@ export function useSearch(): UseSearchReturn {
     products,
     isLoading,
     isLoadingMore,
-    hasMoreCommerces: commercePage + 1 < commerceTotalPages,
-    hasMoreProducts: productPage + 1 < productTotalPages,
+    hasMoreCommerces: page + 1 < commerceTotalPages,
+    hasMoreProducts: page + 1 < productTotalPages,
     totalCommerces,
     totalProducts,
     error,
