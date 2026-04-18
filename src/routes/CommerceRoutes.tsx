@@ -22,8 +22,6 @@ export function CommerceRoutes() {
         <Route index element={<CommerceDashboardPage />} />
         <Route path="profile" element={<CommerceProfilePage />} />
         <Route path="search" element={<SearchResultsPage />} />
-
-        <Route path="search" element={<SearchResultsPage />} />
         <Route path="products/expiring" element={<ExpiringProductsPage />} />
         <Route path="orders/:orderId" element={<CommerceOrderDetailPage />} />
       </Route>
