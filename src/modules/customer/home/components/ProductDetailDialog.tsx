@@ -1,6 +1,6 @@
 import { Dialog, IconButton, Box } from "@mui/material";
 import { MdClose } from "react-icons/md";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useProductDetail } from "../hooks/useProducts";
 import { useNavigate } from "react-router-dom";
 import LoadingState from "@/shared/components/LoadingState";
@@ -37,7 +37,12 @@ export default function ProductDetailDialog({
   onEdit,
 }: ProductDetailDialogProps) {
   const [quantity, setQuantity] = useState(1);
+  const [alreadyInCartOpen, setAlreadyInCartOpen] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (open) setQuantity(1);
+  }, [open]);
 
   const { getQuantity } = useCartStore();
   const quantityInCart = productId ? getQuantity(productId) : 0;
@@ -94,6 +99,10 @@ export default function ProductDetailDialog({
 
   const handleAddToCart = async () => {
     if (!productDetail) return;
+    if (quantityInCart > 0) {
+      setAlreadyInCartOpen(true);
+      return;
+    }
     const added = await cart.handleAddWithQuantity(quantity);
     if (added) onClose();
   };
@@ -146,6 +155,15 @@ export default function ProductDetailDialog({
       <ClosedCommercePopup
         open={cart.closedCommerceOpen}
         onClose={cart.closeClosedCommercePopup}
+      />
+      <ConfirmModal
+        open={alreadyInCartOpen}
+        title="Producto ya en el carrito"
+        description="Este producto ya está en el carrito. ¿Desea incrementar la cantidad pedida?"
+        confirmText="Ir al carrito"
+        cancelText="Cancelar"
+        onConfirm={() => { setAlreadyInCartOpen(false); onClose(); navigate("/cart"); }}
+        onCancel={() => setAlreadyInCartOpen(false)}
       />
 
       {/* Botón cerrar */}
