@@ -28,9 +28,20 @@ export function useClientSync() {
     }
   }, [isClient, clientProfile?.locality, setLocality]);
 
-  // True only while we're a client, haven't got locality yet, and the fetch
-  // is still in-flight. Once locality lands in the store this becomes false.
-  const isSyncing = isClient && !locality && isLoading;
+  // isSyncing stays true during two phases:
+  //  1. The profile fetch is still in-flight (!locality && isLoading)
+  //  2. The fetch just settled and the profile has a locality, but the
+  //     useEffect below hasn't written it to the store yet — this is the
+  //     render-timing gap where !locality && !isLoading && clientProfile?.locality
+  //     would otherwise cause LocalityGuard to redirect to /locality prematurely.
+  //
+  // Once setLocality() fires and locality enters the store, !locality becomes
+  // false and isSyncing resolves to false.
+  //
+  // If the fetch settles and the profile has NO locality, clientProfile?.locality
+  // is falsy so isSyncing becomes false and LocalityGuard redirects to /locality,
+  // prompting the client to complete their profile.
+  const isSyncing = isClient && !locality && (isLoading || !!clientProfile?.locality);
 
   return { isSyncing };
 }
