@@ -11,11 +11,39 @@ import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
-import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
+import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
+import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
+import { Box, CircularProgress } from "@mui/material";
 
+/**
+ * Guards routes that require a locality to be known.
+ *
+ * - Unauthenticated visitors without a locality → redirect to /locality
+ * - Authenticated clients:
+ *     - Still fetching profile (locality not yet synced) → show spinner
+ *     - Profile loaded but locality missing (edge case) → redirect to /locality
+ *     - Locality ready → render children
+ */
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
+  const { isAuthenticated, clientId } = useAuthStore();
+  const isClient = isAuthenticated && !!clientId;
+  // React Query deduplicates this fetch — no extra network call.
+  const { isSyncing } = useClientSync();
+
+  if (isClient) {
+    if (isSyncing) {
+      return (
+        <Box sx={{ minHeight: "100vh", display: "flex", justifyContent: "center", alignItems: "center" }}>
+          <CircularProgress sx={{ color: "#77A787" }} />
+        </Box>
+      );
+    }
+    // Profile loaded — if locality is still null the client profile is incomplete.
+    return locality ? <Outlet /> : <Navigate to="/locality" replace />;
+  }
+
   return locality ? <Outlet /> : <Navigate to="/locality" replace />;
 }
 

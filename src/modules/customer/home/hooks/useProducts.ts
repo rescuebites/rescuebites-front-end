@@ -1,35 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals, getTopDealsByClient, getProductsByCommerceTypeForClient } from "../api/home.api";
+import {
+  getProductDetail,
+  getProductsByCommerceType,
+  getProductsByCommerce,
+  getTopDeals,
+  getProductsByCommerceTypeForClient,
+  getProductsByPreferencesForClient,
+} from "../api/home.api";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { PaginatedResponse } from "../interfaces/responses/paginated.response";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { useLocalityStore } from "./useLocalityStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
-import { useFilterStore } from "../../../filterPanel/hooks/useFilterStore";
-import { PreferenceType } from "@/modules/client/enums/preference-type.enum";
-import { ProductCategory } from "@/modules/products/enums/product-category.enum";
-
-function matchesPreferences(product: ProductResponse, preferences: PreferenceType[]): boolean {
-  if (preferences.length === 0) return true;
-  if (!product.preferences || product.preferences.length === 0) return false;
-  return preferences.every((pref) => product.preferences!.includes(pref));
-}
-
-function matchesCategories(product: ProductResponse, categories: ProductCategory[]): boolean {
-  if (categories.length === 0) return true;
-  return categories.includes(product.category as unknown as ProductCategory);
-}
-
-function applyFilters(
-  products: ProductResponse[],
-  preferences: PreferenceType[],
-  categories: ProductCategory[],
-): ProductResponse[] {
-  return products.filter(
-    (p) => matchesPreferences(p, preferences) && matchesCategories(p, categories),
-  );
-}
 
 interface UseProductsParams {
   commerceId?: string;
@@ -39,27 +22,23 @@ interface UseProductsParams {
 
 
 export function useTopDeals(size = 6) {
+  const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
-  const clientId = useAuthStore((state) => state.clientId);
-  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
-  const categories = useFilterStore((state) => state.categories);
 
-  const query = useQuery<ProductResponse[], Error>({ 
-    queryKey: [TOP_DEALS_QUERY_KEY, clientId, locality, size],
+  const isClient = isAuthenticated && !!clientId;
+
+  return useQuery<ProductResponse[], Error>({
+    queryKey: [TOP_DEALS_QUERY_KEY, isClient ? `client-prefs-${clientId}` : locality, size],
     queryFn: () =>
-      clientId
-        ? getTopDealsByClient(clientId, size)
-        : getTopDeals(locality!, size),
+      isClient
+        ? getProductsByPreferencesForClient(clientId!, size)
+        : getTopDeals(locality || "Córdoba Capital", size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
-    enabled: !!locality,
+    // isClient already guarantees !!clientId; guests need a locality
+    enabled: isClient || !!locality,
     placeholderData: [],
   });
-
-  return {
-    ...query,
-    data: applyFilters(query.data ?? [], temporaryPreferences, categories),
-  };
 }
 
 //hook para obtener los productos de un comercio específico, si no se pasa commerceId, obtiene todos los productos
@@ -86,32 +65,30 @@ export const useProductDetail = (productId: string | null) => {
 
 //hook para obtener los productos filtrados por tipo de comercio seleccionado
 export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
+  const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
-  const clientId = useAuthStore((state) => state.clientId);
-  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
-  const categories = useFilterStore((state) => state.categories);
 
-  const query = useQuery<ProductResponse[], Error>({
-    queryKey: ['products-by-category', clientId, commerceType, locality, size],
+  const isClient = isAuthenticated && !!clientId;
+
+  return useQuery<ProductResponse[], Error>({
+    queryKey: ["products-by-category", commerceType, isClient ? `client-${clientId}` : locality, size],
     queryFn: () => {
-      if (clientId) {
+      if (isClient) {
+        // When a commerce-type chip is selected the backend doesn’t have a
+        // "/type/{type}/preferences" endpoint, so we use the type+price one.
+        // When nothing is selected we use /preferences to respect dietary prefs.
         return commerceType
-          ? getProductsByCommerceTypeForClient(clientId, commerceType, size)
-          : getTopDealsByClient(clientId, size);
+          ? getProductsByCommerceTypeForClient(clientId!, commerceType, 0, size)
+          : getProductsByPreferencesForClient(clientId!, size);
       }
-      if (!commerceType) {
-        return getTopDeals(locality!, size);
-      }
-      return getProductsByCommerceType(commerceType, locality!, 0, size);
+      return commerceType
+        ? getProductsByCommerceType(commerceType, locality || "Córdoba Capital", 0, size)
+        : getTopDeals(locality || "Córdoba Capital", size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
-    enabled: !!locality,
+    // isClient already guarantees !!clientId; guests need a locality
+    enabled: isClient || !!locality,
     placeholderData: [],
   });
-
-  return {
-    ...query,
-    data: applyFilters(query.data ?? [], temporaryPreferences, categories),
-  };
 }
