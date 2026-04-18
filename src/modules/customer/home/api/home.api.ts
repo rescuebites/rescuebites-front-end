@@ -31,31 +31,6 @@ export const getProductsByPreferencesForClient = async (
 };
 
 
-export const getProductsByCommerceTypeForClient = async (
-  clientId: string,
-  commerceTypeDisplay: CommerceTypeDisplay,
-  pageOrSize = 0,
-  size = 12
-): Promise<ProductResponse[]> => {
-  try {
-    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
-    const page = arguments.length >= 4 ? pageOrSize : 0;
-    const resolvedSize = arguments.length >= 4 ? size : pageOrSize || 12;
-
-    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
-      `/api/v1/clients/${clientId}/products/type/${commerceType}/ordered-by-price`,
-      { params: { page, size: resolvedSize } }
-    );
-    return (data?.content ?? []).map((product) => ({
-      ...product,
-      productImages: (product as any).images || product.productImages || [],
-    }));
-  } catch (error) {
-    console.error("Error fetching products by category for client:", error);
-    return [];
-  }
-};
-
 // ── Public endpoints (locality required) ─────────────────────────────────────
 
 // Productos destacados del home (ordenados por precio)
@@ -187,13 +162,14 @@ export const getTopDealsByClient = async (
 export const getProductsByCommerceTypeForClient = async (
   clientId: string,
   commerceTypeDisplay: CommerceTypeDisplay,
+  page = 0,
   size = 12
 ): Promise<ProductResponse[]> => {
   try {
     const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
     const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
       `/api/v1/clients/${clientId}/products/type/${commerceType}/ordered-by-price`,
-      { params: { page: 0, size } }
+      { params: { page, size } }
     );
     return (data?.content ?? []).map(product => ({
       ...product,
