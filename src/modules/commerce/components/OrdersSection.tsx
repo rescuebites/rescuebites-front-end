@@ -1,4 +1,5 @@
 import { Box, Stack } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import OrderCard from "./OrderCard";
 import { OrderSummaryForCommerceResponse } from "@/modules/orders/interfaces/responses/order-summary-commerce-response.interface";
 import EmptyState from "@/shared/components/EmptyState";
@@ -9,6 +10,8 @@ interface Props {
 }
 
 export default function OrdersSection({ orders }: Props) {
+  const navigate = useNavigate();
+
   if (orders.length === 0) {
     return <EmptyState message="No hay pedidos para mostrar" />;
   }
@@ -16,19 +19,18 @@ export default function OrdersSection({ orders }: Props) {
   return (
     <Box mt={3}>
       <Stack spacing={2}>
-        {orders.map((order) => {
-          return (
-            <OrderCard
-              key={order.orderId}
-              name={`${order.clientName} ${order.clientLastName}`}
-              price={Number(order.total)}
-              date={formatDateShort(order.createdAt)}
-              status={order.status}
-              image={order.clientImages?.[0]?.url}
-              orderNumber={order.orderNumber}
-            />
-          );
-        })}
+        {orders.map((order) => (
+          <OrderCard
+            key={order.orderId}
+            name={`${order.clientName} ${order.clientLastName}`}
+            price={Number(order.total)}
+            date={formatDateShort(order.createdAt)}
+            status={order.status}
+            image={order.clientImages?.[0]?.url}
+            orderNumber={order.orderNumber}
+            onClick={() => navigate(`/commerce/orders/${order.orderId}`)}
+          />
+        ))}
       </Stack>
     </Box>
   );

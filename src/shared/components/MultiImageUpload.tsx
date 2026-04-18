@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import ImageIcon from '@mui/icons-material/Image';
 import { ImageResponse } from '@/shared/interfaces/image-response.interface';
+import { ALLOWED_IMAGE_TYPES, MAX_IMAGE_SIZE } from '../lib/constants';
 
 interface MultiImageUploadProps {
   maxImages?: number;
@@ -45,6 +46,7 @@ export const MultiImageUpload = ({
     }));
     return [...existingPreviews, ...filePreviews];
   });
+  const [fileError, setFileError] = useState<string | null>(null);
 
   // Notificar al padre sobre archivos iniciales para sincronizar su estado
   useEffect(() => {
@@ -58,6 +60,22 @@ export const MultiImageUpload = ({
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const filesArray = Array.from(e.target.files);
+      setFileError(null);
+
+      // Validar tipo y tamaño antes de aceptar
+      const invalidType = filesArray.find((f) => !ALLOWED_IMAGE_TYPES.includes(f.type));
+      if (invalidType) {
+        setFileError('Las imágenes deben estar en formato JPG o PNG');
+        e.target.value = '';
+        return;
+      }
+      const tooLarge = filesArray.find((f) => f.size > MAX_IMAGE_SIZE);
+      if (tooLarge) {
+        setFileError('Cada imagen no debe superar los 2MB');
+        e.target.value = '';
+        return;
+      }
+
       const remainingSlots = maxImages - previews.length;
       const filesToAdd = filesArray.slice(0, remainingSlots);
 
@@ -71,9 +89,7 @@ export const MultiImageUpload = ({
       setPreviews(updatedPreviews);
       const newFiles = updatedPreviews.filter((p) => !p.isExisting).map((p) => p.file!);
       onChange(newFiles);
-      onImagesChange?.(); // Notificar cambio
-      
-      // Limpiar el input para permitir seleccionar el mismo archivo de nuevo y evitar duplicaciones
+      onImagesChange?.();
       e.target.value = '';
     }
   };
@@ -309,9 +325,9 @@ export const MultiImageUpload = ({
         </Box>
       )}
 
-      {error && (
+      {(fileError || error) && (
         <Typography color="error" variant="caption" display="block" mt={1}>
-          {error}
+          {fileError ?? error}
         </Typography>
       )}
     </Box>

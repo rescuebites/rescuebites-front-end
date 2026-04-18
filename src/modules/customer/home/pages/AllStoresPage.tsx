@@ -1,21 +1,22 @@
 import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useAllCommerces, useCommercesByType } from "../hooks/useCommerces";
-import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import { StoreCard } from "../components/StoreCard";
 import CategoryChips from "../components/CommerceTypeChips";
 import BackButton from "@/shared/components/ui/BackButton";
 
 export default function AllStoresPage() {
   const navigate = useNavigate();
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const categoryToFetch = selectedCategory || "Panadería";
+
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const categoryToFetch = selectedCommerceType || "Panadería";
 
   const { data: filteredData, isLoading: filteredLoading } = useCommercesByType(categoryToFetch);
   const { data: allData, isLoading: allLoading } = useAllCommerces();
 
-  const isLoading = selectedCategory ? filteredLoading : allLoading;
-  const commerces = selectedCategory
+  const isLoading = selectedCommerceType ? filteredLoading : allLoading;
+  const commerces = selectedCommerceType
     ? (filteredData?.content ?? [])
     : (allData?.content ?? []);
 
@@ -40,8 +41,8 @@ export default function AllStoresPage() {
       ) : commerces.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
           <Typography variant="h6" sx={{ color: "#2D2D2D" }}>
-            {selectedCategory
-              ? `No hay comercios de tipo "${selectedCategory}"`
+            {selectedCommerceType
+              ? `No hay comercios de tipo "${selectedCommerceType}"`
               : "No hay comercios disponibles"}
           </Typography>
         </Box>

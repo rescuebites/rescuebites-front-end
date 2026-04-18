@@ -8,8 +8,8 @@ export interface StatusStyle {
 
 export const OrderStatusStyles: Record<OrderStatus, StatusStyle> = {
   [OrderStatus.PENDING]: {
-    backgroundColor: "#D8F3DC",
-    textColor: "#2D6A4F",
+    backgroundColor: "#FFF3CD",
+    textColor: "#856404",
     label: "Pendiente",
   },
   [OrderStatus.CONFIRMED]: {
@@ -23,13 +23,13 @@ export const OrderStatusStyles: Record<OrderStatus, StatusStyle> = {
     label: "En preparación",
   },
   [OrderStatus.READY]: {
-    backgroundColor: "#E0E7FF",
-    textColor: "#4338CA",
+    backgroundColor: "#D4EDDA",
+    textColor: "#155724",
     label: "Listo para retirar",
   },
   [OrderStatus.COMPLETED]: {
-    backgroundColor: "#D1FAE5",
-    textColor: "#047857",
+    backgroundColor: "#E0E0E0",
+    textColor: "#424242",
     label: "Completado",
   },
   [OrderStatus.CANCELLED]: {

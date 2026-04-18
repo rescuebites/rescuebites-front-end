@@ -1,18 +1,19 @@
 import { type ReactNode } from "react";
 import { Box, Container, Stack, Typography } from "@mui/material";
-import SearchBar from "../../../catalog/components/SearchBar";
+import SearchBar from "../../../filterPanel/components/SearchBar";
 import CommerceTypeChips from "../components/CommerceTypeChips";
 import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
-import FilterDrawer from "../components/FilterDrawer";
+import FilterDrawer from "../../../filterPanel/components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
-import { useFilters } from "@/modules/customer/home/hooks/useFilters";
-import { useSearch } from "@/modules/catalog/hooks/useSearch"
+import { useSearch } from "@/modules/filterPanel/hooks/useSearch"
 import CustomTitle from "@/shared/components/CustomTitle";
+import { useFilters } from "../../../filterPanel/hooks/useFilters";
 
 
 export default function HomePage() {
-  const { applyFilters, hasActiveFilters } = useFilters();
+  useFilters();
+
   const {
     query,
     setQuery,
@@ -25,9 +26,6 @@ export default function HomePage() {
 
   const handleSearchChange = (value: string) => {
     setQuery(value); // esto ya dispara las suggestions internamente
-    if (hasActiveFilters) {
-      applyFilters({ searchQuery: value });
-    }
   };
 
   const handleSearch = (q?: string) => {
@@ -71,6 +69,7 @@ export default function HomePage() {
             suggestions={suggestions}
             showSuggestions={showSuggestions}
             onHideSuggestions={() => setShowSuggestions(false)}
+            onShowSuggestions={() => setShowSuggestions(true)}
           />
           <CustomTitle text="Tipos de comercio" variant="h5" color='#2D2D2D' align="left"/>
           <CommerceTypeChips />

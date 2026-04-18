@@ -4,9 +4,11 @@ import { createOrder } from "@/modules/orders/api/order.api";
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import type { CommerceCartSummary } from "../interfaces/responses/cart-response.interface";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function useCart() {
   const clientId = useAuthStore((state) => state.clientId);
+  const queryClient = useQueryClient();
 
   const {
     cart,
@@ -18,6 +20,7 @@ export function useCart() {
   } = useCartStore();
 
   const [confirming, setConfirming] = useState(false);
+  const [notes, setNotes] = useState("");
 
   const commerceSummaries: CommerceCartSummary[] = Object.values(
     cart?.commerceSummaries ?? {}
@@ -49,8 +52,9 @@ export function useCart() {
     if (!cart?.selectedPaymentMethod || !commerce || !clientId) return;
     setConfirming(true);
     try {
-      await createOrder(clientId, commerce.commerceId);
+      await createOrder(clientId, commerce.commerceId, notes || undefined);
       await clearCart();
+      queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
       // navigate("/orders");
     } catch (error) {
       console.error("Error al confirmar pedido:", error);
@@ -63,6 +67,8 @@ export function useCart() {
     cart,
     commerce,
     confirming,
+    notes,
+    setNotes,
     subtotal: cart?.subtotal ?? 0,
     serviceFee: cart?.serviceFee ?? 0,
     total: cart?.total ?? 0,
@@ -70,5 +76,6 @@ export function useCart() {
     handleUpdateQuantity,
     handleChangePaymentMethod,
     handleConfirmOrder,
+    handleClearCart: clearCart,
   };
 }
