@@ -23,10 +23,14 @@ export function useClientSync() {
   );
 
   useEffect(() => {
-    if (isClient && clientProfile?.locality) {
+    if (
+      isClient &&
+      clientProfile?.locality &&
+      clientProfile.locality !== locality
+    ) {
       setLocality(clientProfile.locality);
     }
-  }, [isClient, clientProfile?.locality, setLocality]);
+  }, [isClient, clientProfile?.locality, locality, setLocality]);
 
   // isSyncing stays true during two phases:
   //  1. The profile fetch is still in-flight (!locality && isLoading)
