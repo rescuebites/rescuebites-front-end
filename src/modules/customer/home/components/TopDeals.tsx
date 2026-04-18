@@ -1,7 +1,7 @@
 import { Box, CircularProgress, Typography } from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
-import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import type { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import ProductDetailDialog from "./ProductDetailDialog";
 import { ProductCard } from "../../../catalog/components/ProductCard";
@@ -11,9 +11,9 @@ export default function TopDeals() {
     null,
   );
 
-  const selectedCategory = useFilterStore((state) => state.selectedCategory); //lee el estado de la categoría seleccionada
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
   const { data: products, isLoading } = useProductsByCommerceType(
-    selectedCategory,
+    selectedCommerceType,
     12,
   ); //obtiene los productos filtrados por categoría, si no hay categoría seleccionada, obtiene los top deals
 
@@ -36,7 +36,7 @@ export default function TopDeals() {
 
   // Manejo de sin productos
   if (!products || products.length === 0) {
-    const isFiltering = !!selectedCategory;
+    const isFiltering = !!selectedCommerceType;
 
     return (
       <Box sx={{ textAlign: "center", py: 8 }}>

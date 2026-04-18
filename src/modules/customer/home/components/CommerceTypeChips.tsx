@@ -2,7 +2,7 @@ import { Box, Stack, Typography } from "@mui/material";
 import { ReactElement } from "react";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { getAllCommerceDisplayNames } from "@/shared/utils/commerce.utils";
-import {useFilterStore} from "../hooks/useFilterStoresAndProducts";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 
 // Íconos
 import { GiCroissant } from "react-icons/gi";
@@ -39,14 +39,14 @@ const commerceTypeData: Record<string, { icon: ReactElement; color: string }> = 
 
 export default function CommerceTypeChips() {
   
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const setSelectedCategory = useFilterStore((state) => state.setSelectedCategory);
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const setSelectedCommerceType = useCommerceTypeStore((state) => state.setSelectedCommerceType);
 
   const handleCategoryClick = (commerceType: CommerceTypeDisplay) => {
-    if (selectedCategory === commerceType) {
-      setSelectedCategory(null); // Deseleccionar si ya está seleccionado
+    if (selectedCommerceType === commerceType) {
+      setSelectedCommerceType(null);
     } else {
-      setSelectedCategory(commerceType);
+      setSelectedCommerceType(commerceType);
     }
   };
 
@@ -59,9 +59,19 @@ export default function CommerceTypeChips() {
         justifyContent="space-between" 
         alignItems="center"
       >
-        {selectedCategory && (
+        <Typography 
+          variant="h6" 
+          sx={{ 
+            fontWeight: 700, 
+            color: '#2D2D2D',
+            fontSize: { xs: 18, sm: 20 }
+          }}
+        >
+          Categorías
+        </Typography>
+        {selectedCommerceType && (
           <Typography 
-            onClick={() => setSelectedCategory(null)}
+            onClick={() => setSelectedCommerceType(null)}
             sx={{ 
               color: '#757575', 
               fontSize: 14,
@@ -93,7 +103,7 @@ export default function CommerceTypeChips() {
           <CategoryTile 
             key={cat} 
             category={cat}
-            active={selectedCategory === cat}
+            active={selectedCommerceType === cat}
             onClick={() => handleCategoryClick(cat)}
           />
         ))}

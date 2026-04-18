@@ -15,6 +15,7 @@ import { ProductDetailActions } from "./ProductDetailActions";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useAddToCart } from "@/modules/cart/hooks/useAddToCart";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
+import ClosedCommercePopup from "@/modules/cart/components/ClosedCommercePopup";
 
 type DialogMode = "addToCart" | "viewOnly" | "edit";
 
@@ -25,6 +26,7 @@ interface ProductDetailDialogProps {
   mode?: DialogMode;
   fixedQuantity?: number;
   onEdit?: () => void;
+  hideCommerceInfo?: boolean;
 }
 
 export default function ProductDetailDialog({
@@ -34,15 +36,16 @@ export default function ProductDetailDialog({
   mode = "addToCart",
   fixedQuantity,
   onEdit,
+  hideCommerceInfo = false,
 }: ProductDetailDialogProps) {
   const [quantity, setQuantity] = useState(1);
   const navigate = useNavigate();
 
   const { getQuantity } = useCartStore();
   const quantityInCart = productId ? getQuantity(productId) : 0;
-  const cart = useAddToCart(productId ?? "", quantityInCart);
 
   const { data: productDetail, isLoading } = useProductDetail(productId);
+  const cart = useAddToCart(productId ?? "", quantityInCart, productDetail?.commerceId, productDetail?.commerceName);
 
   if (!open || !productId) {
     return null;
@@ -132,6 +135,20 @@ export default function ProductDetailDialog({
         onConfirm={cart.navigateToLogin}
         onCancel={cart.closeLoginModal}
       />
+      <ConfirmModal
+        open={cart.commerceConflictOpen}
+        title="¿Cambiar comercio?"
+        description={`Tu carrito tiene productos de ${cart.cartCommerceName ?? "otro comercio"}. Si continuás, se vaciará el carrito y se agregarán productos de ${cart.productCommerceName ?? "este comercio"}.`}
+        confirmText="Vaciar y agregar"
+        cancelText="Cancelar"
+        variant="danger"
+        onConfirm={async () => { await cart.handleConflictConfirm(); onClose(); }}
+        onCancel={cart.closeCommerceConflict}
+      />
+      <ClosedCommercePopup
+        open={cart.closedCommerceOpen}
+        onClose={cart.closeClosedCommercePopup}
+      />
 
       {/* Botón cerrar */}
       <Box sx={{ position: "absolute", top: 16, right: 16, zIndex: 10 }}>
@@ -167,7 +184,7 @@ export default function ProductDetailDialog({
         />
 
         {/* Contenido del producto */}
-        <Box sx={{ px: 3, py: 3, pb: 5 }}>
+        <Box sx={{ px: 3, py: 3, pb: 2 }}>
           {/* Información del producto */}
           <ProductDetailInfo
             name={productDetail.name}
@@ -184,8 +201,8 @@ export default function ProductDetailDialog({
             }
           />
 
-          {/* Información del comercio (oculta en modo edición) */}
-          {mode !== "edit" && productDetail.commerceName && (
+          {/* Información del comercio (oculta en modo edición o cuando se solicita) */}
+          {mode !== "edit" && !hideCommerceInfo && productDetail.commerceName && (
             <ProductDetailCommerce
               commerceName={productDetail.commerceName}
               commerceOpeningHours={productDetail.commerceOpeningHours}

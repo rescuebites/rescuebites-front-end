@@ -9,8 +9,9 @@ import HomePage from "@/modules/customer/home/pages/HomePage";
 import StoresDetailPage from "@/modules/customer/home/pages/StoresDetailPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
-import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
+import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
+import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
 import { Box, CircularProgress } from "@mui/material";
@@ -67,7 +68,7 @@ export function CustomerRoutes() {
           {/* Protected — mostrar NotLoggedInScreen para invitados */}
           <Route element={<ProtectedRoute />}>
             <Route path="cart" element={<ShoppingCartPage />} />
-            <Route path="orders" element={null} />
+            <Route path="orders" element={<ListClientOrdersPage />} />
             <Route path="orders/:orderId" element={<OrderDetailPage />} />
             <Route path="notifications" element={null} />
             <Route path="profile" element={null} />

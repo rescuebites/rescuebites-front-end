@@ -25,7 +25,7 @@ export const ProductDetailInfo = ({
   categoryDisplayName,
 }: ProductDetailInfoProps) => {
   return (
-    <Stack spacing={2.5}>
+    <Stack spacing={1.2}>
       <Box>
         <CustomTitle
           text={name}

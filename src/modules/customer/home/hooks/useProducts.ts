@@ -24,6 +24,9 @@ interface UseProductsParams {
 export function useTopDeals(size = 6) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
+  const clientId = useAuthStore((state) => state.clientId);
+  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
 
@@ -39,6 +42,11 @@ export function useTopDeals(size = 6) {
     enabled: isClient || !!locality,
     placeholderData: [],
   });
+
+  return {
+    ...query,
+    data: applyFilters(query.data ?? [], temporaryPreferences, categories),
+  };
 }
 
 //hook para obtener los productos de un comercio específico, si no se pasa commerceId, obtiene todos los productos
@@ -67,6 +75,9 @@ export const useProductDetail = (productId: string | null) => {
 export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
+  const clientId = useAuthStore((state) => state.clientId);
+  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
 
@@ -91,4 +102,9 @@ export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | nu
     enabled: isClient || !!locality,
     placeholderData: [],
   });
+
+  return {
+    ...query,
+    data: applyFilters(query.data ?? [], temporaryPreferences, categories),
+  };
 }

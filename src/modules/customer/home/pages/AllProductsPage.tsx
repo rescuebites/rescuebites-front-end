@@ -1,19 +1,18 @@
 import { Box, Typography, Skeleton, Stack} from "@mui/material";
 import { useState } from "react";
 import { useProductsByCommerceType } from "../hooks/useProducts";
-import { useFilterStore } from "../hooks/useFilterStoresAndProducts";
-import CategoryChips from "../components/CommerceTypeChips";
+import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import ProductDetailDialog from "../components/ProductDetailDialog";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
-import { useFilters } from "@/modules/customer/home/hooks/useFilters";
 import { ProductCard } from "../../../catalog/components/ProductCard";
-import SearchBar from "@/modules/catalog/components/SearchBar";
-import { useSearch } from "@/modules/catalog/hooks/useSearch";
+import SearchBar from "@/modules/filterPanel/components/SearchBar";
+import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
+import FilterDrawer from "@/modules/filterPanel/components/FilterDrawer";
 import CustomTitle from "@/shared/components/CustomTitle";
+import CommerceTypeChips from "../components/CommerceTypeChips";
 
 export default function AllProductsPage() {
-  const { applyFilters, hasActiveFilters } = useFilters();
   
   const {
       query,
@@ -27,9 +26,6 @@ export default function AllProductsPage() {
   
     const handleSearchChange = (value: string) => {
       setQuery(value); // esto ya dispara las suggestions internamente
-      if (hasActiveFilters) {
-        applyFilters({ searchQuery: value });
-      }
     };
   
     const handleSearch = (q?: string) => {
@@ -43,8 +39,8 @@ export default function AllProductsPage() {
 
   const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
-  const selectedCategory = useFilterStore((state) => state.selectedCategory);
-  const { data: products, isLoading } = useProductsByCommerceType(selectedCategory, 100); // trae más productos que en home
+  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const { data: products, isLoading } = useProductsByCommerceType(selectedCommerceType, 100); // trae más productos que en home
 
   const navigate= useNavigate();
 
@@ -52,7 +48,7 @@ export default function AllProductsPage() {
     <Box sx={{ px: { xs: 2, sm: 4, md:8 },  mx: "auto" }}>
       {/* Botón volver para atras */}
       <Box sx={{ pt: { xs: 0.5, sm: 1, md: 1 }, mb:3 }}>
-        <BackButton onClick={() => navigate('/customer', { replace: true })}/>
+        <BackButton onClick={() => navigate('/', { replace: true })}/>
       </Box>
       {/* Buscador de productos */}
       <Stack spacing={{ xs: 3, sm: 4 }} sx={{mb:5}} >
@@ -64,6 +60,7 @@ export default function AllProductsPage() {
             suggestions={suggestions}
             showSuggestions={showSuggestions}
             onHideSuggestions={() => setShowSuggestions(false)}
+            onShowSuggestions={() => setShowSuggestions(true)}
           />
         </Stack>
       {/* Header */}
@@ -71,7 +68,7 @@ export default function AllProductsPage() {
 
       {/* Categorías */}
       <Box sx={{ mb: 5 }}>
-        <CategoryChips />
+        <CommerceTypeChips />
       </Box>
 
       {/* Contenido */}
@@ -79,9 +76,9 @@ export default function AllProductsPage() {
         <Skeleton />
       ) : !products || products.length === 0 ? (
         <Box sx={{ textAlign: "center", py: 8 }}>
-          <Typography variant="h6" sx={{ color: "#2D2D2D", fontWeight: "bold" }}>
-            {selectedCategory
-              ? `No hay productos en la categoría "${selectedCategory}"`
+          <Typography variant="h6" sx={{ color: "#2D2D2D" }}>
+            {selectedCommerceType
+              ? `No hay productos en la categoría "${selectedCommerceType}"`
               : "No hay productos disponibles"}
           </Typography>
         </Box>
@@ -113,6 +110,8 @@ export default function AllProductsPage() {
         onClose={() => setSelectedProductId(null)}
         productId={selectedProductId}
       />
+
+      <FilterDrawer />
     </Box>
   );
 }

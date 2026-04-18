@@ -244,7 +244,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             }}
           >
             {products.map((item: ProductResponse) => (
-              <ProductCard key={item.productId} product={item} />
+              <ProductCard key={item.productId} product={item} commerceId={commerceId} commerceName={commerce?.name} />
             ))}
           </Box>
         )}
@@ -254,7 +254,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 };
 
 // Componente separado para las tarjetas de producto
-function ProductCard({ product }: { product: ProductResponse }) {
+function ProductCard({ product, commerceId, commerceName }: { product: ProductResponse; commerceId: string; commerceName?: string }) {
   return (
     <Card
       sx={{
@@ -369,6 +369,8 @@ function ProductCard({ product }: { product: ProductResponse }) {
           unitPrice={product.discountedPrice}
           availableStock={product.stock}
           imageUrl={product.productImages?.[0]?.url}
+          commerceId={commerceId}
+          commerceName={commerceName}
         />
         </Box>
       </CardContent>

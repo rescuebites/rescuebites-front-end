@@ -121,7 +121,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
           <Typography sx={{ fontSize: 16, mt: 0.5 }}>
             Stock:{" "}
             <Box component="span" sx={{ color: "#E53935", fontWeight: 500 }}>
-              {product.stock <= 2 ? "Two left" : product.stock}
+              {product.stock <= 2 ? `Quedan ${product.stock}` : product.stock}
             </Box>
           </Typography>
         )}

@@ -71,9 +71,9 @@ const OrderPaymentSection = ({
       <CustomButton
         text="Cancelar Pedido"
         onClick={onCancelClick}
-        backgroundColor="#77A787"
         sx={{
           mt: 0,
+          backgroundColor: "#77A787",
           borderRadius: 3,
           py: 1.5,
           px: 4,

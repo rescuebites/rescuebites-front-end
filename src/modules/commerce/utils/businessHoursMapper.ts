@@ -2,11 +2,45 @@ import type { Day } from "../components/BusinessHours";
 import { INITIAL_DAYS } from "../components/BusinessHours";
 import type { BusinessHoursRequest, DayOfWeek } from "../interfaces/requests/business-hours.request";
 import type { BusinessHoursResponse } from "../interfaces/responses/business-hours.response";
+import { DAY_OF_WEEK_META } from "./constants";
 
 // Función para convertir string "HH:mm" a "HH:mm:ss" (LocalTime)
 export const toLocalTime = (time: string | null | undefined): string | null => {
   if (!time) return null;
   return `${time}:00`;
+};
+
+/**
+ * Validates business hours time logic (mirrors backend CommerceFacade validations).
+ * Returns an error message string if invalid, or null if all OK.
+ */
+export const validateBusinessHoursLogic = (days: Day[]): string | null => {
+  const openDays = days.filter((d) => !d.closed);
+
+  if (openDays.length === 0) {
+    return "Debe configurar al menos un turno de atención.";
+  }
+
+  for (const day of openDays) {
+    const label = day.label;
+    const m = day.shifts.morning;
+    const a = day.shifts.afternoon;
+
+    if (m.open >= m.close) {
+      return `${label}: la hora de apertura debe ser anterior a la hora de cierre`;
+    }
+
+    if (a.enabled) {
+      if (a.open <= m.close) {
+        return `${label}: la apertura del turno tarde debe ser posterior al cierre del turno mañana`;
+      }
+      if (a.open >= a.close) {
+        return `${label}: la apertura del turno tarde debe ser anterior al cierre del turno tarde`;
+      }
+    }
+  }
+
+  return null;
 };
 
 // Función para convertir Day[] a BusinessHoursRequest[] (para enviar al backend)
@@ -41,16 +75,6 @@ export const mapDaysToBusinessHours = (days: Day[]): BusinessHoursRequest[] => {
 // Función para convertir BusinessHoursResponse[] a Day[] (desde el backend)
 export const mapBusinessHoursToDay = (hours: BusinessHoursResponse[] = []): Day[] => {
   if (!hours || hours.length === 0) return INITIAL_DAYS;
-
-  const DAY_OF_WEEK_META: Record<DayOfWeek, { id: string; label: string }> = {
-    MONDAY: { id: "monday", label: "Lunes" },
-    TUESDAY: { id: "tuesday", label: "Martes" },
-    WEDNESDAY: { id: "wednesday", label: "Miércoles" },
-    THURSDAY: { id: "thursday", label: "Jueves" },
-    FRIDAY: { id: "friday", label: "Viernes" },
-    SATURDAY: { id: "saturday", label: "Sábado" },
-    SUNDAY: { id: "sunday", label: "Domingo" },
-  };
 
   const responseByDay = new Map<DayOfWeek, BusinessHoursResponse>();
   hours.forEach((h) => responseByDay.set(h.dayOfWeek, h));
