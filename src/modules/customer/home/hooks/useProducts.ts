@@ -1,10 +1,18 @@
 import { useQuery } from "@tanstack/react-query";
-import { getProductDetail, getProductsByCommerceType, getProductsByCommerce, getTopDeals } from "../api/home.api";
+import {
+  getProductDetail,
+  getProductsByCommerceType,
+  getProductsByCommerce,
+  getTopDeals,
+  getProductsByCommerceTypeForClient,
+  getProductsByPreferencesForClient,
+} from "../api/home.api";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
-import { PaginatedResponse } from "../interfaces/responses"; 
+import { PaginatedResponse } from "../interfaces/responses/paginated.response";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { useLocalityStore } from "./useLocalityStore";
+import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 
 interface UseProductsParams {
   commerceId?: string;
@@ -14,15 +22,23 @@ interface UseProductsParams {
 
 
 export function useTopDeals(size = 6) {
+  const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
 
-  return useQuery<ProductResponse[], Error>({ 
-    queryKey: [TOP_DEALS_QUERY_KEY, locality, size], //identificador único de esta query en cache (para evitar hacer otra petición si se llama de nuevo elmismo id)
-    queryFn: () => getTopDeals(locality || 'Córdoba Capital', size), //función que trae los datos, en este caso la función que hace la petición a la API
+  const isClient = isAuthenticated && !!clientId;
+
+  return useQuery<ProductResponse[], Error>({
+    // Include 'preferences' in the key so the cache is distinct from the
+    // unfiltered (public) version.
+    queryKey: [TOP_DEALS_QUERY_KEY, isClient ? `client-prefs-${clientId}` : locality, size],
+    queryFn: () =>
+      isClient
+        ? getProductsByPreferencesForClient(clientId!, size)
+        : getTopDeals(locality || "Córdoba Capital", size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
-    enabled: !!locality,
-    placeholderData: [], //valor por defecto si la query falla, por si no hay productos en la bd
+    enabled: isClient ? !!clientId : !!locality,
+    placeholderData: [],
   });
 }
 
@@ -48,21 +64,31 @@ export const useProductDetail = (productId: string | null) => {
   });
 };
 
-//hook para obtener los productos filtrados por tipo de coemrcio seleccionado
+//hook para obtener los productos filtrados por tipo de comercio seleccionado
 export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
+  const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
 
+  const isClient = isAuthenticated && !!clientId;
+
   return useQuery<ProductResponse[], Error>({
-    queryKey: ['products-by-category', commerceType, locality, size],
+    queryKey: ["products-by-category", commerceType, isClient ? `client-${clientId}` : locality, size],
     queryFn: () => {
-      if (!commerceType) {
-        return getTopDeals(locality || 'Córdoba Capital', size); //si no hay categoría seleccionada, muestra los top deals
+      if (isClient) {
+        // When a commerce-type chip is selected the backend doesn’t have a
+        // "/type/{type}/preferences" endpoint, so we use the type+price one.
+        // When nothing is selected we use /preferences to respect dietary prefs.
+        return commerceType
+          ? getProductsByCommerceTypeForClient(clientId!, commerceType, 0, size)
+          : getProductsByPreferencesForClient(clientId!, size);
       }
-      return getProductsByCommerceType(commerceType, locality || 'Córdoba Capital', 0, size);
+      return commerceType
+        ? getProductsByCommerceType(commerceType, locality || "Córdoba Capital", 0, size)
+        : getTopDeals(locality || "Córdoba Capital", size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
-    enabled: !!locality,
+    enabled: isClient ? !!clientId : !!locality,
     placeholderData: [],
   });
 }

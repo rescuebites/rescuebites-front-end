@@ -7,6 +7,68 @@ import { PaginatedResponse } from "../interfaces/responses/paginated.response";
 import { CommercePublicResponse } from "@/modules/commerce/interfaces/responses/commerce-public.response";
 import { CommerceResponse } from "@/modules/commerce/interfaces/responses/commerce.response";
 
+// ── Client-specific endpoints ─────────────────────────────────────────────────
+// Backend resolves locality + preferences from the client's own profile.
+
+// Products filtered by the client's stored preferences (vegan, celiac, etc.)
+export const getProductsByPreferencesForClient = async (
+  clientId: string,
+  size = 12
+): Promise<ProductResponse[]> => {
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/preferences`,
+      { params: { page: 0, size } }
+    );
+    return data?.content ?? [];
+  } catch (error) {
+    console.error("Error fetching products by preferences for client:", error);
+    return [];
+  }
+};
+
+// Products ordered by price (no preference filter) — used when a specific
+// commerce type is selected and the preference endpoint has no type variant.
+export const getTopDealsForClient = async (
+  clientId: string,
+  size = 12
+): Promise<ProductResponse[]> => {
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/ordered-by-price`,
+      { params: { page: 0, size } }
+    );
+    return data?.content ?? [];
+  } catch (error) {
+    console.error("Error fetching top deals for client:", error);
+    return [];
+  }
+};
+
+export const getProductsByCommerceTypeForClient = async (
+  clientId: string,
+  commerceTypeDisplay: CommerceTypeDisplay,
+  page = 0,
+  size = 12
+): Promise<ProductResponse[]> => {
+  try {
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/type/${commerceType}/ordered-by-price`,
+      { params: { page, size } }
+    );
+    return (data?.content ?? []).map((product) => ({
+      ...product,
+      productImages: (product as any).images || product.productImages || [],
+    }));
+  } catch (error) {
+    console.error("Error fetching products by category for client:", error);
+    return [];
+  }
+};
+
+// ── Public endpoints (locality required) ─────────────────────────────────────
+
 // Productos destacados del home (ordenados por precio)
 export const getTopDeals = async (locality: string, size = 12): Promise<ProductResponse[]> => {
   try {

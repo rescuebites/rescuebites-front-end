@@ -5,13 +5,18 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { CommerceRoutes } from "@/routes/CommerceRoutes";
 import LoadLocalityPage from "@/modules/catalog/pages/LoadLocalityPage";
 import { useLocalityStore } from "@/modules/customer/home/hooks/useLocalityStore";
+import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 
 export default function RoutesProvider() {
   const locality = useLocalityStore((s) => s.locality);
+  const { isAuthenticated, clientId } = useAuthStore();
+  // Authenticated clients always bypass the locality picker — their locality
+  // is resolved from their profile by useClientSync inside CustomerRoutes.
+  const needsLocality = !locality && !(isAuthenticated && !!clientId);
   return (
     <Routes>
-      {/* Si no hay localidad seleccionada, redirigir la raíz a /locality */}
-      {!locality && <Route path="/" element={<Navigate to="/locality" replace />} />}
+      {/* Only redirect unauthenticated visitors without a locality to /locality */}
+      {needsLocality && <Route path="/" element={<Navigate to="/locality" replace />} />}
       <Route path="/auth/*" element={<AuthRoutes />} />
       <Route path="/api/users/*" element={<UserRoutes />} />
 

@@ -12,14 +12,25 @@ import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
 import SearchResultsPage from "@/modules/catalog/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
+import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
 
+/**
+ * Authenticated clients bypass the locality requirement: their locality is
+ * fetched from their profile by useClientSync and synced into the store.
+ * Unauthenticated visitors still need to select a locality first.
+ */
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
-  return locality ? <Outlet /> : <Navigate to="/locality" replace />;
+  const { isAuthenticated, clientId } = useAuthStore();
+  const isClient = isAuthenticated && !!clientId;
+  return (isClient || !!locality) ? <Outlet /> : <Navigate to="/locality" replace />;
 }
 
 export function CustomerRoutes() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  // Sync the client's locality from their profile into the locality store
+  // so that commerce hooks (public endpoints) always use the correct locality.
+  useClientSync();
 
   return (
     <Routes>
