@@ -89,6 +89,7 @@ export default function EditCommercePage() {
   const hasPendingData = Object.keys(updateData).length > 0;
   useEffect(() => {
     if (!commerceData) return;
+    console.log(commerceData.email)
     const source = hasPendingData ? updateData : commerceData;
     reset({
       name: source.name ?? commerceData.name,
@@ -97,7 +98,7 @@ export default function EditCommercePage() {
       address: source.address ?? commerceData.address,
       locality: source.locality ?? commerceData.locality,
       phone: source.phone ?? commerceData.phone,
-      email: source.email ?? commerceData.email,
+      email: source.email ?? commerceData.email ?? "test04.t04@gmail.com",
       password: "",
       confirmPassword: "",
     } as any);
