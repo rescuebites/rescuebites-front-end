@@ -112,6 +112,48 @@ export const getCommerceDetail = async (commerceId: string): Promise<CommerceRes
   return data;
 };
 
+// Productos ordenados por precio filtrados por preferencias del cliente (autenticado)
+export const getTopDealsByClient = async (
+  clientId: string,
+  size = 12
+): Promise<ProductResponse[]> => {
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/ordered-by-price`,
+      { params: { page: 0, size } }
+    );
+    return (data?.content ?? []).map(product => ({
+      ...product,
+      productImages: (product as any).images || product.productImages || []
+    }));
+  } catch (error) {
+    console.error("Error fetching top deals by client:", error);
+    return [];
+  }
+};
+
+// Productos por tipo de comercio filtrados por preferencias del cliente (autenticado)
+export const getProductsByCommerceTypeForClient = async (
+  clientId: string,
+  commerceTypeDisplay: CommerceTypeDisplay,
+  size = 12
+): Promise<ProductResponse[]> => {
+  try {
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/type/${commerceType}/ordered-by-price`,
+      { params: { page: 0, size } }
+    );
+    return (data?.content ?? []).map(product => ({
+      ...product,
+      productImages: (product as any).images || product.productImages || []
+    }));
+  } catch (error) {
+    console.error("Error fetching products by commerce type for client:", error);
+    return [];
+  }
+};
+
 //Obtener productos por tipo de comercio seleccionado
 export const getProductsByCommerceType = async (
   commerceTypeDisplay: CommerceTypeDisplay,

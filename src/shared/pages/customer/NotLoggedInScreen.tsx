@@ -9,7 +9,7 @@ interface NotLoggedInScreenProps {
 }
 
 export default function NotLoggedInScreen({
-  imageSrc = "/../../../../public/NotLoggedInBag.png",
+  imageSrc = "/NotLoggedInBag.png",
   loginPath = "/auth/login",
 }: NotLoggedInScreenProps) {
   const navigate = useNavigate();
