@@ -28,8 +28,6 @@ export function useTopDeals(size = 6) {
   const isClient = isAuthenticated && !!clientId;
 
   return useQuery<ProductResponse[], Error>({
-    // Include 'preferences' in the key so the cache is distinct from the
-    // unfiltered (public) version.
     queryKey: [TOP_DEALS_QUERY_KEY, isClient ? `client-prefs-${clientId}` : locality, size],
     queryFn: () =>
       isClient
@@ -37,7 +35,8 @@ export function useTopDeals(size = 6) {
         : getTopDeals(locality || "Córdoba Capital", size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
-    enabled: isClient ? !!clientId : !!locality,
+    // isClient already guarantees !!clientId; guests need a locality
+    enabled: isClient || !!locality,
     placeholderData: [],
   });
 }
@@ -88,7 +87,8 @@ export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | nu
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
-    enabled: isClient ? !!clientId : !!locality,
+    // isClient already guarantees !!clientId; guests need a locality
+    enabled: isClient || !!locality,
     placeholderData: [],
   });
 }
