@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-//import CommerceDashboardPage from "@/modules/commerce/pages/CommerceDashboardPage";
+import CommerceDashboardPage from "@/modules/commerce/pages/CommerceDashboardPage";
 import SearchResultsPage from "@/modules/commerce/components/SearchResultsPage";
 import ExpiringProductsPage from "@/modules/products/pages/ExpiringProductsPage";
 import AppLayout from "@/shared/pages/layouts/AppLayout";
