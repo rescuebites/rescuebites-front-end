@@ -28,6 +28,7 @@ import { Box, CircularProgress } from "@mui/material";
  *     - Profile loaded but locality missing (edge case) → redirect to /locality
  *     - Locality ready → render children
  */
+import NotificationsPage from "@/modules/notifications/NotificationsPage";
 
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
@@ -64,7 +65,9 @@ export function CustomerRoutes() {
     <Routes>
       <Route
         element={
-          <AppLayout navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />} />
+          <AppLayout
+            navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />}
+          />
         }
       >
         <Route element={<LocalityGuard />}>
@@ -80,7 +83,7 @@ export function CustomerRoutes() {
             <Route path="cart" element={<ShoppingCartPage />} />
             <Route path="orders" element={<ListClientOrdersPage />} />
             <Route path="orders/:orderId" element={<OrderDetailPage />} />
-            <Route path="notifications" element={null} />
+            <Route path="notifications" element={<NotificationsPage />} />
             <Route path="profile" element={<ClientProfilePage />} />
           </Route>
         </Route>
