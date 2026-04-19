@@ -7,13 +7,24 @@ export default function CommerceNavbar() {
   const { notifications, setNotifications, addNotification, markAllAsRead } =
     useNotifications();
 
+  const getCommerceId = () => {
+    const raw = localStorage.getItem("auth-storage");
+    if (!raw) return null;
+
+    return JSON.parse(raw)?.state?.commerceId;
+  };
+
   useEffect(() => {
     // =========================
     // 1. TRAER NO LEÍDAS
     // =========================
     const fetchUnread = async () => {
       try {
-        const res = await fetch("http://localhost:8080/notifications/unread");
+        const commerceId = getCommerceId();
+
+        const res = await fetch(
+          `http://localhost:8080/notifications/unread?userId=${userId}`,
+        );
 
         const data = await res.json();
         console.log("DATA", data);
@@ -40,8 +51,10 @@ export default function CommerceNavbar() {
     // =========================
     // 2. SSE
     // =========================
+    const commerceId = getCommerceId();
+
     const eventSource = new EventSource(
-      "http://localhost:8080/subscribe/commerce",
+      `http://localhost:8080/subscribe/commerce?commerceId=${commerceId}`,
     );
 
     eventSource.onopen = () => {
@@ -73,9 +86,14 @@ export default function CommerceNavbar() {
   // =========================
   const handleOpenNotifications = async () => {
     try {
-      await fetch("http://localhost:8080/notifications/read/all", {
-        method: "PATCH",
-      });
+      const commerceId = getCommerceId();
+
+      await fetch(
+        `http://localhost:8080/notifications/read/all?userId=${commerceId}`,
+        {
+          method: "PATCH",
+        },
+      );
 
       markAllAsRead(); // 👈 ahora sí correcto
     } catch (err) {
