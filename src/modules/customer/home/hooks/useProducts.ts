@@ -1,3 +1,4 @@
+﻿import { useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 import {
   getProductDetail,
@@ -13,6 +14,8 @@ import { PaginatedResponse } from "../interfaces/responses/paginated.response";
 import { CommerceTypeDisplay } from "@/shared/utils/commerce-mapping";
 import { useLocalityStore } from "./useLocalityStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
+import { useFilterStore } from "@/modules/filterPanel/hooks/useFilterStore";
+import { ProductCategory } from "@/modules/products/enums/product-category.enum";
 
 interface UseProductsParams {
   commerceId?: string;
@@ -24,30 +27,47 @@ interface UseProductsParams {
 export function useTopDeals(size = 6) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
+  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
 
-  return useQuery<ProductResponse[], Error>({
+  const query = useQuery<ProductResponse[], Error>({
     queryKey: [TOP_DEALS_QUERY_KEY, isClient ? `client-prefs-${clientId}` : locality, size],
     queryFn: () =>
       isClient
         ? getProductsByPreferencesForClient(clientId!, size)
-        : getTopDeals(locality || "Córdoba Capital", size),
+        : getTopDeals(locality || "Cordoba Capital", size),
     staleTime: 5 * 60 * 1000,
     retry: 2,
-    // isClient already guarantees !!clientId; guests need a locality
     enabled: isClient || !!locality,
     placeholderData: [],
   });
+
+  const filteredData = useMemo(() => {
+    if (!query.data) return query.data;
+    let result = query.data;
+    if (temporaryPreferences.length > 0) {
+      result = result.filter((p) =>
+        temporaryPreferences.every((pref) => p.preferences?.includes(pref))
+      );
+    }
+    if (categories.length > 0) {
+      result = result.filter((p) => categories.includes(p.category as ProductCategory));
+    }
+    return result;
+  }, [query.data, temporaryPreferences, categories]);
+
+  return { ...query, data: filteredData };
 }
 
 //hook para obtener los productos de un comercio específico, si no se pasa commerceId, obtiene todos los productos
 export const useProducts = ({ commerceId, size = 20, page = 0 }: UseProductsParams = {}) => {
   return useQuery<PaginatedResponse<ProductResponse>, Error>({
     queryKey: ["products", { commerceId, size, page }],
-    queryFn: () => getProductsByCommerce(commerceId!, page, size), // El "!" indica que estamos seguros de que commerceId no es null aquí, ya que la query solo se ejecutará si commerceId existe
-    enabled: !!commerceId, // Solo ejecuta la query si commerceId existe
-    staleTime: 2 * 60 * 1000, // 2 minutos
+    queryFn: () => getProductsByCommerce(commerceId!, page, size),
+    enabled: !!commerceId,
+    staleTime: 2 * 60 * 1000,
     retry: 2,
   });
 };
@@ -57,9 +77,9 @@ export const useProducts = ({ commerceId, size = 20, page = 0 }: UseProductsPara
 export const useProductDetail = (productId: string | null) => {
   return useQuery({
     queryKey: ["product-detail", productId],
-    queryFn: () => getProductDetail(productId!), 
-    enabled: !!productId, 
-    staleTime: 5 * 60 * 1000, // Los datos se consideran frescos por 5 minutos
+    queryFn: () => getProductDetail(productId!),
+    enabled: !!productId,
+    staleTime: 5 * 60 * 1000,
   });
 };
 
@@ -67,28 +87,42 @@ export const useProductDetail = (productId: string | null) => {
 export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
+  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
 
-  return useQuery<ProductResponse[], Error>({
+  const query = useQuery<ProductResponse[], Error>({
     queryKey: ["products-by-category", commerceType, isClient ? `client-${clientId}` : locality, size],
     queryFn: () => {
       if (isClient) {
-        // When a commerce-type chip is selected the backend doesn’t have a
-        // "/type/{type}/preferences" endpoint, so we use the type+price one.
-        // When nothing is selected we use /preferences to respect dietary prefs.
         return commerceType
           ? getProductsByCommerceTypeForClient(clientId!, commerceType, 0, size)
           : getProductsByPreferencesForClient(clientId!, size);
       }
       return commerceType
-        ? getProductsByCommerceType(commerceType, locality || "Córdoba Capital", 0, size)
-        : getTopDeals(locality || "Córdoba Capital", size);
+        ? getProductsByCommerceType(commerceType, locality || "Cordoba Capital", 0, size)
+        : getTopDeals(locality || "Cordoba Capital", size);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
-    // isClient already guarantees !!clientId; guests need a locality
     enabled: isClient || !!locality,
     placeholderData: [],
   });
+
+  const filteredData = useMemo(() => {
+    if (!query.data) return query.data;
+    let result = query.data;
+    if (temporaryPreferences.length > 0) {
+      result = result.filter((p) =>
+        temporaryPreferences.every((pref) => p.preferences?.includes(pref))
+      );
+    }
+    if (categories.length > 0) {
+      result = result.filter((p) => categories.includes(p.category as ProductCategory));
+    }
+    return result;
+  }, [query.data, temporaryPreferences, categories]);
+
+  return { ...query, data: filteredData };
 }
