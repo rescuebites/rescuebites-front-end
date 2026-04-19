@@ -4,34 +4,93 @@ import { navbarRoutes } from "../config/routes";
 import { useNotifications } from "../contexts/NotificationContext";
 
 export default function CommerceNavbar() {
-  const { notifications, addNotification } = useNotifications();
+  const { notifications, setNotifications, addNotification, markAllAsRead } =
+    useNotifications();
 
   useEffect(() => {
+    // =========================
+    // 1. TRAER NO LEÍDAS
+    // =========================
+    const fetchUnread = async () => {
+      try {
+        const res = await fetch("http://localhost:8080/notifications/unread");
+
+        const data = await res.json();
+        console.log("DATA", data);
+        // 🔥 asegurar array SIEMPRE
+        const list = Array.isArray(data) ? data : (data.content ?? []);
+
+        const mapped = list.map((n: any) => ({
+          id: n.id,
+          orderId: n.data?.orderId,
+          message: n.message,
+          type: n.type,
+          read: n.read,
+        }));
+
+        setNotifications(mapped);
+      } catch (err) {
+        console.error("Error fetching notifications", err);
+        setNotifications([]); // fallback seguro
+      }
+    };
+
+    fetchUnread();
+
+    // =========================
+    // 2. SSE
+    // =========================
     const eventSource = new EventSource(
-      "http://localhost:8080/subscribe/commerce"
+      "http://localhost:8080/subscribe/commerce",
     );
+
+    eventSource.onopen = () => {
+      console.log("✅ SSE conectado");
+    };
 
     eventSource.addEventListener("notification", (event) => {
       const data = JSON.parse(event.data);
 
       addNotification({
+        id: crypto.randomUUID(),
         orderId: data.orderId,
         message: data.message,
         type: data.type,
+        isRead: false,
       });
     });
 
-    eventSource.onerror = () => {
+    eventSource.onerror = (err) => {
+      console.error("❌ SSE error", err);
       eventSource.close();
     };
 
     return () => eventSource.close();
   }, []);
 
+  // =========================
+  // 3. MARCAR COMO LEÍDAS
+  // =========================
+  const handleOpenNotifications = async () => {
+    try {
+      await fetch("http://localhost:8080/notifications/read/all", {
+        method: "PATCH",
+      });
+
+      markAllAsRead(); // 👈 ahora sí correcto
+    } catch (err) {
+      console.error("Error marking as read", err);
+    }
+  };
+
+  // 👇 SOLO CONTAR NO LEÍDAS
+  const unreadCount = notifications?.filter((n) => !n.isRead).length;
+
   return (
     <NavbarUI
       routes={navbarRoutes.commerce}
-      notificationCount={notifications.length}
+      notificationCount={unreadCount}
+      onOpenNotifications={handleOpenNotifications}
     />
   );
 }

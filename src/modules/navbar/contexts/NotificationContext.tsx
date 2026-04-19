@@ -3,32 +3,47 @@ import { createContext, useState, ReactNode, useContext } from "react";
 export type NotificationType = "Confirmed" | "Cancelled" | "Expired";
 
 export interface Notification {
+  id: string;
   orderId: string;
   message: string;
   type: NotificationType;
+  isRead: boolean;
 }
 
 interface NotificationContextProps {
   notifications: Notification[];
   addNotification: (n: Notification) => void;
-  clearNotifications: () => void;
+  setNotifications: (n: Notification[]) => void;
+  markAllAsRead: () => void;
 }
 
 const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
 
-// 👇 ESTE es el fix importante
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotificationsState] = useState<Notification[]>([]);
 
   const addNotification = (n: Notification) => {
-    setNotifications((prev) => [n, ...prev]);
+    setNotificationsState((prev) => [n, ...prev]);
   };
 
-  const clearNotifications = () => setNotifications([]);
+  const setNotifications = (n: Notification[]) => {
+    setNotificationsState(n);
+  };
+
+  const markAllAsRead = () => {
+    setNotificationsState((prev) =>
+      prev.map((n) => ({ ...n, isRead: true }))
+    );
+  };
 
   return (
     <NotificationContext.Provider
-      value={{ notifications, addNotification, clearNotifications }}
+      value={{
+        notifications,
+        addNotification,
+        setNotifications,
+        markAllAsRead,
+      }}
     >
       {children}
     </NotificationContext.Provider>
