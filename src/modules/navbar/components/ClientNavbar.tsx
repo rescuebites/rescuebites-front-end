@@ -15,7 +15,7 @@ export default function ClientNavbar() {
     const raw = localStorage.getItem("auth-storage");
     if (!raw) return null;
 
-    return JSON.parse(raw)?.state?.authResponse?.userId;
+    return JSON.parse(raw)?.state?.clientId;
   };
 
   useEffect(() => {

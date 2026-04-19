@@ -23,7 +23,7 @@ export default function CommerceNavbar() {
         const commerceId = getCommerceId();
 
         const res = await fetch(
-          `http://localhost:8080/notifications/unread?userId=${userId}`,
+          `http://localhost:8080/notifications/unread?userId=${commerceId}`,
         );
 
         const data = await res.json();

@@ -13,6 +13,7 @@ import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
+import NotificationsPage from "@/modules/notifications/NotificationsPage";
 
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
@@ -26,7 +27,9 @@ export function CustomerRoutes() {
     <Routes>
       <Route
         element={
-          <AppLayout navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />} />
+          <AppLayout
+            navbar={isAuthenticated ? <ClientNavbar /> : <PublicNavbar />}
+          />
         }
       >
         <Route element={<LocalityGuard />}>
@@ -42,7 +45,7 @@ export function CustomerRoutes() {
             <Route path="cart" element={<ShoppingCartPage />} />
             <Route path="orders" element={<ListClientOrdersPage />} />
             <Route path="orders/:orderId" element={<OrderDetailPage />} />
-            <Route path="notifications" element={null} />
+            <Route path="notifications" element={<NotificationsPage />} />
             <Route path="profile" element={null} />
           </Route>
         </Route>
