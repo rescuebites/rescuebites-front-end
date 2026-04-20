@@ -32,10 +32,12 @@ export const SalesReportPage = () => {
   const isLoading = reportQuery.isLoading;
   const isError = reportQuery.isError;
 
-  const chartData = (report?.topProducts ?? []).map((item, index) => ({
-    ...item,
-    fill: COLORS[index] ?? "#86EFAC",
-  }));
+  const chartData = (report?.topProducts ?? [])
+    .slice(0, 3)
+    .map((item, index) => ({
+      ...item,
+      fill: COLORS[index] ?? "#86EFAC",
+    }));
 
   const totalUnits = report?.totalProductsSold ?? 0;
 
