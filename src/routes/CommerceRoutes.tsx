@@ -12,6 +12,7 @@ import BusinessHoursPage from "@/modules/commerce/pages/BusinessHoursPage";
 import CommerceNavbar from "@/modules/navbar/components/CommerceNavbar";
 import CommerceProfilePage from "@/modules/commerce/pages/CommerceProfilePage";
 import CommerceOrderDetailPage from "@/modules/orders/pages/CommerceOrderDetailPage";
+import { SalesReportPage } from "@/modules/reports/pages/SalesReportPage";
 
 export function CommerceRoutes() {
   return (
@@ -25,6 +26,7 @@ export function CommerceRoutes() {
 
         <Route path="products/expiring" element={<ExpiringProductsPage />} />
         <Route path="orders/:orderId" element={<CommerceOrderDetailPage />} />
+        <Route path="sales" element={<SalesReportPage />} />
       </Route>
 
       <Route element={<AuthLayout />}>
