@@ -1,7 +1,5 @@
 import { Footer } from "@/modules/auth/components/Footer";
 import LoginForm from "@/modules/auth/components/LoginForm";
-import SearchResultsPage from "@/modules/commerce/components/SearchResultsPage";
-import { SalesReportPage } from "@/modules/reports/pages/SalesReportPage";
 
 export function LoginPage() {
   return (
@@ -17,9 +15,6 @@ export function LoginPage() {
         linkHrefClient={"/auth/register-client"}
         linkTextClient={"Registrate como cliente"}
       />
-
-      <SearchResultsPage />
-      <SalesReportPage/>
     </>
   );
 }
