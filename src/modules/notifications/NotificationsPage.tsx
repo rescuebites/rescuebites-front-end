@@ -3,19 +3,63 @@ import { useNotifications } from "../navbar/contexts/NotificationContext";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useNavigate } from "react-router-dom";
 
-const getStyles = (type: string) => {
-  switch (type) {
-    case "Confirmed":
-      return { color: "#4CAF50", icon: "💬" };
-    case "Cancelled":
-      return { color: "#F44336", icon: "❌" };
-    case "Expired":
+export type OrderStatus =
+  | "PENDING"
+  | "CONFIRMED"
+  | "PREPARING"
+  | "READY"
+  | "COMPLETED"
+  | "CANCELED"
+  | "EXPIRED";
+
+export const getLabel = (status: string) => {
+  switch (status) {
+    case "COMPLETED":
+      return "Completado";
+    case "READY":
+      return "Listo para retirar";
+    case "CONFIRMED":
+      return "Nuevo Pedido";
+    case "PENDING":
+      return "Pendiente";
+    case "PREPARING":
+      return "En preparación";
+    case "CANCELED":
+      return "Cancelado";
+    case "EXPIRED":
+      return "Producto vencido";
+    default:
+      return status;
+  }
+};
+
+const getStyles = (status: string) => {
+  switch (status) {
+    case "COMPLETED":
+      return { color: "#4CAF50", icon: "✅" };
+
+    case "READY":
+      return { color: "#4CAF50", icon: "🏪" };
+
+    case "CONFIRMED":
+      return { color: "#4CAF50", icon: "🧾" };
+
+    case "PENDING":
+      return { color: "#4CAF50", icon: "🧾" };
+
+    case "PREPARING":
+      return { color: "#FF9800", icon: "⏱️" };
+
+    case "EXPIRED":
       return { color: "#FF9800", icon: "⚠️" };
+
+    case "CANCELED":
+      return { color: "#F44336", icon: "❌" };
+
     default:
       return { color: "#757575", icon: "ℹ️" };
   }
 };
-
 export default function NotificationsPage() {
   const { notifications } = useNotifications();
   const navigate = useNavigate();
@@ -52,8 +96,7 @@ export default function NotificationsPage() {
           </Typography>
 
           <Typography variant="body2" color="text.secondary">
-            When you receive updates about your orders,
-            they will appear here.
+            When you receive updates about your orders, they will appear here.
           </Typography>
         </Box>
       )}
@@ -61,7 +104,7 @@ export default function NotificationsPage() {
       {/* ================= LIST ================= */}
       {!isEmpty &&
         notifications.map((n) => {
-          const styles = getStyles(n.type);
+          const styles = getStyles(n.status);
 
           return (
             <Paper
@@ -92,12 +135,10 @@ export default function NotificationsPage() {
 
               <Box flex={1}>
                 <Typography fontWeight={600} color={styles.color}>
-                  {n.type}
+                  {getLabel(n.status)}
                 </Typography>
 
-                <Typography variant="body2">
-                  Order #{n.orderId}
-                </Typography>
+                <Typography variant="body2">Order #{n.orderId}</Typography>
 
                 <Typography variant="body2" color="text.secondary">
                   {n.message}

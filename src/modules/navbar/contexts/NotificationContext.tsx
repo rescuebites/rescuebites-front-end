@@ -7,6 +7,7 @@ export interface Notification {
   orderId: string;
   message: string;
   type: NotificationType;
+  status: string;
   isRead: boolean;
 }
 
@@ -17,7 +18,9 @@ interface NotificationContextProps {
   markAllAsRead: () => void;
 }
 
-const NotificationContext = createContext<NotificationContextProps | undefined>(undefined);
+const NotificationContext = createContext<NotificationContextProps | undefined>(
+  undefined,
+);
 
 export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   const [notifications, setNotificationsState] = useState<Notification[]>([]);
@@ -31,9 +34,7 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const markAllAsRead = () => {
-    setNotificationsState((prev) =>
-      prev.map((n) => ({ ...n, isRead: true }))
-    );
+    setNotificationsState((prev) => prev.map((n) => ({ ...n, isRead: true })));
   };
 
   return (
@@ -53,7 +54,9 @@ export const NotificationProvider = ({ children }: { children: ReactNode }) => {
 export const useNotifications = () => {
   const ctx = useContext(NotificationContext);
   if (!ctx) {
-    throw new Error("useNotifications must be used inside NotificationProvider");
+    throw new Error(
+      "useNotifications must be used inside NotificationProvider",
+    );
   }
   return ctx;
 };
