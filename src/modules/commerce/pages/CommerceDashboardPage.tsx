@@ -66,6 +66,7 @@ export default function CustomerDashboardPage() {
             showSuggestions={showSuggestions}
             onHideSuggestions={() => setShowSuggestions(false)}
             onShowSuggestions={() => setShowSuggestions(true)}
+            showFilterButton={false}
           />
 
         <QuickActions />

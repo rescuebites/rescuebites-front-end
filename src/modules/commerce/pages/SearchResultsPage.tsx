@@ -2,7 +2,7 @@ import { Box, Typography, Stack, CircularProgress, Alert, Button } from "@mui/ma
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import SearchBar from "@/modules/filterPanel/components/SearchBar";
-import SearchResultCard from "./SearchResultCard";
+import SearchResultCard from "../components/SearchResultCard";
 import { useCommerceSearch } from "@/modules/filterPanel/hooks/useCommerceSearch";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import BackButton from "@/shared/components/ui/BackButton";
@@ -46,6 +46,7 @@ export default function SearchResultsPage() {
         showSuggestions={showSuggestions}
         onHideSuggestions={() => setShowSuggestions(false)}
         onShowSuggestions={() => setShowSuggestions(true)}
+        showFilterButton={false}
       />
 
       {error && (
