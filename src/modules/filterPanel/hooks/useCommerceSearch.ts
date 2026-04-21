@@ -111,6 +111,9 @@ export function useCommerceSearch(
       setQueryState(searchQuery);
       setPage(0);
       setProducts([]);
+      setTotalPages(0);
+      setTotalProducts(0);
+      setError(null);
       runSearch(searchQuery, 0, false);
     },
     [query, runSearch]
