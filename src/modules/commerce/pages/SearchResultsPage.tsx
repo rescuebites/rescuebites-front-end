@@ -99,7 +99,7 @@ export default function SearchResultsPage() {
         }}
       />
 
-      {hasMore && !isLoading && (
+      {hasMore && !isLoading && !error && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
           {isLoadingMore ? (
             <CircularProgress size={28} sx={{ color: "#77A787" }} />
