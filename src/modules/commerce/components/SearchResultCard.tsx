@@ -22,10 +22,10 @@ export default function SearchResultCard({ product, onClick }: Props) {
         display: "flex",
         gap: 2,
         alignItems: "center",
-        bgcolor: "#F6F6F6",
+        bgcolor: "#FFF",
         cursor: onClick ? "pointer" : "default",
-        "&:hover": onClick ? { bgcolor: "#EFEFEF" } : undefined,
-        transition: "background-color 0.15s",
+        "&:hover": { boxShadow: "0 4px 16px rgba(0,0,0,0.1)", borderColor: "#77A787" },
+        transition: "all 0.2s",
       }}
     >
       {/* Imagen */}
