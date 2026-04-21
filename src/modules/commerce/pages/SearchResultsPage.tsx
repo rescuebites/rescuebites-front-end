@@ -18,7 +18,7 @@ export default function SearchResultsPage() {
   const {
     query, setQuery,
     suggestions, showSuggestions, setShowSuggestions,
-    products, isLoading, hasMore, totalProducts, error,
+    products, isLoading, isLoadingMore, hasMore, totalProducts, error,
     loadMore, clearSearch, confirmSearch,
   } = useCommerceSearch(commerceId);
 
@@ -101,16 +101,20 @@ export default function SearchResultsPage() {
 
       {hasMore && !isLoading && (
         <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
-          <Button
-            variant="outlined"
-            onClick={loadMore}
-            sx={{
-              borderColor: "#77A787", color: "#77A787", borderRadius: 3, px: 4, fontWeight: 600,
-              "&:hover": { bgcolor: "#F0F7F2", borderColor: "#5a8f6a" },
-            }}
-          >
-            Cargar más
-          </Button>
+          {isLoadingMore ? (
+            <CircularProgress size={28} sx={{ color: "#77A787" }} />
+          ) : (
+            <Button
+              variant="outlined"
+              onClick={loadMore}
+              sx={{
+                borderColor: "#77A787", color: "#77A787", borderRadius: 3, px: 4, fontWeight: 600,
+                "&:hover": { bgcolor: "#F0F7F2", borderColor: "#5a8f6a" },
+              }}
+            >
+              Cargar más
+            </Button>
+          )}
         </Box>
       )}
     </Box>

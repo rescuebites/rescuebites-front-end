@@ -16,6 +16,7 @@ interface UseCommerceSearchReturn {
   setShowSuggestions: (v: boolean) => void;
   products: SearchProductResponse[];
   isLoading: boolean;
+  isLoadingMore: boolean;
   hasMore: boolean;
   totalProducts: number;
   error: string | null;
@@ -38,6 +39,7 @@ export function useCommerceSearch(
   const [totalProducts, setTotalProducts] = useState(0);
 
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoadingMore, setIsLoadingMore] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -72,7 +74,7 @@ export function useCommerceSearch(
     async (q: string, pageNum: number, append: boolean) => {
       if (!commerceId || !q.trim()) return;
       const gen = ++searchGenRef.current;
-      if (pageNum === 0) setIsLoading(true);
+      if (append) setIsLoadingMore(true); else setIsLoading(true);
       setError(null);
       try {
         const data: Page<SearchProductResponse> = await fetchCommerceSearchResults(
@@ -88,7 +90,10 @@ export function useCommerceSearch(
       } catch {
         if (gen === searchGenRef.current) setError("Error al buscar productos.");
       } finally {
-        if (gen === searchGenRef.current) setIsLoading(false);
+        if (gen === searchGenRef.current) {
+          setIsLoading(false);
+          setIsLoadingMore(false);
+        }
       }
     },
     [commerceId]
@@ -112,10 +117,10 @@ export function useCommerceSearch(
   );
 
   const loadMore = useCallback(() => {
-    if (page + 1 < totalPages) {
+    if (page + 1 < totalPages && !isLoading && !isLoadingMore) {
       runSearch(confirmedQuery, page + 1, true);
     }
-  }, [page, totalPages, confirmedQuery, runSearch]);
+  }, [page, totalPages, isLoading, isLoadingMore, confirmedQuery, runSearch]);
 
   const clearSearch = useCallback(() => {
     if (debounceRef.current) clearTimeout(debounceRef.current);
@@ -127,6 +132,8 @@ export function useCommerceSearch(
     setPage(0);
     setTotalPages(0);
     setTotalProducts(0);
+    setIsLoading(false);
+    setIsLoadingMore(false);
     setError(null);
   }, []);
 
@@ -138,6 +145,7 @@ export function useCommerceSearch(
     setShowSuggestions,
     products,
     isLoading,
+    isLoadingMore,
     hasMore: page + 1 < totalPages,
     totalProducts,
     error,
