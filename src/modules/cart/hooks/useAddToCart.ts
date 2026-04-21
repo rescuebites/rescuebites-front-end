@@ -62,10 +62,21 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
   }
 
   async function handleConflictConfirm() {
-    await clearCart();
-    const success = await doAddOrUpdate(pendingQty ?? qty);
+    const quantity = pendingQty ?? qty;
     setPendingQty(null);
-    if (success) setCommerceConflictOpen(false);
+
+    // Attempt the add BEFORE clearing. The backend validates commerce availability
+    // first, so if commerce2 is closed the error is thrown immediately and the
+    // commerce1 cart remains intact. doAddOrUpdate will open the closed-commerce
+    // popup and return false in that case.
+    const success = await doAddOrUpdate(quantity);
+    if (!success) return;
+
+    // Commerce2 is open. The cart now has mixed items (commerce1 + commerce2).
+    // Clear everything, then re-add the commerce2 item for a clean cart.
+    await clearCart();
+    await doAddOrUpdate(quantity);
+    setCommerceConflictOpen(false);
   }
 
   async function doAddOrUpdate(quantity: number): Promise<boolean> {

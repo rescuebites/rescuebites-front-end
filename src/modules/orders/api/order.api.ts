@@ -1,14 +1,15 @@
 import { httpClient } from "@/shared/lib/httpClient";
 import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 import { UpdateOrderStatusRequest } from "../interfaces/requests/update-order-status.request";
 
 export const getClientOrders = async (
   clientId: string,
   page = 0,
   size = 20
-): Promise<PaginatedResponse<OrderResponse>> => {
-  const { data } = await httpClient.get<PaginatedResponse<OrderResponse>>(
+): Promise<PaginatedResponse<OrderSummaryForClientResponse>> => {
+  const { data } = await httpClient.get<PaginatedResponse<OrderSummaryForClientResponse>>(
     `/api/v1/clients/${clientId}/orders`,
     { params: { page, size, sort: "createdAt,desc" } }
   );
