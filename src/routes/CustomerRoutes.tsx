@@ -9,7 +9,7 @@ import HomePage from "@/modules/customer/home/pages/HomePage";
 import StoresDetailPage from "@/modules/customer/home/pages/StoresDetailPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
-import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
+import SearchResultsPage from "@/modules/customer/home/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";

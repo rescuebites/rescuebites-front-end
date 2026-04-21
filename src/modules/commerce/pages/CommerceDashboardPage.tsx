@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import SearchBar from "@/shared/components/layout/SearchBar";
+import SearchBar from "@/modules/filterPanel/components/SearchBar";
 import ProductsSection from "../components/ProductsSection";
 import OrdersSection from "../components/OrdersSection";
 import QuickActions from "../components/QuickActions";
@@ -11,13 +11,28 @@ import {
 } from "../hooks/useCommerceData";
 import LoadingState from "@/shared/components/LoadingState";
 import CustomTitle from "@/shared/components/CustomTitle";
+import { useCommerceSearch } from "@/modules/filterPanel/hooks/useCommerceSearch";
+import { useNavigate } from "react-router-dom";
 
 export default function CustomerDashboardPage() {
   const commerceId = useAuthStore((state) => state.commerceId);
+  const navigate = useNavigate();
   const { data: ordersData, isLoading: ordersLoading } =
     useCommerceOrders(commerceId);
   const { data: productsData, isLoading: productsLoading } =
     useCommerceProductsByStock(commerceId);
+
+  const {
+    query, setQuery,
+    suggestions, showSuggestions, setShowSuggestions,
+    clearSearch,
+  } = useCommerceSearch(commerceId);
+
+  const handleSearch = (q?: string) => {
+    const searchQuery = (q ?? query).trim();
+    if (!searchQuery) return;
+    navigate(`search?q=${encodeURIComponent(searchQuery)}`);
+  };
 
   if (!commerceId) {
     return (
@@ -42,7 +57,16 @@ export default function CustomerDashboardPage() {
           mx: "auto",
         }}
       >
-        <SearchBar onSearchChange={() => {}} />
+        <SearchBar
+            query={query}
+            onQueryChange={setQuery}
+            onSearch={handleSearch}
+            onClear={clearSearch}
+            suggestions={suggestions}
+            showSuggestions={showSuggestions}
+            onHideSuggestions={() => setShowSuggestions(false)}
+            onShowSuggestions={() => setShowSuggestions(true)}
+          />
 
         <QuickActions />
       </Box>
