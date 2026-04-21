@@ -9,7 +9,7 @@ interface Props {
 }
 
 export default function SearchResultCard({ product, onClick }: Props) {
-  const image = product.productImages?.[0]?.url;
+  const image = product.productImages?.[0]?.url || "/placeholder.jpg";
   const expiresLabel = product.expirationDate ? formatDateShort(product.expirationDate) : null;
 
   return (

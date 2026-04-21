@@ -1,4 +1,4 @@
-﻿import { Box } from "@mui/material";
+import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
 import { CreateProductSchema } from "../schemas/createProductSchema";

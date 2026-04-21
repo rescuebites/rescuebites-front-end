@@ -14,7 +14,7 @@ import CustomTitle from "@/shared/components/CustomTitle";
 import { useCommerceSearch } from "@/modules/filterPanel/hooks/useCommerceSearch";
 import { useNavigate } from "react-router-dom";
 
-export default function CustomerDashboardPage() {
+export default function CommerceDashboardPage() {
   const commerceId = useAuthStore((state) => state.commerceId);
   const navigate = useNavigate();
   const { data: ordersData, isLoading: ordersLoading } =
