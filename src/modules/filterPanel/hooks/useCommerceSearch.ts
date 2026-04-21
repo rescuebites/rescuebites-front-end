@@ -98,6 +98,9 @@ export function useCommerceSearch(
     (q?: string) => {
       const searchQuery = (q ?? query).trim();
       if (!searchQuery) return;
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      suggestionGenRef.current++;
+      setSuggestions([]);
       setShowSuggestions(false);
       setConfirmedQuery(searchQuery);
       setQueryState(searchQuery);
