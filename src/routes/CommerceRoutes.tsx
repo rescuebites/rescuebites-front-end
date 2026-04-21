@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import CommerceDashboardPage from "@/modules/commerce/pages/CommerceDashboardPage";
-import SearchResultsPage from "@/modules/commerce/components/SearchResultsPage";
+import SearchResultsPage from "@/modules/commerce/pages/SearchResultsPage";
 import ExpiringProductsPage from "@/modules/products/pages/ExpiringProductsPage";
 import AppLayout from "@/shared/pages/layouts/AppLayout";
 import { CreateProductPage } from "@/modules/products/pages/CreateProductPage";

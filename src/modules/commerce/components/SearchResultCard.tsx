@@ -1,42 +1,45 @@
 import { Box, Typography, Paper, Stack } from "@mui/material";
+import type { SearchProductResponse } from "@/modules/filterPanel/interfaces/responses/search-response.interface";
 import ProductStatusBadge from "./ProductStatusBadge";
+import { formatDateShort } from "@/shared/utils/dateFormat";
 
 interface Props {
-  product: {
-    name: string;
-    price: number;
-    originalPrice: number;
-    discount: number;
-    expiresIn: string;
-    stock: number;
-    image: string;
-  };
+  product: SearchProductResponse;
+  onClick?: () => void;
 }
 
-export default function SearchResultCard({ product }: Props) {
+export default function SearchResultCard({ product, onClick }: Props) {
+  const image = product.productImages?.[0]?.url || "/placeholder.jpg";
+  const expiresLabel = product.expirationDate ? formatDateShort(product.expirationDate) : null;
+
   return (
     <Paper
       elevation={0}
+      onClick={onClick}
       sx={{
         p: 1.5,
         borderRadius: 3,
         display: "flex",
         gap: 2,
         alignItems: "center",
-        bgcolor: "#F6F6F6",
+        bgcolor: "#FFF",
+        cursor: onClick ? "pointer" : "default",
+        "&:hover": { boxShadow: "0 4px 16px rgba(0,0,0,0.1)", borderColor: "#77A787" },
+        transition: "all 0.2s",
       }}
     >
       {/* Imagen */}
       <Box sx={{ position: "relative" }}>
         <Box
           component="img"
-          src={product.image}
+          src={image}
           alt={product.name}
           sx={{
             width: 80,
             height: 80,
             borderRadius: 2,
             objectFit: "cover",
+            bgcolor: "#E0E0E0",
           }}
         />
 
@@ -55,7 +58,7 @@ export default function SearchResultCard({ product }: Props) {
             borderRadius: 2,
           }}
         >
-          {product.discount}%
+          {product.discountPercentage}%
         </Box>
       </Box>
 
@@ -66,13 +69,15 @@ export default function SearchResultCard({ product }: Props) {
         </Typography>
 
         <Stack direction="row" spacing={1} mt={0.5} mb={0.5}>
-          <ProductStatusBadge text={`Expires in ${product.expiresIn}`} variant="expire" />
-          <ProductStatusBadge text={`${product.stock} Left`} variant="stock" />
+          {expiresLabel && (
+            <ProductStatusBadge text={`Vence: ${expiresLabel}`} variant="expire" />
+          )}
+          <ProductStatusBadge text={`${product.stock} restantes`} variant="stock" />
         </Stack>
 
         <Stack direction="row" spacing={1} alignItems="center">
           <Typography fontWeight={700} color="#2D6A4F">
-            ${product.price.toFixed(2)}
+            ${product.discountedPrice.toFixed(2)}
           </Typography>
 
           <Typography

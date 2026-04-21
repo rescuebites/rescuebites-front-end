@@ -41,7 +41,7 @@ export const registerClientSchema = z
     password: z
       .string()
       .min(8, "La contraseña debe tener al menos 8 caracteres")
-      .max(22, "La contraseña no debe exceder los 32 caracteres")
+      .max(22, "La contraseña no debe exceder los 22 caracteres")
       .regex(
         /[A-Z]/,
         "La contraseña debe contener al menos una letra mayúscula"

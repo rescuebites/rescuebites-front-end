@@ -28,6 +28,7 @@ interface SearchBarProps {
   showSuggestions: boolean;
   onHideSuggestions: () => void;
   onShowSuggestions: () => void;
+  showFilterButton?: boolean;
 }
 
 export default function SearchBar({
@@ -39,6 +40,7 @@ export default function SearchBar({
   showSuggestions,
   onHideSuggestions,
   onShowSuggestions,
+  showFilterButton = true,
 }: SearchBarProps) {
   const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
   const activeFiltersCount = getActiveFiltersCount();
@@ -217,7 +219,7 @@ export default function SearchBar({
         </Box>
 
         {/* Filter button */}
-        <IconButton
+        {showFilterButton && <IconButton
           onClick={openFilterDrawer}
           sx={{
             bgcolor: "#FFF",
@@ -245,7 +247,7 @@ export default function SearchBar({
           >
             <TuneIcon sx={{ color: "#77A787", fontSize: 24 }} />
           </Badge>
-        </IconButton>
+        </IconButton>}
       </Box>
     </ClickAwayListener>
   );

@@ -9,19 +9,19 @@ import {
   Paper,
   Stack,
 } from "@mui/material";
-import { useSearch } from "../hooks/useSearch";
-import SearchBar from "../components/SearchBar";
-import { ProductCard } from "../../catalog/components/ProductCard";
+import { useSearch } from "../../../filterPanel/hooks/useSearch";
+import SearchBar from "../../../filterPanel/components/SearchBar";
+import { ProductCard } from "../../../catalog/components/ProductCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import BackButton from "@/shared/components/ui/BackButton";
-import type { SearchCommerceResponse } from "../interfaces/responses/search-response.interface";
+import type { SearchCommerceResponse } from "../../../filterPanel/interfaces/responses/search-response.interface";
 import { SearchX, Store } from "lucide-react";
 import { CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
 import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 import CustomTitle from "@/shared/components/CustomTitle";
 import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
-import FilterDrawer from "../components/FilterDrawer";
+import FilterDrawer from "../../../filterPanel/components/FilterDrawer";
 
 
 
