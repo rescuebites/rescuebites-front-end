@@ -1,7 +1,7 @@
-import { Store, Clock } from "lucide-react";
+import { User, Clock } from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
 import CustomTitle from "@/shared/components/CustomTitle";
-import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
+import { OrderSummaryForCommerceResponse } from "../interfaces/responses/order-summary-commerce-response.interface";
 import { getShortOrderNumber } from "../utils/order.utils";
 import { OrderStatusStyles } from "../config/order-status-styles.config";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
@@ -9,17 +9,21 @@ import { formatDateWithTime } from "@/shared/utils/dateFormat";
 import { useNavigate } from "react-router-dom";
 import { formatCurrency } from "@/shared/utils/currency.utils";
 
-function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
+function CommerceOrderCard({
+  order,
+}: {
+  order: OrderSummaryForCommerceResponse;
+}) {
   const style = OrderStatusStyles[order.status];
   const bg = style.backgroundColor;
   const color = style.textColor;
-  const commerceImageUrl = order.commerceImages?.[0]?.url;
+  const clientImageUrl = order.clientImages?.[0]?.url;
   const navigate = useNavigate();
 
   return (
     <Card
       variant="outlined"
-      onClick={() => navigate(`/orders/${order.orderId}`)}
+      onClick={() => navigate(`/commerce/orders/${order.orderId}`)}
       sx={{
         borderRadius: 3,
         maxWidth: 1500,
@@ -50,19 +54,19 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
                 flexShrink: 0,
               }}
             >
-              {commerceImageUrl ? (
+              {clientImageUrl ? (
                 <img
-                  src={commerceImageUrl}
-                  alt={order.commerceName}
+                  src={clientImageUrl}
+                  alt={`${order.clientName} ${order.clientLastName}`}
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
-                <Store size={28} color="#E07A30" />
+                <User size={28} color="#4CAF50" />
               )}
             </Box>
             <Box>
               <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }}>
-                {order.commerceName}
+                {order.clientName} {order.clientLastName}
               </Typography>
               <Chip
                 icon={
@@ -111,16 +115,16 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
                 {formatDateWithTime(order.createdAt)}
               </Typography>
             </Box>
-            <Typography fontSize={20} color="text.disabled">
+            <Typography fontSize={{ xs: 13, sm: 14 }} color="text.disabled">
               {order.totalItems}{" "}
               {order.totalItems === 1 ? "Producto" : "Productos"}
             </Typography>
-            {/* <Typography fontSize={{ xs: 13, sm: 14 }} color="text.disabled">
-              {order.totalItems ?? (order.items ?? []).reduce((sum, it) => sum + (it.quantity ?? 0), 0)}{" "}
-              {(order.totalItems ?? (order.items ?? []).reduce((sum, it) => sum + (it.quantity ?? 0), 0)) === 1 ? "Producto" : "Productos"}
-            </Typography> */}
           </Box>
-          <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }} color="#77A787">
+          <Typography
+            fontWeight={600}
+            fontSize={{ xs: 15, sm: 17 }}
+            color="#77A787"
+          >
             ${formatCurrency(order.total)}
           </Typography>
         </Box>
@@ -129,10 +133,10 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
   );
 }
 
-export default function OrdersListCard({
+export default function CommerceOrdersListCard({
   orders = [],
 }: {
-  orders: OrderSummaryForClientResponse[];
+  orders: OrderSummaryForCommerceResponse[];
 }) {
   if (orders.length === 0) {
     return (
@@ -144,8 +148,20 @@ export default function OrdersListCard({
         gap={0.5}
       >
         <img src="/emptyBag.png" alt="Sin pedidos" width={400} height={300} />
-        <CustomTitle text="Sin pedidos" fontSize={20} fontWeight={500} color="#2d2d2d" align="center" />
-        <CustomTitle text="No encontramos pedidos en esta categoría. Realizá tu próxima compra y llená tu lista." fontSize={18} color="#6d6d6d" align="center" fontWeight={400} />
+        <CustomTitle
+          text="Sin pedidos"
+          fontSize={20}
+          fontWeight={500}
+          color="#2d2d2d"
+          align="center"
+        />
+        <CustomTitle
+          text="Todavía no recibiste ningún pedido"
+          fontSize={18}
+          color="#6d6d6d"
+          align="center"
+          fontWeight={400}
+        />
       </Box>
     );
   }
@@ -153,7 +169,7 @@ export default function OrdersListCard({
   return (
     <Box display="flex" flexDirection="column" gap={2} p={2}>
       {orders.map((order) => (
-        <OrderCard key={order.orderId} order={order} />
+        <CommerceOrderCard key={order.orderId} order={order} />
       ))}
     </Box>
   );
