@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonBase,
   Card,
   CardContent,
   CardMedia,
@@ -24,11 +25,11 @@ import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import AddToCartControl from "@/modules/cart/components/AddToCartControl";
-import { formatBusinessHours } from "@/modules/commerce/utils/businessHoursMapper";
 import ClosedCommerceAlert from "./ClosedCommerceAlert";
 import { isCommerceCurrentlyClosed } from "../utils/commerceStatus";
+import BusinessHoursDialog from "./BusinessHoursDialog";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -60,6 +61,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   useEffect(() => {
     fetchCart();
   }, []);
+
+  const [hoursOpen, setHoursOpen] = useState(false);
 
   // Loading state
   if (isLoadingCommerce || isLoadingProducts) {
@@ -181,11 +184,15 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 
             {/* Horario */}
             {commerce.businessHours && commerce.businessHours.length > 0 && (
-              <Box
+              <ButtonBase
+                onClick={() => setHoursOpen(true)}
+                aria-label="Ver horarios del comercio"
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   gap: { xs: 1, md: 2 },
+                  borderRadius: 1,
+                  "&:hover": { opacity: 0.75 },
                 }}
               >
                 <Schedule
@@ -194,9 +201,21 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <CustomTitle text={formatBusinessHours(commerce.businessHours)} color="#757575" variant="body2" align="left"/>
-              </Box>
+                <CustomTitle
+                  text="Ver horarios"
+                  color="#757575"
+                  variant="h6"
+                  align="left"
+                />
+              </ButtonBase>
             )}
+
+            <BusinessHoursDialog
+              open={hoursOpen}
+              onClose={() => setHoursOpen(false)}
+              businessHours={commerce.businessHours ?? []}
+              commerceName={commerce.name}
+            />
 
             {/* Teléfono */}
             {commerce.phone && (
