@@ -11,16 +11,11 @@ import { Close } from "@mui/icons-material";
 import type { BusinessHoursResponse } from "@/modules/commerce/interfaces/responses/business-hours.response";
 import type { DayOfWeek } from "@/modules/commerce/interfaces/requests/business-hours.request";
 import { DAY_ORDER, DAY_OF_WEEK_META } from "@/modules/commerce/utils/constants";
+import { formatTime } from "@/shared/utils/dateFormat";
 
 const JS_DAY_TO_DOW: DayOfWeek[] = [
   "SUNDAY", "MONDAY", "TUESDAY", "WEDNESDAY", "THURSDAY", "FRIDAY", "SATURDAY",
 ];
-
-function formatTime(time: string | null): string {
-  if (!time) return "";
-  return time.substring(0, 5); // "HH:mm:ss" → "HH:mm"
-}
-
 interface BusinessHoursDialogProps {
   open: boolean;
   onClose: () => void;
