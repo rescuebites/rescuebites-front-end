@@ -134,7 +134,7 @@ export default function OrdersListCard({
           Sin pedidos
         </Typography>
         <Typography fontSize={18} color="#6d6d6d" textAlign="center">
-          Todavía no realizaste ningún pedido
+          No encontramos pedidos en esta categoría. Realizá tu próxima compra y llená tu lista.
         </Typography>
       </Box>
     );
