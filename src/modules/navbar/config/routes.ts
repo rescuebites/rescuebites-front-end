@@ -10,6 +10,7 @@ export const navbarRoutes: Record<string, NavbarRoutes> = {
   },
   commerce: {
     home: '/commerce',
+    products: '/commerce/products',
     orders: '/commerce/orders',
     notifications: '/commerce/notifications',
     profile: '/commerce/profile',

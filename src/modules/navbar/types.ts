@@ -17,6 +17,7 @@ export interface NavbarConfig {
 export type NavbarRole = 'client' | 'commerce' | 'user';
 export interface NavbarRoutes {
   home: string;
+  products?: string;
   orders: string;
   cart?: string; 
   notifications: string;

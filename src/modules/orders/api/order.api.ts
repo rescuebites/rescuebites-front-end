@@ -3,6 +3,7 @@ import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/
 import { OrderResponse } from "../interfaces/responses/order-response.interface";
 import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 import { UpdateOrderStatusRequest } from "../interfaces/requests/update-order-status.request";
+import { OrderSummaryForCommerceResponse } from "../interfaces/responses/order-summary-commerce-response.interface";
 
 export const getClientOrders = async (
   clientId: string,
@@ -11,6 +12,18 @@ export const getClientOrders = async (
 ): Promise<PaginatedResponse<OrderSummaryForClientResponse>> => {
   const { data } = await httpClient.get<PaginatedResponse<OrderSummaryForClientResponse>>(
     `/api/v1/clients/${clientId}/orders`,
+    { params: { page, size, sort: "createdAt,desc" } }
+  );
+  return data;
+};
+
+export const getCommerceOrders = async (
+  commerceId: string,
+  page = 0,
+  size = 20
+): Promise<PaginatedResponse<OrderSummaryForCommerceResponse>> => {
+  const { data } = await httpClient.get<PaginatedResponse<OrderSummaryForCommerceResponse>>(
+    `/api/v1/commerces/${commerceId}/orders`,
     { params: { page, size, sort: "createdAt,desc" } }
   );
   return data;

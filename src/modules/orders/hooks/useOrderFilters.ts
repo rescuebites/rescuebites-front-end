@@ -1,9 +1,13 @@
 import { useState, useMemo } from "react";
 import { OrderStatus } from "../enums/order-status.enum";
+import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { OrderSummaryForCommerceResponse } from "../interfaces/responses/order-summary-commerce-response.interface";
 
 export type FilterValue = OrderStatus | "ALL";
 
-export const useOrderFilters = <T extends { status: OrderStatus }>(orders: T[]) => {
+type OrderType = OrderResponse | OrderSummaryForCommerceResponse;
+
+export const useOrderFilters = <T extends OrderType>(orders: T[]) => {
   const [activeStatus, setActiveStatus] = useState<FilterValue>("ALL");
 
   const filteredOrders = useMemo(() => {
