@@ -16,13 +16,8 @@ export const useOrderPageActions = () => {
     setProductDialogOpen(true);
   };
 
-  const handleBackToOrders = () => {
-    navigate("/orders");
-  };
-
   return {
     handleCommerceClick,
     handleProductClick,
-    handleBackToOrders,
   };
 };

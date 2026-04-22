@@ -19,12 +19,13 @@ export interface OrderItemResponse {
 export interface OrderResponse {
   orderId: string;
   orderNumber: string;
+  totalItems: number;
   commerceId: string;
   commerceName: string;
   commerceAddress: string;
   commerceLocality: string;
   commercePhone: string;
-  commerceType: CommerceType;
+  commerceTypes: CommerceType[];
   commerceImages: ImageResponse[];
   items: OrderItemResponse[];
   subtotal: number;
