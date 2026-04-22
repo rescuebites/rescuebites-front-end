@@ -82,7 +82,7 @@ export default function CommerceDashboardPage() {
           {ordersLoading ? (
             <LoadingState />
           ) : (
-            <OrdersSection orders={ordersData?.content || []} />
+            <OrdersSection orders={(ordersData?.content || []).slice(0, 5)} />
           )}
         </CollapsibleSection>
 
@@ -90,7 +90,7 @@ export default function CommerceDashboardPage() {
           {productsLoading ? (
             <LoadingState />
           ) : (
-            <ProductsSection products={productsData?.content || []} />
+            <ProductsSection products={(productsData?.content || []).slice(0, 8)} />
           )}
         </CollapsibleSection>
       </Box>
