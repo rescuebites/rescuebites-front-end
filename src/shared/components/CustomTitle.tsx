@@ -1,4 +1,5 @@
-import { Typography } from "@mui/material";
+import { Typography, SxProps, Theme } from "@mui/material";
+import type { ResponsiveStyleValue } from "@mui/system";
 
 interface CustomTitleProps {
   text: string;
@@ -6,9 +7,10 @@ interface CustomTitleProps {
   variant?: "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "subtitle1" | "subtitle2" | "body1" | "body2";
   align?: "inherit" | "left" | "center" | "right" | "justify";
   fontWeight?: string | number;
-  fontSize?: string | number;
+  fontSize?: ResponsiveStyleValue<string | number>;
   fontStyle?: string;
   textDecoration?: string;
+  sx?: SxProps<Theme>;
 }
 
 export default function CustomTitle({
@@ -20,13 +22,14 @@ export default function CustomTitle({
   fontSize,
   fontStyle,
   textDecoration,
+  sx,
 }: CustomTitleProps) {
   return (
     <Typography
       variant={variant}
       align={align}
       gutterBottom
-      sx={{ fontWeight, color, fontSize, fontStyle, textDecoration }}
+      sx={{ fontWeight, color, fontSize, fontStyle, textDecoration, ...sx }}
     >
       {text}
     </Typography>
