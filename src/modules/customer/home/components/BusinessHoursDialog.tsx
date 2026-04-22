@@ -67,6 +67,8 @@ export default function BusinessHoursDialog({
             let hoursText: string;
             if (!entry || entry.closed) {
               hoursText = "Cerrado";
+            } else if (!entry.openTime || !entry.closeTime) {
+              hoursText = "Horario no disponible";
             } else {
               const morning = `${formatTime(entry.openTime)} – ${formatTime(entry.closeTime)}`;
               const hasAfternoon = entry.afternoonOpenTime && entry.afternoonCloseTime;
@@ -75,7 +77,7 @@ export default function BusinessHoursDialog({
                 : morning;
             }
 
-            const isClosed = !entry || entry.closed;
+            const isClosed = !entry || entry.closed || !entry.openTime || !entry.closeTime;
 
             return (
               <Box
