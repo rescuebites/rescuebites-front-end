@@ -50,7 +50,7 @@ export default function ClientProfilePage() {
     <Box
       sx={{
         bgcolor: "#FAFAFA",
-        pb: 10,
+        pb: 2,
       }}
     >
       <Box sx={{ px: 3, pt: 3 }}>
