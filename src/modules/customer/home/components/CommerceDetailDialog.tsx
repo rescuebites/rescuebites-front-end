@@ -1,5 +1,6 @@
 import {
   Box,
+  ButtonBase,
   Card,
   CardContent,
   CardMedia,
@@ -183,13 +184,14 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 
             {/* Horario */}
             {commerce.businessHours && commerce.businessHours.length > 0 && (
-              <Box
+              <ButtonBase
                 onClick={() => setHoursOpen(true)}
+                aria-label="Ver horarios del comercio"
                 sx={{
                   display: "flex",
                   alignItems: "center",
                   gap: { xs: 1, md: 2 },
-                  cursor: "pointer",
+                  borderRadius: 1,
                   "&:hover": { opacity: 0.75 },
                 }}
               >
@@ -205,7 +207,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                   variant="h6"
                   align="left"
                 />
-              </Box>
+              </ButtonBase>
             )}
 
             <BusinessHoursDialog
