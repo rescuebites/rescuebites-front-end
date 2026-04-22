@@ -94,6 +94,8 @@ export const CreateProductForm = ({
   const conditionsValue = watch("conditions");
   const preferencesValue = watch("preferences");
 
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <>
       <form onSubmit={handleSubmit(onSubmit)}>
@@ -191,7 +193,7 @@ export const CreateProductForm = ({
           control={control}
           name="expirationDate"
           error={errors.expirationDate?.message}
-          minDate={new Date().toISOString().split("T")[0]}
+          minDate={today}
           size="small"
           sx={fieldSx}
         />
