@@ -4,10 +4,9 @@ export type NotificationType = "Confirmed" | "Cancelled" | "Expired";
 
 export interface Notification {
   id: string;
-  orderId: string;
+  eventId: string;
   message: string;
   type: NotificationType;
-  status: string;
   isRead: boolean;
 }
 
