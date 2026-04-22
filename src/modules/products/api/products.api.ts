@@ -4,10 +4,8 @@ import { UpdateProductRequest } from "../interfaces/requests/update-product-requ
 import { ProductResponse } from "../interfaces/responses/product-response.interface";
 import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 
-const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1`;
-
-const getProductUrl = (commerceId: string) => 
-  `${BASE_URL}/commerces/${commerceId}/products`;
+const getProductUrl = (commerceId: string) =>
+  `/api/v1/commerces/${commerceId}/products`;
 
 export const createProduct = async (
   commerceId: string,
