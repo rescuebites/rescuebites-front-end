@@ -12,8 +12,8 @@ export type OrderStatus =
   | "CANCELED"
   | "EXPIRED";
 
-export const getLabel = (status: string) => {
-  switch (status) {
+export const getLabel = (type: string) => {
+  switch (type) {
     case "COMPLETED":
       return "Completado";
     case "READY":
@@ -29,12 +29,12 @@ export const getLabel = (status: string) => {
     case "EXPIRED":
       return "Producto vencido";
     default:
-      return status;
+      return type;
   }
 };
 
-const getStyles = (status: string) => {
-  switch (status) {
+const getStyles = (type: string) => {
+  switch (type) {
     case "COMPLETED":
       return { color: "#4CAF50", icon: "✅" };
 
@@ -66,11 +66,29 @@ export default function NotificationsPage() {
 
   const isEmpty = !notifications || notifications.length === 0;
 
+  const getRole = () => {
+    const raw = localStorage.getItem("auth-storage");
+    if (!raw) return null;
+
+    return JSON.parse(raw)?.state?.authResponse?.role;
+  };
+
+  const goBack = () => {
+    const role = getRole();
+
+    if (role == "CLIENT") {
+      navigate("/", { replace: true });
+    }
+    if (role == "COMMERCE") {
+      navigate("/commerce", { replace: true });
+    }
+  };
+
   return (
     <Box p={2} bgcolor="#F5F5F5" minHeight="100vh">
       <BackButton
         sx={{ position: "absolute", left: 14, top: 14 }}
-        onClick={() => navigate("/commerce", { replace: true })}
+        onClick={() => goBack()}
       />
 
       <Typography variant="h6" mb={2}>
@@ -104,7 +122,8 @@ export default function NotificationsPage() {
       {/* ================= LIST ================= */}
       {!isEmpty &&
         notifications.map((n) => {
-          const styles = getStyles(n.status);
+          console.log("CORA", n);
+          const styles = getStyles(n.type);
 
           return (
             <Paper
@@ -135,10 +154,10 @@ export default function NotificationsPage() {
 
               <Box flex={1}>
                 <Typography fontWeight={600} color={styles.color}>
-                  {getLabel(n.status)}
+                  {getLabel(n.type)}
                 </Typography>
 
-                <Typography variant="body2">Order #{n.orderId}</Typography>
+                <Typography variant="body2">Orden #{n.eventId}</Typography>
 
                 <Typography variant="body2" color="text.secondary">
                   {n.message}

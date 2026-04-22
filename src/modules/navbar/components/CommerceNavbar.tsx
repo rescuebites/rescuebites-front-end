@@ -33,7 +33,7 @@ export default function CommerceNavbar() {
 
         const mapped = list.map((n: any) => ({
           id: n.id,
-          orderId: n.data?.orderId,
+          eventId: n.data?.eventId,
           message: n.message,
           type: n.type,
           read: n.read,
@@ -66,7 +66,7 @@ export default function CommerceNavbar() {
 
       addNotification({
         id: crypto.randomUUID(),
-        orderId: data.orderId,
+        eventId: data.eventId,
         message: data.message,
         type: data.type,
         isRead: false,
