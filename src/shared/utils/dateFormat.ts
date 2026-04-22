@@ -1,3 +1,12 @@
+/**
+ * Parsea un string "YYYY-MM-DD" como fecha local (sin conversión UTC).
+ * Usar en lugar de `new Date(string)` para evitar el desfase de timezone.
+ */
+export const parseDateLocal = (dateString: string): Date => {
+  const [year, month, day] = dateString.split("-").map(Number);
+  return new Date(year, month - 1, day);
+};
+
 export const formatDate = (dateString: string) => {
     const [year, month, day] = dateString.split("-");
     return `${day}/${month}/${year}`;
