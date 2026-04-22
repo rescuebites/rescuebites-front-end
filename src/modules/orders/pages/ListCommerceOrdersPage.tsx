@@ -1,15 +1,14 @@
-import OrderList from "../components/OrdersListCard";
+import CommerceOrdersListCard from "../components/CommerceOrdersListCard";
 import OrderStatusFilter from "../components/OrderStatusFilter";
 import { useOrderFilters } from "../hooks/useOrderFilters";
-import { useClientOrders } from "../hooks/useClientOrders";
+import { useCommerceOrders } from "../hooks/useCommerceOrders";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { Box, CircularProgress, Typography } from "@mui/material";
 import BackButton from "@/shared/components/ui/BackButton";
-import CustomTitle from "@/shared/components/CustomTitle";
 
-const ListClientOrdersPage = () => {
-  const clientId = useAuthStore((state) => state.clientId);
-  const { data, isLoading, isError } = useClientOrders(clientId);
+const ListCommerceOrdersPage = () => {
+  const commerceId = useAuthStore((state) => state.commerceId);
+  const { data, isLoading, isError } = useCommerceOrders(commerceId);
   const orders = data?.content ?? [];
   const { activeStatus, setActiveStatus, filteredOrders } = useOrderFilters(orders);
 
@@ -18,7 +17,6 @@ const ListClientOrdersPage = () => {
       <Box mb={3}>
         <BackButton />
       </Box>
-      <CustomTitle  text="Mis Pedidos" variant="h4" color="#2d2d2d" align="left" />
       <Box mt={4}>
         <OrderStatusFilter value={activeStatus} onChange={setActiveStatus} />
       </Box>
@@ -33,10 +31,10 @@ const ListClientOrdersPage = () => {
             Error al cargar los pedidos.
           </Typography>
         )}
-        {!isLoading && !isError && <OrderList orders={filteredOrders} />}
+        {!isLoading && !isError && <CommerceOrdersListCard orders={filteredOrders} />}
       </Box>
     </Box>
   );
 };
 
-export default ListClientOrdersPage;
+export default ListCommerceOrdersPage;

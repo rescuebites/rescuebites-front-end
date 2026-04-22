@@ -15,12 +15,14 @@ import OrderHeader from "@/modules/orders/components/OrderHeader";
 import OrderItemCard from "@/modules/orders/components/OrderItemCard";
 import OrderPriceBreakdown from "@/modules/orders/components/OrderPriceBreakdown";
 import OrderPaymentSection from "@/modules/orders/components/OrderPaymentSection";
+import OrderCancelledPage from "@/shared/pages/OrderCancelledPage";
 
 const OrderDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
   const clientId = useAuthStore((state) => state.clientId);
 
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
+  const [cancelled, setCancelled] = useState(false);
   const [productDialogOpen, setProductDialogOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
@@ -30,7 +32,7 @@ const OrderDetailPage = () => {
 
   const { data: order, isLoading, error } = useOrderDetail(clientId, orderId);
 
-  const { handleCommerceClick, handleProductClick, handleBackToOrders } =
+  const { handleCommerceClick, handleProductClick } =
     useOrderPageActions();
 
   const { handleCancelOrder, isCanceling } = useCancelOrderWithFeedback({
@@ -39,8 +41,15 @@ const OrderDetailPage = () => {
   });
 
   const onCancelOrder = (reason: string) => {
-    handleCancelOrder(reason, () => setCancelDialogOpen(false));
+    handleCancelOrder(reason, () => {
+      setCancelDialogOpen(false);
+      setCancelled(true);
+    });
   };
+
+  if (cancelled) {
+    return <OrderCancelledPage redirectTo="/" />;
+  }
 
   const onProductClick = (productId: string) => {
     const orderItem = order?.items.find((item) => item.productId === productId);
@@ -81,7 +90,7 @@ const OrderDetailPage = () => {
         }}
       >
         <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, mb: 3 }}>
-          <BackButton onClick={handleBackToOrders} />
+          <BackButton />
         </Box>
         <Container maxWidth="lg">
           <CustomTitle
@@ -106,7 +115,7 @@ const OrderDetailPage = () => {
     >
       {/* Botón volver */}
       <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, mb: 3 }}>
-        <BackButton onClick={handleBackToOrders} />
+        <BackButton />
       </Box>
 
       <Container maxWidth="lg">
@@ -156,7 +165,7 @@ const OrderDetailPage = () => {
             commerceName={order.commerceName}
             commerceAddress={order.commerceAddress}
             commerceLocality={order.commerceLocality}
-            commerceType={order.commerceType}
+            commerceTypes={order.commerceTypes}
             commerceImages={order.commerceImages}
             onClick={onCommerceClick}
           />
