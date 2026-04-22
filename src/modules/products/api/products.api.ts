@@ -2,6 +2,7 @@ import { httpClient } from "@/shared/lib/httpClient";
 import { CreateProductRequest } from "../interfaces/requests/product.form.interface";
 import { UpdateProductRequest } from "../interfaces/requests/update-product-request.interface";
 import { ProductResponse } from "../interfaces/responses/product-response.interface";
+import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 
 const BASE_URL = `${import.meta.env.VITE_BACKEND_URL}/api/v1`;
 
@@ -58,4 +59,16 @@ export const deleteProductImage = async (
   // Se importa dinámicamente para evitar dependencia circular
   const { deleteImage } = await import("@/shared/lib/images.api");
   await deleteImage(imageId);
+};
+
+export const getProductsByStock = async (
+  commerceId: string,
+  page = 0,
+  size = 20
+): Promise<PaginatedResponse<ProductResponse>> => {
+  const response = await httpClient.get<PaginatedResponse<ProductResponse>>(
+    `${getProductUrl(commerceId)}/ordered-by-stock`,
+    { params: { page, size } }
+  );
+  return response.data;
 };
