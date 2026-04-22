@@ -24,7 +24,7 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
-  const { addItem, updateItem, removeItem, getCartItemId, clearCart, cart } = useCartStore();
+  const { addItem, updateItem, removeItem, getCartItemId, clearCart, fetchCart, cart } = useCartStore();
   const cartItemId = getCartItemId(productId);
   const inCart = quantityInCart > 0;
 
@@ -62,10 +62,35 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
   }
 
   async function handleConflictConfirm() {
-    await clearCart();
-    const success = await doAddOrUpdate(pendingQty ?? qty);
+    const quantity = pendingQty ?? qty;
     setPendingQty(null);
-    if (success) setCommerceConflictOpen(false);
+
+    // Attempt the add BEFORE clearing. The backend validates commerce availability
+    // first, so if commerce2 is closed the error is thrown immediately and the
+    // commerce1 cart remains intact. doAddOrUpdate will open the closed-commerce
+    // popup and return false in that case.
+    const success = await doAddOrUpdate(quantity);
+    if (!success) return;
+
+    // Commerce2 is open. Clear then re-add for a clean cart.
+    try {
+      await clearCart();
+      const readded = await doAddOrUpdate(quantity);
+      if (!readded) {
+        // doAddOrUpdate already handled the error (e.g. opened closedCommercePopup).
+        // Cart is now empty — sync UI state.
+        await fetchCart();
+        return;
+      }
+      setCommerceConflictOpen(false);
+    } catch {
+      // clearCart or an unexpected network error — sync cart state and inform the user.
+      await fetchCart();
+      useSnackbarStore.getState().showMessage(
+        "No se pudo actualizar el carrito. Por favor, inténtalo de nuevo.",
+        "error"
+      );
+    }
   }
 
   async function doAddOrUpdate(quantity: number): Promise<boolean> {

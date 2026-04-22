@@ -1,13 +1,13 @@
 import { Store, Clock } from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
-import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 import { getShortOrderNumber } from "../utils/order.utils";
 import { OrderStatusStyles } from "../config/order-status-styles.config";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
 import { useNavigate } from "react-router-dom";
 
-function OrderCard({ order }: { order: OrderResponse }) {
+function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
   const style = OrderStatusStyles[order.status];
   const bg = style.backgroundColor;
   const color = style.textColor;
@@ -97,8 +97,8 @@ function OrderCard({ order }: { order: OrderResponse }) {
               </Typography>
             </Box>
             <Typography fontSize={20} color="text.disabled">
-              {(order.items ?? []).length}{" "}
-              {(order.items ?? []).length === 1 ? "Producto" : "Productos"}
+              {order.totalItems}{" "}
+              {order.totalItems === 1 ? "Producto" : "Productos"}
             </Typography>
           </Box>
           <Typography fontWeight={550} fontSize={22} color="#77A787">
@@ -113,7 +113,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
 export default function OrdersListCard({
   orders = [],
 }: {
-  orders: OrderResponse[];
+  orders: OrderSummaryForClientResponse[];
 }) {
   if (orders.length === 0) {
     return (

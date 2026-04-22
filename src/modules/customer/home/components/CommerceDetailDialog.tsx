@@ -27,6 +27,8 @@ import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useEffect } from "react";
 import AddToCartControl from "@/modules/cart/components/AddToCartControl";
 import { formatBusinessHours } from "@/modules/commerce/utils/businessHoursMapper";
+import ClosedCommerceAlert from "./ClosedCommerceAlert";
+import { isCommerceCurrentlyClosed } from "../utils/commerceStatus";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -135,6 +137,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             )}
           </Box>
         </Box>
+
+        {isCommerceCurrentlyClosed(commerce.businessHours ?? []) && (
+          <Box sx={{ mb: 3 }}>
+            <ClosedCommerceAlert />
+          </Box>
+        )}
 
         {/* Contact Information Card */}
         <Card
