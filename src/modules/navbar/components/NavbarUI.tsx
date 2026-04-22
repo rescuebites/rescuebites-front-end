@@ -27,7 +27,9 @@ export default function NavbarUI({
   };
 
   const hasCart = !!routes.cart;
-  const gridColumns = hasCart ? '1fr 1fr auto 1fr 1fr' : 'repeat(4, 1fr)';
+  const hasProducts = !!routes.products;
+  const hasMainAction = hasCart || hasProducts;
+  const gridColumns = hasMainAction ? '1fr 1fr auto 1fr 1fr' : 'repeat(4, 1fr)';
 
   return (
     <Paper
@@ -72,11 +74,11 @@ export default function NavbarUI({
           {navbarIcons.home}
         </IconButton>
 
-        {/* Orders */}
+        {/* Products (commerce) or Orders (client) */}
         <IconButton
-          onClick={() => handleNavigation(routes.orders)}
+          onClick={() => handleNavigation(routes.products || routes.orders)}
           sx={{
-            color: isActive(routes.orders) ? '#77A787' : '#757575',
+            color: isActive(routes.products || routes.orders) ? '#77A787' : '#757575',
             transition: 'color 0.2s',
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -86,18 +88,18 @@ export default function NavbarUI({
             },
           }}
         >
-          {navbarIcons.orders}
+          {routes.products ? navbarIcons.products : navbarIcons.orders}
         </IconButton>
 
-        {/* Cart (solo para roles con carrito) */}
-        {hasCart && (
+        {/* Cart (client) or Orders (commerce) - Central elevated button */}
+        {hasMainAction && (
           <Box sx={{ position: 'relative', justifySelf: 'center' }}>
             <IconButton
-              onClick={() => handleNavigation(routes.cart!)}
+              onClick={() => handleNavigation(routes.cart || routes.orders)}
               sx={{
                 width: { xs: 64, md: 76, lg: 88 },
                 height: { xs: 64, md: 76, lg: 88 },
-                bgcolor: isActive(routes.cart!) ? '#77A787' : '#3E6A53',
+                bgcolor: isActive(routes.cart || routes.orders) ? '#77A787' : '#3E6A53',
                 color: '#FFFFFF',
                 border: '4px solid #FFFFFF',
                 boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
@@ -111,7 +113,7 @@ export default function NavbarUI({
               }}
             >
               <Badge
-                badgeContent={cartCount}
+                badgeContent={hasCart ? cartCount : 0}
                 sx={{
                   '& .MuiBadge-badge': {
                     top: { xs: -13, md: -15, lg: -20 },
@@ -125,7 +127,7 @@ export default function NavbarUI({
                   },
                 }}
               >
-                {navbarIcons.cart}
+                {hasCart ? navbarIcons.cart : navbarIcons.commerceOrders}
               </Badge>
             </IconButton>
           </Box>
