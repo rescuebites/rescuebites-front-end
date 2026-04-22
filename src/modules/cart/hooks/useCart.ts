@@ -21,6 +21,7 @@ export function useCart() {
 
   const [confirming, setConfirming] = useState(false);
   const [notes, setNotes] = useState("");
+  const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
 
   const commerceSummaries: CommerceCartSummary[] = Object.values(
     cart?.commerceSummaries ?? {}
@@ -52,10 +53,10 @@ export function useCart() {
     if (!cart?.selectedPaymentMethod || !commerce || !clientId) return;
     setConfirming(true);
     try {
-      await createOrder(clientId, commerce.commerceId, notes || undefined);
+      const order = await createOrder(clientId, commerce.commerceId, notes || undefined);
       await clearCart();
       queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
-      // navigate("/orders");
+      setCreatedOrderId(order.orderId);
     } catch (error) {
       console.error("Error al confirmar pedido:", error);
     } finally {
@@ -67,6 +68,7 @@ export function useCart() {
     cart,
     commerce,
     confirming,
+    createdOrderId,
     notes,
     setNotes,
     subtotal: cart?.subtotal ?? 0,

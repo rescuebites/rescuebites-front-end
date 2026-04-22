@@ -1,5 +1,6 @@
 import { ImageResponse} from "@/shared/interfaces/image-response.interface";
 import { PaymentMethod } from "../../../orders/enums/payment-method.enum";
+import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
 
 
 //Cart Item 
@@ -27,6 +28,9 @@ export interface CommerceCartSummary {
   commerceId: string;         
   commerceName: string;
   address: string;
+  commerceLocality: string;
+  commerceTypes: CommerceType[];
+  commerceImages: ImageResponse[];
   items: CartItemResponse[];
   subtotal: number;
   itemCount: number;
