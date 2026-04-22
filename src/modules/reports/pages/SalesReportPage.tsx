@@ -11,11 +11,14 @@ import { StatCard } from "@/modules/reports/components/StatCard";
 import { DateRangeFilter } from "@/modules/reports/components/DateRangeFilter";
 import { ProductLegendItem } from "@/modules/reports/components/ProductLegendItem";
 import { LegendItemSkeleton } from "@/modules/reports/components/LegendItemSkeleton";
+import BackButton from "@/shared/components/ui/BackButton";
+import { useNavigate } from "react-router-dom";
 
 const COLORS = ["#166534", "#4ADE80", "#86EFAC"];
 
 export const SalesReportPage = () => {
   const { commerceId } = useAuthStore();
+  const navigate = useNavigate();
 
   const { control } = useForm({
     defaultValues: { from: "", to: "" },
@@ -49,23 +52,35 @@ export const SalesReportPage = () => {
 
   return (
     <Box p={2}>
-      <DateRangeFilter
-        control={control}
-        from={from}
-        to={to}
-        onApply={handleApplyFilter}
-      />
-
-      {isError && (
-        <Box mt={2}>
-          <CustomTitle
-            text="No se pudo cargar el reporte. Verificá el rango de fechas."
-            color="#D32F2F"
-            fontSize={16}
-            align="left"
-            fontWeight={400}
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          gap: 2,
+          py: 2,
+          mb: 1,
+          flexWrap: "wrap",
+        }}
+      >
+        <BackButton onClick={() => navigate("/commerce", { replace: true })} />
+        <Box sx={{ flex: 1 }}>
+          <DateRangeFilter
+            control={control}
+            from={from}
+            to={to}
+            onApply={handleApplyFilter}
           />
         </Box>
+      </Box>
+
+      {isError && (
+        <CustomTitle
+          text="No se pudo cargar el reporte. Verificá el rango de fechas."
+          color="#D32F2F"
+          fontSize={16}
+          align="left"
+          fontWeight={400}
+        />
       )}
 
       {/* Total Sales */}
@@ -115,13 +130,17 @@ export const SalesReportPage = () => {
       {/* Cards */}
       <Box mt={2} display="grid" gridTemplateColumns="1fr 1fr" gap={2}>
         <StatCard
-          icon={<ReceiptLongOutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />}
+          icon={
+            <ReceiptLongOutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />
+          }
           title="Pedidos"
           value={report?.totalOrders ?? "—"}
           isLoading={isLoading}
         />
         <StatCard
-          icon={<Inventory2OutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />}
+          icon={
+            <Inventory2OutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />
+          }
           title="Productos"
           value={report?.totalProductsSold ?? "—"}
           isLoading={isLoading}
