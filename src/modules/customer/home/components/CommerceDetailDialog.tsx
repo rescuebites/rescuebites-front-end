@@ -24,7 +24,8 @@ import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import ImageCarouselModal from "@/modules/commerce/components/ImageCarouselModal";
 import AddToCartControl from "@/modules/cart/components/AddToCartControl";
 import { formatBusinessHours } from "@/modules/commerce/utils/businessHoursMapper";
 
@@ -36,6 +37,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   commerceId,
 }) => {
   const navigate = useNavigate();
+  const [showCarousel, setShowCarousel] = useState(false);
 
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } =
@@ -110,11 +112,13 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
         >
           <Avatar
             src={commerce.images?.[0]?.url || ""}
+            onClick={() => commerce.images && commerce.images.length > 0 && setShowCarousel(true)}
             sx={{
               width: { xs: 95, sm: 160, md: 200 },
               height: { xs: 95, sm: 160, md: 200 },
               backgroundColor: "#77A787",
               flexShrink: 0,
+              cursor: commerce.images && commerce.images.length > 0 ? "pointer" : "default",
             }}
           >
             {!commerce.images?.[0]?.url && (
@@ -249,6 +253,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
           </Box>
         )}
       </Box>
+
+      <ImageCarouselModal
+        open={showCarousel}
+        images={commerce.images ?? []}
+        onClose={() => setShowCarousel(false)}
+      />
     </Box>
   );
 };
