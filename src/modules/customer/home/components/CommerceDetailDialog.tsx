@@ -115,21 +115,33 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             mb: { xs: 3, sm: 3, md: 5 },
           }}
         >
-          <Avatar
-            src={commerce.images?.[0]?.url || ""}
-            onClick={() => commerce.images && commerce.images.length > 0 && setShowCarousel(true)}
+          <ButtonBase
+            onClick={() => setShowCarousel(true)}
+            aria-label={`Ver imágenes de ${commerce.name}`}
+            disabled={!commerce.images || commerce.images.length === 0}
             sx={{
-              width: { xs: 95, sm: 160, md: 200 },
-              height: { xs: 95, sm: 160, md: 200 },
-              backgroundColor: "#77A787",
+              borderRadius: "50%",
               flexShrink: 0,
-              cursor: commerce.images && commerce.images.length > 0 ? "pointer" : "default",
+              "&:focus-visible": {
+                outline: "3px solid #77A787",
+                outlineOffset: 3,
+              },
             }}
           >
-            {!commerce.images?.[0]?.url && (
-              <RestaurantIcon sx={{ fontSize: "inherit" }} />
-            )}
-          </Avatar>
+            <Avatar
+              src={commerce.images?.[0]?.url || ""}
+              sx={{
+                width: { xs: 95, sm: 160, md: 200 },
+                height: { xs: 95, sm: 160, md: 200 },
+                backgroundColor: "#77A787",
+                cursor: commerce.images && commerce.images.length > 0 ? "pointer" : "default",
+              }}
+            >
+              {!commerce.images?.[0]?.url && (
+                <RestaurantIcon sx={{ fontSize: "inherit" }} />
+              )}
+            </Avatar>
+          </ButtonBase>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <CustomTitle text={commerce.name} color="#2D2D2D" variant="h3" align="left"/>
