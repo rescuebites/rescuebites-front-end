@@ -12,10 +12,12 @@ export interface NavItem {
 export interface NavbarConfig {
   items: NavItem[];
   cartItem?: NavItem;
-}export type NavbarRole = 'client' | 'commerce' | 'user';
+}
 
+export type NavbarRole = 'client' | 'commerce' | 'user';
 export interface NavbarRoutes {
   home: string;
+  products?: string;
   orders: string;
   cart?: string; 
   notifications: string;

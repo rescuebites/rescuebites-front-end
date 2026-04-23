@@ -18,6 +18,7 @@ import CustomButton from "@/shared/components/CustomButton";
 import { CurrencyTextField } from "@/shared/components/CurrencyTextField";
 import { fieldSx } from "@/shared/styles/fieldSx";
 import { QuantityInput } from "@/shared/components/QuantityInput";
+import { formatDateLocal } from "@/shared/utils/dateFormat";
 import DateField from "@/shared/components/DateField";
 import { ProductFilterPicker } from "./ProductFilterPicker";
 import { ProductResponse } from "../interfaces/responses/product-response.interface";
@@ -93,6 +94,8 @@ export const CreateProductForm = ({
   const categoryValue = watch("category");
   const conditionsValue = watch("conditions");
   const preferencesValue = watch("preferences");
+
+  const today = formatDateLocal();
 
   return (
     <>
@@ -191,7 +194,7 @@ export const CreateProductForm = ({
           control={control}
           name="expirationDate"
           error={errors.expirationDate?.message}
-          minDate={new Date().toISOString().split("T")[0]}
+          minDate={today}
           size="small"
           sx={fieldSx}
         />

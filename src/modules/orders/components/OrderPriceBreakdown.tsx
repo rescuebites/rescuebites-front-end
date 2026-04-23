@@ -73,7 +73,7 @@ const OrderPriceBreakdown = ({
           <CustomTitle
             variant="body2"
             align="left"
-            text="Service"
+            text="Tarifa de servicio"
             color="#9E9E9E"
           />
 

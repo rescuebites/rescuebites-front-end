@@ -33,7 +33,7 @@ export function AuthLayout() {
           elevation={3}
           sx={{
             borderRadius: 3,
-            p: 3,
+            p: 2.5,
             width: "100%",
             maxWidth: 400,
             pt: 9,

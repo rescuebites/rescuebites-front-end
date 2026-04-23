@@ -1,5 +1,6 @@
 import { Navigate, Outlet, Route, Routes } from "react-router-dom";
 import { useLocalityStore } from "@/modules/customer/home/hooks/useLocalityStore";
+import UnauthorizedPage from "@/shared/pages/UnauthorizedPage";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { ProtectedRoute } from "@/routes/ProtectedRoute";
 import AppLayout from "@/shared/pages/layouts/AppLayout";
@@ -9,10 +10,11 @@ import HomePage from "@/modules/customer/home/pages/HomePage";
 import StoresDetailPage from "@/modules/customer/home/pages/StoresDetailPage";
 import AllStoresPage from "@/modules/customer/home/pages/AllStoresPage";
 import AllProductsPage from "@/modules/customer/home/pages/AllProductsPage";
-import SearchResultsPage from "@/modules/filterPanel/pages/SearchResultsPage";
+import SearchResultsPage from "@/modules/customer/home/pages/SearchResultsPage";
 import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
+import ClientProfilePage from "@/modules/client/pages/ClientProfilePage";
 import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
 import { Box, CircularProgress } from "@mui/material";
 
@@ -49,6 +51,12 @@ function LocalityGuard() {
 
 export function CustomerRoutes() {
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const commerceId = useAuthStore((s) => s.commerceId);
+
+  // Un usuario autenticado como comercio no puede acceder a las rutas de cliente
+  if (isAuthenticated && !!commerceId) {
+    return <UnauthorizedPage />;
+  }
 
   return (
     <Routes>
@@ -71,7 +79,7 @@ export function CustomerRoutes() {
             <Route path="orders" element={<ListClientOrdersPage />} />
             <Route path="orders/:orderId" element={<OrderDetailPage />} />
             <Route path="notifications" element={null} />
-            <Route path="profile" element={null} />
+            <Route path="profile" element={<ClientProfilePage />} />
           </Route>
         </Route>
       </Route>

@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 import { PaginatedResponse } from "@/modules/customer/home/interfaces/responses/paginated.response";
 import { getClientOrders } from "../api/order.api";
-import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 
 export const useClientOrders = (clientId: string | null | undefined) => {
-  return useQuery<PaginatedResponse<OrderResponse>, Error>({
+  return useQuery<PaginatedResponse<OrderSummaryForClientResponse>, Error>({
     queryKey: ["client-orders", clientId],
     queryFn: () => {
       if (!clientId) {

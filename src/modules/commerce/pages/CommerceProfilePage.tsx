@@ -34,6 +34,7 @@ export default function CommerceProfilePage() {
 
   const handleLogout = () => {
     logout();
+    navigate("/auth/login", { replace: true });
   };
 
   const handleDeleteAccount = () => {

@@ -1,24 +1,33 @@
-import { Card, CardContent, Box, Typography, Stack, IconButton } from "@mui/material";
+import { Card, CardContent, Box, Stack, IconButton } from "@mui/material";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import { QuantityControl } from "@/shared/components/layout/QuantityControl";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
 import type { CartItemResponse } from "../interfaces/responses/cart-response.interface";
+import { formatCurrency } from "@/shared/utils/currency.utils";
 
 interface Props {
   item: CartItemResponse;
   onRemove: (cartItemId: string) => void;
   onQuantityChange: (cartItemId: string, quantity: number) => void;
+  onProductClick?: (productId: string) => void;
 }
 
-export default function CartProductCard({ item, onRemove, onQuantityChange }: Props) {
+export default function CartProductCard({
+  item,
+  onRemove,
+  onQuantityChange,
+  onProductClick,
+}: Props) {
   return (
     <Card
+      onClick={() => onProductClick?.(item.productId)}
       sx={{
         borderRadius: { xs: 4, md: 6 },
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         overflow: "visible",
         transition: "transform 0.2s, box-shadow 0.2s",
+        cursor: onProductClick ? "pointer" : "default",
         "&:hover": {
           transform: { md: "translateY(-2px)" },
           boxShadow: { md: "0 4px 12px rgba(0,0,0,0.12)" },
@@ -41,29 +50,59 @@ export default function CartProductCard({ item, onRemove, onQuantityChange }: Pr
             }}
           />
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <Stack direction="row" justifyContent="space-between" alignItems="flex-start">
-              <CustomTitle text={item.productName} color="#2d2d2d" variant="h5" align="left" />
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="flex-start"
+            >
+              <CustomTitle
+                text={item.productName}
+                color="#2d2d2d"
+                variant="h5"
+                align="left"
+              />
               <IconButton
                 size="small"
-                onClick={() => onRemove(item.cartItemId)}
+                onClick={(e) => { e.stopPropagation(); onRemove(item.cartItemId); }}
                 sx={{ color: "#9CA3AF", p: 0.5, ml: 0.5 }}
               >
-                <DeleteOutlineIcon sx={{ fontSize: { xs: 20, sm: 23, md: 26 } }} />
+                <DeleteOutlineIcon
+                  sx={{ fontSize: { xs: 20, sm: 23, md: 26 } }}
+                />
               </IconButton>
             </Stack>
 
-            <Typography sx={{ color: "#2d2d2d" }}>{item.description}</Typography>
+            <CustomTitle
+              text={item.description}
+              color="#2d2d2d"
+              variant="body1"
+              align="left"
+            />
 
             <Box sx={{ display: "flex", alignItems: "baseline", gap: 1.5 }}>
-              <Typography sx={{ fontWeight: 700, fontSize: { xs: 18, sm: 20, md: 26 }, color: "#77A787" }}>
-                ${item.unitPrice.toFixed(2)}
-              </Typography>
-              <Typography sx={{ textDecoration: "line-through", color: "#999", fontSize: { xs: 16, sm: 18, md: 24 } }}>
-                ${item.originalPrice.toFixed(2)}
-              </Typography>
+              <CustomTitle
+                text={`$${formatCurrency(item.unitPrice)}`}
+                variant="body1"
+                align="left"
+                color="#77A787"
+                fontWeight={700}
+                fontSize={{ xs: 18, sm: 20, md: 26 }}
+              />
+              <CustomTitle
+                text={`$${formatCurrency(item.originalPrice)}`}
+                variant="body1"
+                align="left"
+                color="#999"
+                fontSize={{ xs: 16, sm: 18, md: 24 }}
+                sx={{ textDecoration: "line-through" }}
+              />
             </Box>
 
-            <Stack direction="row" justifyContent="space-between" alignItems="center">
+            <Stack
+              direction="row"
+              justifyContent="space-between"
+              alignItems="center"
+            >
               <ProductChips
                 showDiscount={false}
                 discountAsImageBadge
@@ -72,11 +111,13 @@ export default function CartProductCard({ item, onRemove, onQuantityChange }: Pr
                 stock={item.availableStock}
                 showCondition={false}
               />
-              <QuantityControl
-                stock={item.availableStock}
-                initialQuantity={item.quantity}
-                onQuantityChange={(q) => onQuantityChange(item.cartItemId, q)}
-              />
+              <Box onClick={(e) => e.stopPropagation()}>
+                <QuantityControl
+                  stock={item.availableStock}
+                  initialQuantity={item.quantity}
+                  onQuantityChange={(q) => onQuantityChange(item.cartItemId, q)}
+                />
+              </Box>
             </Stack>
           </Box>
         </Box>

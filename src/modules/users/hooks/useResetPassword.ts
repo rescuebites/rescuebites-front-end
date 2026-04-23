@@ -11,7 +11,6 @@ export function useResetPassword() {
     mutationFn: resetPassword, 
     
     onSuccess: () => { 
-      console.log("Hola sí pasé por acá");
       showMessage("Contraseña recuperada con éxito", "success");
       navigate("/auth/login", { replace: true });
     },

@@ -1,6 +1,6 @@
 import { Stack } from "@mui/material";
 import RestaurantIcon from "@mui/icons-material/Restaurant";
-import PersonIcon from "@mui/icons-material/Person";
+import BarChartIcon from "@mui/icons-material/BarChart";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import QuickActionCard from "./QuickActionCard";
 import { useNavigate } from "react-router-dom";
@@ -18,10 +18,10 @@ export default function QuickActions() {
       />
 
       <QuickActionCard
-        title="Editar Perfil"
-        icon={<PersonIcon sx={{ fontSize: 45 }} />}
+        title="Reporte"
+        icon={<BarChartIcon sx={{ fontSize: 45 }} />}
         color="#5EA574"
-        onClick={() => navigate("/commerce/edit-commerce-profile")}
+        onClick={() => navigate("/commerce/sales")}
       />
 
       <QuickActionCard

@@ -20,9 +20,10 @@ export default function Header() {
       position="static"
       elevation={0}
       sx={{
-        bgcolor: "transparent",
+        bgcolor: "#ffffff",
         color: "#2D2D2D",
         borderBottom: "none",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
       }}
     >
       <Toolbar sx={{ px: { xs: 2, sm: 3 }, gap: 1.5, py: { xs: 2, sm: 1.5 } }}>

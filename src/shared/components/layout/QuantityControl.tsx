@@ -48,17 +48,17 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({
   return (
     <Stack direction="row" alignItems="center" spacing={0.5}>
       <IconButton
-        size="small"
+        size="medium"
         onClick={() => setQuantity(quantity - 1)}
         disabled={quantity <= 1}
         sx={{
-          width: 26, height: 26,
+          width: 36, height: 36,
           bgcolor: "#F3F4F6",
           "&:hover": { bgcolor: "#E5E7EB" },
           "&:disabled": { opacity: 0.4 },
         }}
       >
-        <RemoveIcon sx={{ fontSize: 14 }} />
+        <RemoveIcon sx={{ fontSize: 20 }} />
       </IconButton>
 
       <Box
@@ -76,10 +76,10 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({
         onKeyDown={handleKeyDown}
         inputMode="numeric"
         sx={{
-          width: 36, height: 26, textAlign: "center",
-          fontWeight: 700, fontSize: "0.875rem", fontFamily: "inherit",
-          color: "#111827",
-          border: isEditing ? "1.5px solid #166534" : "1.5px solid #E5E7EB",
+          width: 44, height: 36, textAlign: "center",
+          fontWeight: 700, fontSize: "1rem", fontFamily: "inherit",
+          color: "#2d2d2d",
+          border: isEditing ? "1.5px solid #77A787" : "1.5px solid #E5E7EB",
           borderRadius: "6px", outline: "none",
           bgcolor: isEditing ? "#F0FDF4" : "white",
           transition: "border 0.15s, background 0.15s",
@@ -88,17 +88,17 @@ export const QuantityControl: React.FC<QuantityControlProps> = ({
       />
 
       <IconButton
-        size="small"
+        size="medium"
         onClick={() => setQuantity(quantity + 1)}
         disabled={quantity >= stock}
         sx={{
-          width: 26, height: 26,
-          bgcolor: "#166534", color: "white",
-          "&:hover": { bgcolor: "#15803D" },
+          width: 36, height: 36,
+          bgcolor: "#77A787", color: "white",
+          "&:hover": { bgcolor: "#66A176" },
           "&:disabled": { opacity: 0.4 },
         }}
       >
-        <AddIcon sx={{ fontSize: 14 }} />
+        <AddIcon sx={{ fontSize: 20 }} />
       </IconButton>
     </Stack>
   );

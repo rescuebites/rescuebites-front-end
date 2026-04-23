@@ -47,7 +47,7 @@ export default function HomePage() {
   };
 
   return (
-    <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh', pb: { xs: 8, md: 10 } }}>
+    <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh'}}>
 
       {/* Sección de búsqueda y categorías */}
       <Container

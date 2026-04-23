@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Box, Container, Stack, CircularProgress } from "@mui/material";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import BackButton from "@/shared/components/ui/BackButton";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import CustomTitle from "@/shared/components/CustomTitle";
@@ -14,7 +14,6 @@ import { useOrderPageActions } from "@/modules/orders/hooks/useOrderPageActions"
 
 const CommerceOrderDetailPage = () => {
   const { orderId } = useParams<{ orderId: string }>();
-  const navigate = useNavigate();
   const commerceId = useAuthStore((state) => state.commerceId);
 
   const [productDialogOpen, setProductDialogOpen] = useState(false);
@@ -58,7 +57,7 @@ const CommerceOrderDetailPage = () => {
         }}
       >
         <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, mb: 3 }}>
-          <BackButton onClick={() => navigate("/commerce")} />
+          <BackButton />
         </Box>
         <Container maxWidth="lg">
           <CustomTitle
@@ -82,7 +81,7 @@ const CommerceOrderDetailPage = () => {
       }}
     >
       <Box sx={{ pt: { xs: 1, sm: 1, md: 1 }, mb: 3 }}>
-        <BackButton onClick={() => navigate("/commerce")} />
+        <BackButton />
       </Box>
 
       <Container maxWidth="lg">

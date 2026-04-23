@@ -1,5 +1,5 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { MdStorefront } from "react-icons/md";
+import { MdStorefront, MdCancel } from "react-icons/md";
 import CustomButton from "@/shared/components/CustomButton";
 import { PaymentMethodDisplayName } from "@/modules/orders/utils/payment-method-mapping";
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
@@ -70,22 +70,22 @@ const OrderPaymentSection = ({
       {/* Botón Cancelar Pedido */}
       <CustomButton
         text="Cancelar Pedido"
+        fullWidth
         onClick={onCancelClick}
+        startIcon={<MdCancel size={20} />}
         sx={{
-          mt: 0,
-          backgroundColor: "#77A787",
           borderRadius: 3,
           py: 1.5,
-          px: 4,
           fontWeight: 600,
           fontSize: { xs: 14, sm: 15 },
           textTransform: "none",
           boxShadow: "none",
+          backgroundColor: "#F5F5F5",
+          color: "#D32F2F",
           flex: { xs: "none", sm: 1 },
-          width: "100%",
           "&:hover": {
-            bgcolor: "#6B9677",
-            boxShadow: "0 2px 8px rgba(119,167,135,0.3)",
+            backgroundColor: "#FFEBEE",
+            boxShadow: "none",
           },
         }}
       />

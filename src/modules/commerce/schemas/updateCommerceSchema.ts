@@ -39,7 +39,7 @@ export const updateCommerceSchema = z
           if (!val || val === "") return true;
           return val.length <= 22;
         },
-        { message: "La contraseña no debe exceder los 32 caracteres" },
+        { message: "La contraseña no debe exceder los 22 caracteres" },
       )
       .refine(
         (val) => {

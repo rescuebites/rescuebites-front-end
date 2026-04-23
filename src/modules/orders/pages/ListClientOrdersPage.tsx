@@ -14,7 +14,7 @@ const ListClientOrdersPage = () => {
   const { activeStatus, setActiveStatus, filteredOrders } = useOrderFilters(orders);
 
   return (
-    <Box mt={2} sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto", pb: { xs: 5, sm: 10} }}>
+    <Box mt={2} sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto" }}>
       <Box mb={3}>
         <BackButton />
       </Box>

@@ -9,7 +9,7 @@ interface NotLoggedInScreenProps {
 }
 
 export default function NotLoggedInScreen({
-  imageSrc = "/../../../../public/NotLoggedInBag.png",
+  imageSrc = "/NotLoggedInBag.png",
   loginPath = "/auth/login",
 }: NotLoggedInScreenProps) {
   const navigate = useNavigate();
@@ -72,8 +72,7 @@ export default function NotLoggedInScreen({
           width: 230,
           fontSize: {xs:"14px", sm:"16px", md:"18px"},
         }}
-      >
-      </CustomButton>
+      />
     </Box>
   );
 }

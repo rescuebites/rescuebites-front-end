@@ -1,13 +1,15 @@
 import { Store, Clock } from "lucide-react";
 import { Box, Card, CardContent, Chip, Typography } from "@mui/material";
-import { OrderResponse } from "../interfaces/responses/order-response.interface";
+import CustomTitle from "@/shared/components/CustomTitle";
+import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 import { getShortOrderNumber } from "../utils/order.utils";
 import { OrderStatusStyles } from "../config/order-status-styles.config";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
 import { formatDateWithTime } from "@/shared/utils/dateFormat";
 import { useNavigate } from "react-router-dom";
+import { formatCurrency } from "@/shared/utils/currency.utils";
 
-function OrderCard({ order }: { order: OrderResponse }) {
+function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
   const style = OrderStatusStyles[order.status];
   const bg = style.backgroundColor;
   const color = style.textColor;
@@ -37,14 +39,15 @@ function OrderCard({ order }: { order: OrderResponse }) {
           <Box display="flex" alignItems="center" gap={1.5}>
             <Box
               sx={{
-                width: 44,
-                height: 44,
+                width: { xs: 44, sm: 52 },
+                height: { xs: 44, sm: 52 },
                 borderRadius: 2,
-                bgcolor: "#FFF0E6",
+                bgcolor: "#E8F5E9",
                 overflow: "hidden",
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "center",
+                flexShrink: 0,
               }}
             >
               {commerceImageUrl ? (
@@ -54,29 +57,41 @@ function OrderCard({ order }: { order: OrderResponse }) {
                   style={{ width: "100%", height: "100%", objectFit: "cover" }}
                 />
               ) : (
-                <Store size={30} color="#E07A30" />
+                <Store size={28} color="#E07A30" />
               )}
             </Box>
             <Box>
-              <Typography fontWeight={600} fontSize={25}>
+              <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }}>
                 {order.commerceName}
               </Typography>
               <Chip
+                icon={
+                  <Box
+                    sx={{
+                      width: 8,
+                      height: 8,
+                      borderRadius: "50%",
+                      bgcolor: color,
+                    }}
+                  />
+                }
                 label={OrderStatusDisplayName[order.status]}
-                size="small"
                 sx={{
-                  mt: 0.5,
-                  height: 20,
-                  fontSize: 15,
-                  fontWeight: 500,
-                  color,
-                  bgcolor: bg,
-                  borderRadius: "999px",
+                  backgroundColor: bg,
+                  color: color,
+                  fontWeight: 600,
+                  fontSize: { xs: 13, sm: 14 },
+                  height: { xs: 28, sm: 36 },
+                  px: 2,
+                  "& .MuiChip-icon": {
+                    ml: 0.5,
+                    mr: -0.5,
+                  },
                 }}
               />
             </Box>
           </Box>
-          <Typography fontSize={20} color="text.secondary">
+          <Typography fontSize={{ xs: 14, sm: 16 }} color="text.secondary">
             #{getShortOrderNumber(order.orderNumber)}
           </Typography>
         </Box>
@@ -92,17 +107,21 @@ function OrderCard({ order }: { order: OrderResponse }) {
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" alignItems="center" gap={0.75}>
               <Clock size={20} color="gray" />
-              <Typography fontSize={18} color="text.secondary">
+              <Typography fontSize={{ xs: 13, sm: 14 }} color="text.secondary">
                 {formatDateWithTime(order.createdAt)}
               </Typography>
             </Box>
             <Typography fontSize={20} color="text.disabled">
-              {(order.items ?? []).length}{" "}
-              {(order.items ?? []).length === 1 ? "Producto" : "Productos"}
+              {order.totalItems}{" "}
+              {order.totalItems === 1 ? "Producto" : "Productos"}
             </Typography>
+            {/* <Typography fontSize={{ xs: 13, sm: 14 }} color="text.disabled">
+              {order.totalItems ?? (order.items ?? []).reduce((sum, it) => sum + (it.quantity ?? 0), 0)}{" "}
+              {(order.totalItems ?? (order.items ?? []).reduce((sum, it) => sum + (it.quantity ?? 0), 0)) === 1 ? "Producto" : "Productos"}
+            </Typography> */}
           </Box>
-          <Typography fontWeight={550} fontSize={22} color="#77A787">
-            ${order.total.toFixed(2)}
+          <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }} color="#77A787">
+            ${formatCurrency(order.total)}
           </Typography>
         </Box>
       </CardContent>
@@ -113,7 +132,7 @@ function OrderCard({ order }: { order: OrderResponse }) {
 export default function OrdersListCard({
   orders = [],
 }: {
-  orders: OrderResponse[];
+  orders: OrderSummaryForClientResponse[];
 }) {
   if (orders.length === 0) {
     return (
@@ -125,17 +144,8 @@ export default function OrdersListCard({
         gap={0.5}
       >
         <img src="/emptyBag.png" alt="Sin pedidos" width={400} height={300} />
-        <Typography
-          fontSize={20}
-          fontWeight={500}
-          color="#2d2d2d"
-          textAlign="center"
-        >
-          Sin pedidos
-        </Typography>
-        <Typography fontSize={18} color="#6d6d6d" textAlign="center">
-          Todavía no realizaste ningún pedido
-        </Typography>
+        <CustomTitle text="Sin pedidos" fontSize={20} fontWeight={500} color="#2d2d2d" align="center" />
+        <CustomTitle text="No encontramos pedidos en esta categoría. Realizá tu próxima compra y llená tu lista." fontSize={18} color="#6d6d6d" align="center" fontWeight={400} />
       </Box>
     );
   }
