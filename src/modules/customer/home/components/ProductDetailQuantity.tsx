@@ -23,6 +23,7 @@ export const ProductDetailQuantity = ({
         spacing={2}
         alignItems="center"
         justifyContent="space-between"
+        mt={2}
       >
         <Typography sx={{ color: "#2D2D2D", fontWeight: 700, fontSize: 16 }}>
           Cantidad
@@ -39,7 +40,7 @@ export const ProductDetailQuantity = ({
   if (mode === "viewOnly") {
     return (
       <>
-        <Divider sx={{ my: 2 }} />
+        <Divider sx={{ my: 1.5 }} />
         <Stack
           direction="row"
           spacing={2}

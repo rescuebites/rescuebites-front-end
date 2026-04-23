@@ -7,6 +7,7 @@ interface ProductDetailCommerceProps {
   commerceOpeningHours: string;
   commerceImages?: ImageResponse[];
   onCommerceClick: () => void;
+  showDivider?: boolean;
 }
 
 export const ProductDetailCommerce = ({
@@ -14,6 +15,7 @@ export const ProductDetailCommerce = ({
   commerceOpeningHours,
   commerceImages,
   onCommerceClick,
+  showDivider = true,
 }: ProductDetailCommerceProps) => {
   return (
     <>
@@ -82,7 +84,7 @@ export const ProductDetailCommerce = ({
         </Stack>
       </Paper>
 
-      <Divider sx={{ my: 1 }} />
+      {showDivider && <Divider sx={{ my: 1 }} />}
     </>
   );
 };

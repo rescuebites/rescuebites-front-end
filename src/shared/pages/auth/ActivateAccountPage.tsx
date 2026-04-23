@@ -45,12 +45,16 @@ export function ActivateAccountPage() {
           if (clientData) {
             const imageFile = await getProfileImageFile();
             const payload = { ...clientData.createClientRequest, userId };
-            createClient({
-              createClientRequest: payload,
-              profilePicture: imageFile,
-            });
-            clearData();
-            clearProfileImage();
+            createClient(
+              { createClientRequest: payload, profilePicture: imageFile },
+              {
+                onSuccess: () => {
+                  clearData();
+                  clearProfileImage();
+                  navigate("/auth/login", { replace: true });
+                },
+              },
+            );
           } else if (commerceData) {
             const imageFiles = await getCommerceProfileImageFiles();
             await createCommerce({

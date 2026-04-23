@@ -1,4 +1,3 @@
-//Diseño básico idéntico para todas las pantallas y roles
 import { Box } from "@mui/material";
 import Header from "../../components/layout/Header";
 import { Outlet } from "react-router-dom";
@@ -12,7 +11,7 @@ export default function AppLayout({navbar}:CustomerLayoutProps) {
      <Box sx={{ display: "flex", flexDirection: "column", height: "100vh" }}>
       
       {/* Contenido scrolleable */}
-      <Box sx={{ flex: 1, overflow: "auto", pb: "56px", backgroundColor: "#F9F9F9" }}>
+      <Box sx={{ flex: 1, overflow: "auto", pb: { xs: "100px", sm: "110px", md: "120px" }, backgroundColor: "#F9F9F9" }}>
         <Header/>
         <Outlet />
       </Box>

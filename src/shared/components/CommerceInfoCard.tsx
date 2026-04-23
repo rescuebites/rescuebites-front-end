@@ -12,7 +12,7 @@ interface CommerceInfoCardProps {
   commerceName: string;
   commerceAddress: string;
   commerceLocality?: string;
-  commerceType?: string;
+  commerceTypes?: CommerceType[];
   commerceImages?: Array<{ url: string }>;
   onClick?: () => void;
 }
@@ -21,17 +21,16 @@ const CommerceInfoCard: React.FC<CommerceInfoCardProps> = ({
   commerceName,
   commerceAddress,
   commerceLocality,
-  commerceType,
+  commerceTypes,
   commerceImages,
   onClick,
 }) => {
-  // Obtener los estilos del tipo de comercio
-  const displayName = commerceType
-    ? CommerceTypeDisplayName[commerceType as CommerceType] || commerceType
-    : null;
-  const commerceStyle = displayName
-    ? COMMERCE_TYPE_STYLES[displayName as CommerceTypeDisplay]
-    : null;
+  // Obtener los estilos de cada tipo de comercio
+  const typeChips = (commerceTypes ?? []).map((type) => {
+    const displayName = CommerceTypeDisplayName[type] || type;
+    const style = COMMERCE_TYPE_STYLES[displayName as CommerceTypeDisplay];
+    return style ? { displayName, style } : null;
+  }).filter(Boolean) as { displayName: string; style: (typeof COMMERCE_TYPE_STYLES)[CommerceTypeDisplay] }[];
 
   return (
     <Paper
@@ -83,7 +82,7 @@ const CommerceInfoCard: React.FC<CommerceInfoCardProps> = ({
             direction="row"
             alignItems="center"
             spacing={0.5}
-            sx={{ mb: commerceType ? 1 : 0 }}
+            sx={{ mb: typeChips.length > 0 ? 1 : 0 }}
           >
             <MdLocationOn size={16} color="#9CA3AF" />
 
@@ -95,28 +94,33 @@ const CommerceInfoCard: React.FC<CommerceInfoCardProps> = ({
             />
           </Stack>
 
-          {/* Chip del tipo de comercio */}
-          {commerceType && commerceStyle && displayName && (
-            <Chip
-              icon={commerceStyle.icon as any}
-              label={displayName}
-              size="small"
-              sx={{
-                backgroundColor: commerceStyle.bg,
-                color: commerceStyle.color,
-                fontWeight: 600,
-                fontSize: 11,
-                height: 22,
-                "& .MuiChip-label": {
-                  px: 1.5,
-                },
-                "& .MuiChip-icon": {
-                  color: commerceStyle.color,
-                  ml: 1,
-                  mr: -0.5,
-                },
-              }}
-            />
+          {/* Chips de tipos de comercio */}
+          {typeChips.length > 0 && (
+            <Stack direction="row" spacing={0.5} flexWrap="wrap">
+              {typeChips.map(({ displayName, style }) => (
+                <Chip
+                  key={displayName}
+                  icon={style.icon as any}
+                  label={displayName}
+                  size="small"
+                  sx={{
+                    backgroundColor: style.bg,
+                    color: style.color,
+                    fontWeight: 600,
+                    fontSize: 11,
+                    height: 22,
+                    "& .MuiChip-label": {
+                      px: 1.5,
+                    },
+                    "& .MuiChip-icon": {
+                      color: style.color,
+                      ml: 1,
+                      mr: -0.5,
+                    },
+                  }}
+                />
+              ))}
+            </Stack>
           )}
         </Box>
       </Stack>

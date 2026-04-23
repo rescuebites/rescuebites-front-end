@@ -7,6 +7,7 @@ import LoadingState from "@/shared/components/LoadingState";
 import EmptyState from "@/shared/components/EmptyState";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useClientProfile } from "@/modules/client/hooks/useClientProfile";
+import BackButton from "@/shared/components/ui/BackButton";
 
 export function EditClientPage() {
   const { clientId } = useAuthStore();
@@ -22,7 +23,8 @@ export function EditClientPage() {
   }
 
   return (
-    <Box >
+    <Box>
+      <BackButton sx={{ position: "absolute", left: 14, top: 14 }} />
       <CustomTitle text="Modificar Perfil" />
 
       <ProfileImageUpload

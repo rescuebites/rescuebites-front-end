@@ -1,17 +1,23 @@
 import React, { useState } from "react";
-import { Box, Typography, Container, TextField, Button } from "@mui/material";
+import { Box, Typography, Container, Button } from "@mui/material";
+import { TextField } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import BackButton from "@/shared/components/ui/BackButton";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CartCommerceSection from "../components/CartCommerceSection";
 import PaymentDetail from "../components/PaymentDetails";
 import { useCart } from "../hooks/useCart";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
+import OrderSuccessPage from "@/shared/pages/OrderSuccessPage";
+import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
+import { fieldSx } from "@/shared/styles/fieldSx";
 
 const CartPage: React.FC = () => {
   const {
     cart,
     commerce,
     confirming,
+    createdOrderId,
     notes,
     setNotes,
     handleRemove,
@@ -21,16 +27,93 @@ const CartPage: React.FC = () => {
     handleClearCart,
   } = useCart();
 
+  const navigate = useNavigate();
   const [clearDialogOpen, setClearDialogOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
+  const [selectedProductQuantity, setSelectedProductQuantity] =
+    useState<number>(1);
+  const [productDialogOpen, setProductDialogOpen] = useState(false);
+
+  const handleProductClick = (productId: string) => {
+    const item = commerce?.items.find((i) => i.productId === productId);
+    setSelectedProductId(productId);
+    setSelectedProductQuantity(item?.quantity ?? 1);
+    setProductDialogOpen(true);
+  };
+
+  if (createdOrderId) {
+    return <OrderSuccessPage orderId={createdOrderId} />;
+  }
 
   return (
-    <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh", py: { xs: 0.2, sm: 0.4 }, px: { xs: 2, sm: 5, md: 6 } , pb:{ xs: 8, sm: 10 } }}>
-      <Box sx={{ pt: 1, mb: 3 }}>
-        <BackButton />
-      </Box>
-
+    <Box
+      sx={{
+        backgroundColor: "#FAFAFA",
+        minHeight: "100vh",
+        px: { xs: 2, sm: 5, md: 6 },
+      }}
+    >
       <Container maxWidth="lg">
-        
+        <Box
+          display="grid"
+          gridTemplateColumns="auto 1fr auto"
+          alignItems="center"
+          sx={{ mb: 2, mt: { xs: 2, sm: 3 } }}
+        >
+          <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+            <BackButton />
+          </Box>
+
+          <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {commerce && (
+              <CustomTitle
+                text="Mi carrito"
+                color="#2d2d2d"
+                variant="h4"
+                align="center"
+              />
+            )}
+          </Box>
+
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+            }}
+          >
+            {commerce && (
+              <Button
+                onClick={() => setClearDialogOpen(true)}
+                sx={{
+                  color: "#77a77c",
+                  fontWeight: 600,
+                  textTransform: "none",
+                  fontSize: { xs: 14, sm: 16 },
+                }}
+              >
+                Vaciar carrito
+              </Button>
+            )}
+          </Box>
+        </Box>
+
+        {commerce && (
+          <ConfirmModal
+            open={clearDialogOpen}
+            title="¿Vaciar el carrito?"
+            description="Se eliminarán todos los productos del carrito."
+            confirmText="Vaciar"
+            variant="danger"
+            onConfirm={async () => {
+              setClearDialogOpen(false);
+              await handleClearCart();
+            }}
+            onCancel={() => setClearDialogOpen(false)}
+          />
+        )}
 
         {!commerce ? (
           <Box
@@ -57,28 +140,12 @@ const CartPage: React.FC = () => {
           </Box>
         ) : (
           <>
-          <Box display="flex" alignItems="center" justifyContent="space-between" mb={1}>
-            <CustomTitle text="Tu carrito" color="#2d2d2d" variant="h4" align="left" />
-            <Button
-              onClick={() => setClearDialogOpen(true)}
-              sx={{ color: "#77a77c", fontWeight: 600, textTransform: "none", fontSize: { xs: 14, sm: 16 } }}
-            >
-              Vaciar carrito
-            </Button>
-          </Box>
-          <ConfirmModal
-            open={clearDialogOpen}
-            title="¿Vaciar el carrito?"
-            description="Se eliminarán todos los productos del carrito."
-            confirmText="Vaciar"
-            variant="danger"
-            onConfirm={async () => { setClearDialogOpen(false); await handleClearCart(); }}
-            onCancel={() => setClearDialogOpen(false)}
-          />
             <CartCommerceSection
               commerce={commerce}
               onRemove={handleRemove}
               onQuantityChange={handleUpdateQuantity}
+              onCommerceClick={() => navigate(`/stores/${commerce.commerceId}`)}
+              onProductClick={handleProductClick}
             />
 
             <TextField
@@ -90,28 +157,9 @@ const CartPage: React.FC = () => {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               inputProps={{ maxLength: 300 }}
-              sx={{
-                mb: 3,
-                backgroundColor: "white",
-                "& .MuiInputLabel-root.Mui-focused": {
-                  color: "#6b7280", 
-                },
-                "& .MuiOutlinedInput-root": {
-                  borderRadius: "10px", 
-                  "& fieldset": { 
-                    borderColor: "#E5E7EB" 
-                  },
-                  "&:hover fieldset": { 
-                    borderColor: "#77a77c" 
-                  },
-                  "&.Mui-focused fieldset": { 
-                    borderColor: "#77a77c",
-                    borderWidth: "1px"
-                  },
-                },
-              }}
+              sx={{ ...fieldSx, mb: 3 }}
             />
-      
+
             {cart && (
               <PaymentDetail
                 cart={cart}
@@ -122,6 +170,17 @@ const CartPage: React.FC = () => {
             )}
           </>
         )}
+
+        <ProductDetailDialog
+          open={productDialogOpen}
+          onClose={() => {
+            setProductDialogOpen(false);
+            setSelectedProductId(null);
+          }}
+          productId={selectedProductId}
+          mode="viewOnly"
+          fixedQuantity={selectedProductQuantity}
+        />
       </Container>
     </Box>
   );

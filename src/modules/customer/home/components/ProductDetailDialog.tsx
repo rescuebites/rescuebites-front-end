@@ -222,12 +222,15 @@ export default function ProductDetailDialog({
 
           {/* Información del comercio (oculta en modo edición o cuando se solicita) */}
           {mode !== "edit" && !hideCommerceInfo && productDetail.commerceName && (
-            <ProductDetailCommerce
-              commerceName={productDetail.commerceName}
-              commerceOpeningHours={productDetail.commerceOpeningHours}
-              commerceImages={productDetail.commerceImages}
-              onCommerceClick={handleGoToCommerce}
-            />
+            <Box sx={{ mt: 3 }}>
+              <ProductDetailCommerce
+                commerceName={productDetail.commerceName}
+                commerceOpeningHours={productDetail.commerceOpeningHours}
+                commerceImages={productDetail.commerceImages}
+                onCommerceClick={handleGoToCommerce}
+                showDivider={false}
+              />
+            </Box>
           )}
 
           {/* Control de cantidad */}
