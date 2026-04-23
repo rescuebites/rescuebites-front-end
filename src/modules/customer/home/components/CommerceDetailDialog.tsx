@@ -26,6 +26,7 @@ import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useEffect, useState } from "react";
+import ImageCarouselModal from "@/modules/commerce/components/ImageCarouselModal";
 import AddToCartControl from "@/modules/cart/components/AddToCartControl";
 import ClosedCommerceAlert from "./ClosedCommerceAlert";
 import { isCommerceCurrentlyClosed } from "../utils/commerceStatus";
@@ -39,7 +40,11 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   commerceId,
 }) => {
   const navigate = useNavigate();
+  const [showCarousel, setShowCarousel] = useState(false);
 
+  useEffect(() => {
+    setShowCarousel(false);
+  }, [commerceId]);
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } =
     useCommerceDetail(commerceId);
@@ -113,19 +118,33 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             mb: { xs: 3, sm: 3, md: 5 },
           }}
         >
-          <Avatar
-            src={commerce.images?.[0]?.url || ""}
+          <ButtonBase
+            onClick={() => setShowCarousel(true)}
+            aria-label={`Ver imágenes de ${commerce.name}`}
+            disabled={!commerce.images || commerce.images.length === 0}
             sx={{
-              width: { xs: 95, sm: 160, md: 200 },
-              height: { xs: 95, sm: 160, md: 200 },
-              backgroundColor: "#77A787",
+              borderRadius: "50%",
               flexShrink: 0,
+              "&:focus-visible": {
+                outline: "3px solid #77A787",
+                outlineOffset: 3,
+              },
             }}
           >
-            {!commerce.images?.[0]?.url && (
-              <RestaurantIcon sx={{ fontSize: "inherit" }} />
-            )}
-          </Avatar>
+            <Avatar
+              src={commerce.images?.[0]?.url || ""}
+              sx={{
+                width: { xs: 95, sm: 160, md: 200 },
+                height: { xs: 95, sm: 160, md: 200 },
+                backgroundColor: "#77A787",
+                cursor: commerce.images && commerce.images.length > 0 ? "pointer" : "default",
+              }}
+            >
+              {!commerce.images?.[0]?.url && (
+                <RestaurantIcon sx={{ fontSize: "inherit" }} />
+              )}
+            </Avatar>
+          </ButtonBase>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
             <CustomTitle text={commerce.name} color="#2D2D2D" variant="h3" align="left"/>
@@ -276,6 +295,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
           </Box>
         )}
       </Box>
+
+      <ImageCarouselModal
+        open={showCarousel}
+        images={commerce.images ?? []}
+        onClose={() => setShowCarousel(false)}
+      />
     </Box>
   );
 };
