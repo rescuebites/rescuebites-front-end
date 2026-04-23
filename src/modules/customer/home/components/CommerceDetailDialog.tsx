@@ -42,6 +42,9 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   const navigate = useNavigate();
   const [showCarousel, setShowCarousel] = useState(false);
 
+  useEffect(() => {
+    setShowCarousel(false);
+  }, [commerceId]);
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } =
     useCommerceDetail(commerceId);
