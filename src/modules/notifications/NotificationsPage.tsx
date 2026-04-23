@@ -128,6 +128,7 @@ export default function NotificationsPage() {
           return (
             <Paper
               key={n.id} // 👈 mejor que index
+              onClick={() => navigate(`/commerce/orders/${n.registerId}`)}
               sx={{
                 p: 2,
                 mb: 2,

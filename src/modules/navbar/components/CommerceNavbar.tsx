@@ -30,10 +30,11 @@ export default function CommerceNavbar() {
         console.log("DATA", data);
         // 🔥 asegurar array SIEMPRE
         const list = Array.isArray(data) ? data : (data.content ?? []);
-
+        console.log("list", list);
         const mapped = list.map((n: any) => ({
           id: n.id,
-          eventId: n.data?.eventId,
+          eventId: n?.eventId,
+          registerId: n?.registerId,
           message: n.message,
           type: n.type,
           read: n.read,
@@ -67,6 +68,7 @@ export default function CommerceNavbar() {
       addNotification({
         id: crypto.randomUUID(),
         eventId: data.eventId,
+        registerId: data.registerId,
         message: data.message,
         type: data.type,
         isRead: false,

@@ -37,7 +37,8 @@ export default function ClientNavbar() {
 
         const mapped = list.map((n: any) => ({
           id: n.id,
-          eventId: n.data?.eventId,
+          eventId: n.eventId,
+          registerId: n.registerId,
           message: n.message,
           type: n.type,
           isRead: n.read,
@@ -72,6 +73,7 @@ export default function ClientNavbar() {
       addNotification({
         id: crypto.randomUUID(),
         eventId: data.eventId,
+        registerId: data.registerId,
         message: data.message,
         type: data.type,
         isRead: false,
