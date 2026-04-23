@@ -5,6 +5,7 @@ export type NotificationType = "Confirmed" | "Cancelled" | "Expired";
 export interface Notification {
   id: string;
   eventId: string;
+  registerId: string,
   message: string;
   type: NotificationType;
   isRead: boolean;
