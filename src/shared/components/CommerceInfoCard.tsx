@@ -12,7 +12,7 @@ interface CommerceInfoCardProps {
   commerceName: string;
   commerceAddress: string;
   commerceLocality?: string;
-  commerceTypes?: string[];
+  commerceTypes?: CommerceType[];
   commerceImages?: Array<{ url: string }>;
   onClick?: () => void;
 }
@@ -27,7 +27,7 @@ const CommerceInfoCard: React.FC<CommerceInfoCardProps> = ({
 }) => {
   // Obtener los estilos de cada tipo de comercio
   const typeChips = (commerceTypes ?? []).map((type) => {
-    const displayName = CommerceTypeDisplayName[type as CommerceType] || type;
+    const displayName = CommerceTypeDisplayName[type] || type;
     const style = COMMERCE_TYPE_STYLES[displayName as CommerceTypeDisplay];
     return style ? { displayName, style } : null;
   }).filter(Boolean) as { displayName: string; style: (typeof COMMERCE_TYPE_STYLES)[CommerceTypeDisplay] }[];

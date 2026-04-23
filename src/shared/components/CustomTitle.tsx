@@ -22,14 +22,14 @@ export default function CustomTitle({
   fontSize,
   fontStyle,
   textDecoration,
-  sx,
+  
 }: CustomTitleProps) {
   return (
     <Typography
       variant={variant}
       align={align}
       gutterBottom
-      sx={{ fontWeight, color, fontSize, fontStyle, textDecoration, ...sx }}
+      sx={[{ fontWeight, color, fontSize, fontStyle, textDecoration }]}
     >
       {text}
     </Typography>
