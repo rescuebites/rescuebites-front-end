@@ -99,7 +99,7 @@ export default function NavbarUI({
               sx={{
                 width: { xs: 64, md: 76, lg: 88 },
                 height: { xs: 64, md: 76, lg: 88 },
-                bgcolor: isActive(routes.cart || routes.orders) ? '#77A787' : '#3E6A53',
+                bgcolor: isActive(routes.cart || routes.orders) ? '#3E6A53' : '#77A787',
                 color: '#FFFFFF',
                 border: '4px solid #FFFFFF',
                 boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
