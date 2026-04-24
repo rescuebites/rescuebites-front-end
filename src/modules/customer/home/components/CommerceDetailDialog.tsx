@@ -20,7 +20,6 @@ import { ProductResponse } from "@/modules/products/interfaces/responses/product
 import { useCommerceDetail } from "@/modules/commerce/hooks/useCommerceDetail";
 import { useProducts } from "../hooks/useProducts";
 import BackButton from "../../../../shared/components/ui/BackButton";
-import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
@@ -39,7 +38,6 @@ interface CommerceDetailDialogProps {
 const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   commerceId,
 }) => {
-  const navigate = useNavigate();
   const [showCarousel, setShowCarousel] = useState(false);
 
   useEffect(() => {
@@ -61,7 +59,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
     return sorted;
   };
 
-    //función para probar si funciona el agregado de productos a carrito
+  //función para probar si funciona el agregado de productos a carrito
   const { fetchCart } = useCartStore();
   useEffect(() => {
     fetchCart();
@@ -99,7 +97,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
       }}
     >
       <Box sx={{ pt: { xs: 2, sm: 3, md: 4 }, px: { xs: 2, sm: 3, md: 5 } }}>
-        <BackButton  />
+        <BackButton />
       </Box>
       <Box
         sx={{
@@ -137,7 +135,10 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                 width: { xs: 95, sm: 160, md: 200 },
                 height: { xs: 95, sm: 160, md: 200 },
                 backgroundColor: "#77A787",
-                cursor: commerce.images && commerce.images.length > 0 ? "pointer" : "default",
+                cursor:
+                  commerce.images && commerce.images.length > 0
+                    ? "pointer"
+                    : "default",
               }}
             >
               {!commerce.images?.[0]?.url && (
@@ -147,15 +148,28 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
           </ButtonBase>
 
           <Box sx={{ flex: 1, minWidth: 0 }}>
-            <CustomTitle text={commerce.name} color="#2D2D2D" variant="h3" align="left"/>
+            <CustomTitle
+              text={commerce.name}
+              color="#2D2D2D"
+              variant="h3"
+              align="left"
+            />
 
             {commerce.description && (
-              <CustomTitle text={commerce.description} color="#757575" variant="h5" align="left"/>
-              
+              <CustomTitle
+                text={commerce.description}
+                color="#757575"
+                variant="h5"
+                align="left"
+              />
             )}
-            {/* Ícono de tipo de comercio */}
-            {commerce.commerceTypes?.[0] && (
-              <CommerceTypeChip commerceType={commerce.commerceTypes[0]} />
+            {/* Tipos de comercio */}
+            {commerce.commerceTypes && commerce.commerceTypes.length > 0 && (
+              <Box sx={{ display: "flex", gap: 1, mt: 1, flexWrap: "wrap" }}>
+                {commerce.commerceTypes.map((ct: string) => (
+                  <CommerceTypeChip key={ct} commerceType={ct} />
+                ))}
+              </Box>
             )}
           </Box>
         </Box>
@@ -197,7 +211,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <CustomTitle text={commerce.address} color="#757575" variant="h6" align="left"/>
+                <CustomTitle
+                  text={commerce.address}
+                  color="#757575"
+                  variant="h6"
+                  align="left"
+                />
               </Box>
             )}
 
@@ -253,7 +272,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                     color: "#757575",
                   }}
                 />
-                <CustomTitle text={commerce.phone} color="#757575" variant="h6" align="left"/>
+                <CustomTitle
+                  text={commerce.phone}
+                  color="#757575"
+                  variant="h6"
+                  align="left"
+                />
               </Box>
             )}
           </Box>
@@ -269,7 +293,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             px: { xs: 0, sm: 0.5 },
           }}
         >
-          <CustomTitle text="Catálogo" color="#2D2D2D" variant="h4" align="left"/>
+          <CustomTitle
+            text="Catálogo"
+            color="#2D2D2D"
+            variant="h4"
+            align="left"
+          />
         </Box>
 
         {/* Menu Items */}
@@ -292,7 +321,12 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
             }}
           >
             {products.map((item: ProductResponse) => (
-              <ProductCard key={item.productId} product={item} commerceId={commerceId} commerceName={commerce?.name} />
+              <ProductCard
+                key={item.productId}
+                product={item}
+                commerceId={commerceId}
+                commerceName={commerce?.name}
+              />
             ))}
           </Box>
         )}
@@ -308,7 +342,15 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 };
 
 // Componente separado para las tarjetas de producto
-function ProductCard({ product, commerceId, commerceName }: { product: ProductResponse; commerceId: string; commerceName?: string }) {
+function ProductCard({
+  product,
+  commerceId,
+  commerceName,
+}: {
+  product: ProductResponse;
+  commerceId: string;
+  commerceName?: string;
+}) {
   return (
     <Card
       sx={{
@@ -367,7 +409,12 @@ function ProductCard({ product, commerceId, commerceName }: { product: ProductRe
               flexDirection: "column",
             }}
           >
-            <CustomTitle text={product.name} color="#2D2D2D" variant="h4" align="left"/>
+            <CustomTitle
+              text={product.name}
+              color="#2D2D2D"
+              variant="h4"
+              align="left"
+            />
 
             {/* Prices */}
             <Box
@@ -418,14 +465,14 @@ function ProductCard({ product, commerceId, commerceName }: { product: ProductRe
             </Box>
           </Box>
           <AddToCartControl
-          productId={product.productId}
-          productName={product.name}
-          unitPrice={product.discountedPrice}
-          availableStock={product.stock}
-          imageUrl={product.productImages?.[0]?.url}
-          commerceId={commerceId}
-          commerceName={commerceName}
-        />
+            productId={product.productId}
+            productName={product.name}
+            unitPrice={product.discountedPrice}
+            availableStock={product.stock}
+            imageUrl={product.productImages?.[0]?.url}
+            commerceId={commerceId}
+            commerceName={commerceName}
+          />
         </Box>
       </CardContent>
     </Card>

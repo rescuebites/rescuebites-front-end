@@ -65,8 +65,8 @@ function StoresSkeleton() {
   return (
     <Box sx={{ display: "flex", gap: 2, py: 2 }}>
       {[1, 2, 3, 4, 5, 6].map((i) => (
-        <Stack key={i} sx={{ minWidth: 160, gap: 1 }}>
-          <Skeleton variant="rectangular" sx={{ width: "100%", aspectRatio: "3/4", borderRadius: 2 }} animation="wave" />
+        <Stack key={i} sx={{ minWidth: 200, gap: 1 }}>
+          <Skeleton variant="rectangular" sx={{ width: "100%", aspectRatio: "4/5", borderRadius: 3, height: { xs: 160, sm: 200 } }} animation="wave" />
           <Skeleton width="80%" animation="wave" />
           <Skeleton width="60%" animation="wave" />
         </Stack>

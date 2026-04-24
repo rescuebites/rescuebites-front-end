@@ -6,10 +6,9 @@ import FeaturedStores from "../components/FeaturedStores";
 import TopDeals from "../components/TopDeals";
 import FilterDrawer from "../../../filterPanel/components/FilterDrawer";
 import { useNavigate } from "react-router-dom";
-import { useSearch } from "@/modules/filterPanel/hooks/useSearch"
+import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { useFilters } from "../../../filterPanel/hooks/useFilters";
-
 
 export default function HomePage() {
   useFilters();
@@ -29,12 +28,12 @@ export default function HomePage() {
   };
 
   const handleSearch = (q?: string) => {
-  const term = (q ?? query).trim();
-  console.log("navegando con term:", term);
-  if (!term) return;
-  confirmSearch(term);
-  navigate(`/search?q=${encodeURIComponent(term)}`);
-};
+    const term = (q ?? query).trim();
+    console.log("navegando con term:", term);
+    if (!term) return;
+    confirmSearch(term);
+    navigate(`/search?q=${encodeURIComponent(term)}`);
+  };
 
   const navigate = useNavigate();
 
@@ -47,8 +46,7 @@ export default function HomePage() {
   };
 
   return (
-    <Box sx={{ bgcolor: "#FAFAFA", minHeight: '100vh'}}>
-
+    <Box sx={{ bgcolor: "#FAFAFA", minHeight: "100vh" }}>
       {/* Sección de búsqueda y categorías */}
       <Container
         maxWidth={false}
@@ -56,14 +54,14 @@ export default function HomePage() {
           //mt: { xs: 4, md: 6 },
           pt: { xs: 2, sm: 3 },
           px: { xs: 2, sm: 3 },
-          maxWidth: '1600px',
-          mx: 'auto',
+          maxWidth: "1600px",
+          mx: "auto",
         }}
       >
         <Stack spacing={{ xs: 3, sm: 4 }}>
           <SearchBar
-            query={query}              
-            onQueryChange={handleSearchChange}  
+            query={query}
+            onQueryChange={handleSearchChange}
             onSearch={handleSearch}
             onClear={clearSearch}
             suggestions={suggestions}
@@ -71,27 +69,36 @@ export default function HomePage() {
             onHideSuggestions={() => setShowSuggestions(false)}
             onShowSuggestions={() => setShowSuggestions(true)}
           />
-          <CustomTitle text="Tipos de comercio" variant="h5" color='#2D2D2D' align="left"/>
-          <CommerceTypeChips />
+          <Box>
+            <CustomTitle
+              text="Tipos de comercio"
+              variant="h5"
+              color="#2D2D2D"
+              align="left"
+            />
+            <Box sx={{ mt: { xs: 0.5, sm: 1 } }}>
+              <CommerceTypeChips />
+            </Box>
+          </Box>
         </Stack>
       </Container>
 
       {/* Sección de locales destacados */}
       <Container
         maxWidth={false}
-        sx={{ 
+        sx={{
           mt: { xs: 4, md: 6 },
-          pt: { xs: 3, md: 4 }, 
           px: { xs: 2, sm: 3 },
-          maxWidth: '1600px',
-          mx: 'auto',
+          maxWidth: "1600px",
+          mx: "auto",
         }}
       >
         <Stack spacing={3}>
-          <SectionHeader 
-          secondary="Ver todo" 
-          onSecondaryClick={handleGoToAllStores} >
-          <CustomTitle text="Locales" variant="h5" color='#2D2D2D'/>
+          <SectionHeader
+            secondary="Ver todo"
+            onSecondaryClick={handleGoToAllStores}
+          >
+            <CustomTitle text="Locales" variant="h5" color="#2D2D2D" />
           </SectionHeader>
           <FeaturedStores />
         </Stack>
@@ -100,19 +107,23 @@ export default function HomePage() {
       {/* Sección de productos destacados */}
       <Container
         maxWidth={false}
-        sx={{ 
+        sx={{
           mt: { xs: 4, md: 6 },
-          pt: { xs: 3, md: 4 }, 
           px: { xs: 2, sm: 3 },
-          maxWidth: '1600px',
-          mx: 'auto',
+          maxWidth: "1600px",
+          mx: "auto",
         }}
       >
         <Stack spacing={3}>
-          <SectionHeader 
-          secondary="Ver todo" 
-          onSecondaryClick={handleGoToAllDeals} >
-          <CustomTitle text="Mejores ofertas en productos" variant="h5" color='#2D2D2D'/>
+          <SectionHeader
+            secondary="Ver todo"
+            onSecondaryClick={handleGoToAllDeals}
+          >
+            <CustomTitle
+              text="Mejores ofertas en productos"
+              variant="h5"
+              color="#2D2D2D"
+            />
           </SectionHeader>
           <TopDeals />
         </Stack>
@@ -151,11 +162,11 @@ function SectionHeader({
           onClick={onSecondaryClick}
           variant="subtitle1"
           sx={{
-            color: '#757575',
+            color: "#757575",
             fontWeight: "bold",
-            background: 'none',
-            border: 'none',
-            '&:hover': { color: '#77A787' },
+            background: "none",
+            border: "none",
+            "&:hover": { color: "#77A787" },
           }}
         >
           {secondary} <span>→</span>
