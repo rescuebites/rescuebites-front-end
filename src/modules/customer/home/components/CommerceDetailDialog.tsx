@@ -20,7 +20,6 @@ import { ProductResponse } from "@/modules/products/interfaces/responses/product
 import { useCommerceDetail } from "@/modules/commerce/hooks/useCommerceDetail";
 import { useProducts } from "../hooks/useProducts";
 import BackButton from "../../../../shared/components/ui/BackButton";
-import { useNavigate } from "react-router-dom";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
 import CustomTitle from "@/shared/components/CustomTitle";
@@ -38,8 +37,6 @@ interface CommerceDetailDialogProps {
 const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   commerceId,
 }) => {
-  const navigate = useNavigate();
-
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } =
     useCommerceDetail(commerceId);
@@ -134,9 +131,13 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
               <CustomTitle text={commerce.description} color="#757575" variant="h5" align="left"/>
               
             )}
-            {/* Ícono de tipo de comercio */}
-            {commerce.commerceTypes?.[0] && (
-              <CommerceTypeChip commerceType={commerce.commerceTypes[0]} />
+            {/* Tipos de comercio */}
+            {commerce.commerceTypes && commerce.commerceTypes.length > 0 && (
+              <Box sx={{ display: "flex", gap: 1, mt: 1, flexWrap: "wrap" }}>
+                {commerce.commerceTypes.map((ct: string) => (
+                  <CommerceTypeChip key={ct} commerceType={ct} />
+                ))}
+              </Box>
             )}
           </Box>
         </Box>
