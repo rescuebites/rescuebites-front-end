@@ -48,7 +48,7 @@ export default function ListCommerceProductsPage() {
           sx={{ position: "absolute", left: 4, top: 4 }}
           onClick={() => navigate("/commerce", { replace: true })}
         />
-        <CustomTitle text="Mis Productos" />
+        <CustomTitle text="Mis Productos" variant="h5" color="#2d2d2d" align="center" />
       </Box>
 
       {products.length === 0 ? (
