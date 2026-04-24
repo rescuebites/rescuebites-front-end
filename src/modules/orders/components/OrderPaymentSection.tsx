@@ -5,7 +5,6 @@ import { PaymentMethodDisplayName } from "@/modules/orders/utils/payment-method-
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import { useState } from "react";
 import { createPaymentPreference } from "@/modules/orders/api/payment.api";
-import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 
 interface OrderPaymentSectionProps {
   paymentMethod: PaymentMethod;
@@ -23,7 +22,6 @@ const OrderPaymentSection = ({
   orderId,
 }: OrderPaymentSectionProps) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
-  const { showMessage } = useSnackbarStore();
 
   const handleContinuePayment = async () => {
     if (!orderId) return;
@@ -35,7 +33,6 @@ const OrderPaymentSection = ({
       window.location.href = target;
     } catch (err: any) {
       console.error("continue payment failed:", err);
-      showMessage("No se pudo iniciar el pago. Por favor intentá nuevamente.", "error");
       setIsProcessingPayment(false);
     }
   };

@@ -4,6 +4,7 @@ import { OrderResponse } from "../interfaces/responses/order-response.interface"
 import { OrderSummaryForClientResponse } from "../interfaces/responses/order-summary-client-response.interface";
 import { UpdateOrderStatusRequest } from "../interfaces/requests/update-order-status.request";
 import { OrderSummaryForCommerceResponse } from "../interfaces/responses/order-summary-commerce-response.interface";
+import { PaymentMethod } from "../enums/payment-method.enum";
 
 export const getClientOrders = async (
   clientId: string,
@@ -75,7 +76,7 @@ export const cancelOrder = async (
 export const createOrder = async (
   clientId: string,
   commerceId: string,
-  paymentMethod: string,
+  paymentMethod: PaymentMethod,
   notes?: string
 ): Promise<OrderResponse> => {
   const { data } = await httpClient.post<OrderResponse>(

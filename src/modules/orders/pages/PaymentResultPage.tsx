@@ -4,7 +4,7 @@ import ErrorOutlineIcon from "@mui/icons-material/ErrorOutline";
 import AccessTimeIcon from "@mui/icons-material/AccessTime";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { useEffect } from "react";
-import { httpClient } from "@/shared/lib/httpClient";
+import { rawHttpClient } from "@/shared/lib/httpClient";
 import CustomButton from "@/shared/components/CustomButton";
 import BackButton from "@/shared/components/ui/BackButton";
 
@@ -50,7 +50,7 @@ export default function PaymentResultPage({ type }: Props) {
     // Si aterrizamos en la página de éxito con orderId, avisar al backend
     // para que confirme la orden (fallback cuando el webhook no llegó).
     if (type === "success" && orderId) {
-      httpClient
+      rawHttpClient
         .post(`/api/v1/payments/orders/${orderId}/confirm`)
         .catch((err) => {
           // No bloquear la UI por errores de confirmación; loguear para debugging.
