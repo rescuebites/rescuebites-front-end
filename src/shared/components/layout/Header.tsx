@@ -20,9 +20,9 @@ export default function Header() {
       position="static"
       elevation={0}
       sx={{
-        bgcolor: "#ffffff",
+        bgcolor: "#FFFFFF",
         color: "#2D2D2D",
-        borderBottom: "none",
+        borderBottom: "1px solid #F0F0F0",
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
       }}
     >
