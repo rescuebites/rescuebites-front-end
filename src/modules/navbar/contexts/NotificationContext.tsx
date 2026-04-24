@@ -1,13 +1,12 @@
 import { createContext, useState, ReactNode, useContext } from "react";
 
-export type NotificationType = "Confirmed" | "Cancelled" | "Expired";
-
 export interface Notification {
   id: string;
   eventId: string;
   registerId: string,
   message: string;
-  type: NotificationType;
+  type: string;
+  notes: string;
   isRead: boolean;
 }
 

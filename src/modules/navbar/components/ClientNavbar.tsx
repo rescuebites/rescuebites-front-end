@@ -40,6 +40,7 @@ export default function ClientNavbar() {
           eventId: n.eventId,
           registerId: n.registerId,
           message: n.message,
+          notes: n.notes,
           type: n.type,
           isRead: n.read,
         }));
@@ -76,6 +77,7 @@ export default function ClientNavbar() {
         registerId: data.registerId,
         message: data.message,
         type: data.type,
+        notes: data.notes,
         isRead: false,
       });
     });

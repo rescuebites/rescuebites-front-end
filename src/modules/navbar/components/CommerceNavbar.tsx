@@ -36,6 +36,7 @@ export default function CommerceNavbar() {
           eventId: n?.eventId,
           registerId: n?.registerId,
           message: n.message,
+          notes: n.notes,
           type: n.type,
           read: n.read,
         }));
@@ -70,6 +71,7 @@ export default function CommerceNavbar() {
         eventId: data.eventId,
         registerId: data.registerId,
         message: data.message,
+        notes: data.notes,
         type: data.type,
         isRead: false,
       });
