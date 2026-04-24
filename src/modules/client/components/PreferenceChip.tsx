@@ -22,7 +22,7 @@ export default function PreferenceChip({ preference, size = "medium" }: Preferen
             ml: 0.5,
           }}
         >
-          <Icon size={16} />
+          <Icon size={20} />
         </Box>
       }
       label={PreferenceTypeDisplayName[preference]}
@@ -31,8 +31,8 @@ export default function PreferenceChip({ preference, size = "medium" }: Preferen
         bgcolor: config.bgColor,
         color: config.textColor,
         fontWeight: 600,
-        fontSize: size === "small" ? 12 : 13,
-        height: size === "small" ? 28 : 32,
+        fontSize: size === "small" ? 13 : 15,
+        height: size === "small" ? 32 : 40,
         borderRadius: 2,
         "& .MuiChip-icon": {
           ml: 1,
