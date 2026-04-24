@@ -14,6 +14,7 @@ import RoutesProvider from "@/providers/RoutesProvider";
 import { ErrorBoundary } from "@/shared/components/ui/ErrorBoundary";
 import { SnackbarProvider } from "./SnackbarProvider";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import ScrollToTop from "@/shared/components/ScrollToTop";
 
 const queryClient = new QueryClient({
   queryCache: new QueryCache({
@@ -30,6 +31,7 @@ export default function AppProvider() {
     <StrictMode>
       <QueryClientProvider client={queryClient}>
         <BrowserRouter>
+          <ScrollToTop />
           <CssBaseline />
           {/*<ConfirmModal /> */}
 

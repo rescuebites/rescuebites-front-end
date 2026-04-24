@@ -208,6 +208,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
                 aria-label="Ver horarios del comercio"
                 sx={{
                   display: "flex",
+                  width: "100%",
+                  justifyContent: "flex-start",
                   alignItems: "center",
                   gap: { xs: 1, md: 2 },
                   borderRadius: 1,

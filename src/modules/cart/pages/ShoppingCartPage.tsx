@@ -51,7 +51,6 @@ const CartPage: React.FC = () => {
     <Box
       sx={{
         backgroundColor: "#FAFAFA",
-        minHeight: "100vh",
         px: { xs: 2, sm: 5, md: 6 },
       }}
     >
@@ -121,7 +120,8 @@ const CartPage: React.FC = () => {
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              py: 8,
+              pt: 4,
+              pb: 2,
               gap: 2,
             }}
           >
