@@ -192,6 +192,7 @@ const OrderDetailPage = () => {
           <OrderPaymentSection
             paymentMethod={order.paymentMethod}
             onCancelClick={() => setCancelDialogOpen(true)}
+            orderId={order.orderId}
           />
         )}
 

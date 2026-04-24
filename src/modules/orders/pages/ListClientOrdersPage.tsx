@@ -15,11 +15,15 @@ const ListClientOrdersPage = () => {
 
   return (
     <Box mt={2} sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto" }}>
-      <Box mb={3}>
-        <BackButton />
+      <Box sx={{ position: "relative", display: "flex", justifyContent: "center", alignItems: "center" }}>
+        <Box sx={{ position: "absolute", left: { xs: 2, sm: 10 }, display: "flex", alignItems: "center" }}>
+          <BackButton />
+        </Box>
+        <Box sx={{ mt: { xs: 1, sm: 2 } }}>
+          <CustomTitle text="Mis Pedidos" variant="h4" color="#2d2d2d" align="center" />
+        </Box>
       </Box>
-      <CustomTitle  text="Mis Pedidos" variant="h4" color="#2d2d2d" align="left" />
-      <Box mt={4}>
+      <Box mt={2}>
         <OrderStatusFilter value={activeStatus} onChange={setActiveStatus} />
       </Box>
       <Box mt={2}>
@@ -29,7 +33,7 @@ const ListClientOrdersPage = () => {
           </Box>
         )}
         {isError && (
-          <Typography color="error" textAlign="center" mt={4}>
+          <Typography color="error" textAlign="center" mt={4} fontSize={{ xs: 15, sm: 16 }}>
             Error al cargar los pedidos.
           </Typography>
         )}
