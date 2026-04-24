@@ -18,7 +18,6 @@ interface CartStore {
 }
 
 const getClientId = () => useAuthStore.getState().clientId;
-//const getClientId = () => "295a5546-bc99-4616-8e10-5bb9aabb1269";
 
 export const useCartStore = create<CartStore>()((set, get) => ({
   cart: null,
