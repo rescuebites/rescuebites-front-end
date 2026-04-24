@@ -1,4 +1,5 @@
-import { Box, Chip } from "@mui/material";
+import { Box } from "@mui/material";
+import FilterChip from "@/shared/components/ui/FilterChip";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useCommerceProductsByExpiration } from "@/modules/commerce/hooks/useCommerceData";
 import LoadingState from "@/shared/components/LoadingState";
@@ -54,14 +55,14 @@ export default function ExpiringProductsPage() {
   const products = data?.content || [];
 
   return (
-    <Box sx={{ px: 2.5, maxWidth: 600, mx: "auto" }}>
+    <Box sx={{ mt: 2, px: 2.5, maxWidth: 600, mx: "auto" }}>
       <Box sx={{ position: "relative", py: 2 }}>
         <BackButton
           sx={{ position: "absolute", left: 4, top: 4 }}
           onClick={() => navigate("/commerce", { replace: true })}
         />
 
-        <CustomTitle text="Productos por Vencer" />
+        <CustomTitle text="Productos por Vencer" variant="h5" color="#2d2d2d" align="center"  />
       </Box>
 
       {/* Filtros */}
@@ -81,31 +82,17 @@ export default function ExpiringProductsPage() {
           scrollbarWidth: "none",
         }}
       >
-        {(Object.keys(FILTER_LABELS) as ProductExpirationFilter[]).map((filter) => (
-          <Chip
-            key={filter}
-            label={FILTER_LABELS[filter]}
-            onClick={() => setSelectedFilter(filter)}
-            sx={{
-              flexShrink: 0,
-              px: 2.5,
-              py: 1,
-              height: "36px",
-              borderRadius: "20px",
-              fontSize: "19px",
-              fontWeight: 500,
-              border: "none",
-              backgroundColor:
-                selectedFilter === filter ? "#77A787" : "#fdfcfc",
-              color: selectedFilter === filter ? "#FFFFFF" : "#666666",
-              transition: "all 0.2s ease-in-out",
-              "&:hover": {
-                backgroundColor:
-                  selectedFilter === filter ? "#5a8f6a" : "#E8E8E8",
-              },
-            }}
-          />
-        ))}
+        {(Object.keys(FILTER_LABELS) as ProductExpirationFilter[]).map((filter) => {
+          const isActive = selectedFilter === filter;
+          return (
+            <FilterChip
+              key={filter}
+              label={FILTER_LABELS[filter]}
+              active={isActive}
+              onClick={() => setSelectedFilter(filter)}
+            />
+          );
+        })}
       </Box>
 
       {products.length === 0 ? (
