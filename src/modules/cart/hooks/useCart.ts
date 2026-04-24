@@ -6,10 +6,13 @@ import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import type { CommerceCartSummary } from "../interfaces/responses/cart-response.interface";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import axios from "axios";
 
 export function useCart() {
   const clientId = useAuthStore((state) => state.clientId);
   const queryClient = useQueryClient();
+  const { showMessage } = useSnackbarStore();
 
   const {
     cart,
@@ -21,6 +24,7 @@ export function useCart() {
   } = useCartStore();
 
   const [confirming, setConfirming] = useState(false);
+  const [redirectingToMP, setRedirectingToMP] = useState(false);
   const [notes, setNotes] = useState("");
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
 
@@ -54,17 +58,47 @@ export function useCart() {
     if (!cart?.selectedPaymentMethod || !commerce || !clientId) return;
     setConfirming(true);
     try {
-      const order = await createOrder(clientId, commerce.commerceId, notes || undefined);
-      await clearCart();
+        const order = await createOrder(clientId, commerce.commerceId, cart.selectedPaymentMethod, notes || undefined);
 
-      if (cart.selectedPaymentMethod === PaymentMethod.MERCADO_PAGO) {
-        const { sandboxInitPoint } = await createPaymentPreference(order.orderId);
-        window.location.href = sandboxInitPoint;
-      }
+        // Log order for debugging before creating payment preference
+        // eslint-disable-next-line no-console
+        console.debug("createOrder response:", order);
+
+        if (cart.selectedPaymentMethod === PaymentMethod.MERCADO_PAGO) {
+          // indicate redirecting to the user (UI will show modal)
+          setRedirectingToMP(true);
+
+          // request preference and log response for debugging 400s
+          try {
+            const pref = await createPaymentPreference(order.orderId);
+            // eslint-disable-next-line no-console
+            console.debug("createPaymentPreference response:", pref);
+            const { sandboxInitPoint } = pref;
+            // don't clear UI state until redirect happens on the client;
+            // backend already cleared the cart on order creation, so show modal instead
+            window.location.href = sandboxInitPoint;
+            return;
+          } catch (prefError) {
+            // Log and handle error: stop redirecting so UI returns to cart
+            // eslint-disable-next-line no-console
+            console.error("createPaymentPreference failed:", prefError);
+            setRedirectingToMP(false);
+            throw prefError;
+          }
+        }
+
+      await clearCart();
       queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
       setCreatedOrderId(order.orderId);
     } catch (error) {
       console.error("Error al confirmar pedido:", error);
+      if (axios.isAxiosError(error)) {
+        const apiData = error.response?.data as any;
+        const detail = apiData?.detail ?? apiData?.message;
+        showMessage(detail ?? "No se pudo confirmar el pedido. Por favor, intentá nuevamente.", "error");
+      } else {
+        showMessage("No se pudo confirmar el pedido. Por favor, intentá nuevamente.", "error");
+      }
     } finally {
       setConfirming(false);
     }
@@ -74,6 +108,7 @@ export function useCart() {
     cart,
     commerce,
     confirming,
+    redirectingToMP,
     createdOrderId,
     notes,
     setNotes,

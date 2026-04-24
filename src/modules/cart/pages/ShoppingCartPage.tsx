@@ -1,6 +1,5 @@
 import React, { useState } from "react";
-import { Box, Typography, Container, Button } from "@mui/material";
-import { TextField } from "@mui/material";
+import { Box, Typography, Container, Button, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress, TextField } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BackButton from "@/shared/components/ui/BackButton";
 import CustomTitle from "@/shared/components/CustomTitle";
@@ -17,6 +16,7 @@ const CartPage: React.FC = () => {
     cart,
     commerce,
     confirming,
+    redirectingToMP,
     createdOrderId,
     notes,
     setNotes,
@@ -56,6 +56,23 @@ const CartPage: React.FC = () => {
       }}
     >
       <Container maxWidth="lg">
+        {/* Diálogo de redirección a Mercado Pago (estilo consistente con ConfirmModal/LoadingState) */}
+        <Dialog
+          open={redirectingToMP}
+          aria-labelledby="redirecting-dialog-full"
+          PaperProps={{ sx: { borderRadius: 3, p: 1 } }}
+        >
+          <DialogTitle id="redirecting-dialog-full" sx={{ fontWeight: 600, color: "#2D2D2D" }}>
+            Redirigiendo a Mercado Pago
+          </DialogTitle>
+
+          <DialogContent sx={{ display: "flex", alignItems: "center", gap: 2, py: 3 }}>
+            <CircularProgress sx={{ color: "#5A9A6E" }} />
+            <DialogContentText sx={{ color: "#6B7280" }}>
+              Estamos redirigiéndote al checkout de Mercado Pago...
+            </DialogContentText>
+          </DialogContent>
+        </Dialog>
         <Box
           display="grid"
           gridTemplateColumns="auto 1fr auto"
