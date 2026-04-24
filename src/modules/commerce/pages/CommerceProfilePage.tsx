@@ -12,6 +12,7 @@ import useCommerceDetail from "@/modules/commerce/hooks/useCommerceDetail";
 import { useDeleteCommerce } from "@/modules/commerce/hooks/useDeleteCommerce";
 import { useNavigate } from "react-router-dom";
 import CustomTitle from "@/shared/components/CustomTitle";
+import BackButton from "@/shared/components/ui/BackButton";
 import ProfileInfoItem from "@/modules/client/components/ProfileInfoItem";
 import ProfileSection from "@/modules/client/components/ProfileSection";
 import ProfileActionButton from "@/modules/client/components/ProfileActionButton";
@@ -57,21 +58,43 @@ export default function CommerceProfilePage() {
   return (
     <Box sx={{ bgcolor: "#FAFAFA", pb: 10 }}>
       <Box sx={{ px: 3, pt: 3 }}>
-        {/* Imagen de perfil y nombre del comercio */}
-        <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-          <Avatar
-            src={mainImage}
-            onClick={() => images.length > 0 && setShowCarousel(true)}
+        <Box
+          sx={{
+            position: "relative",
+            mb: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
             sx={{
-              width: 120,
-              height: 120,
-              mb: 2,
-              border: "4px solid #FFFFFF",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-              cursor: images.length > 1 ? "pointer" : "default",
+              position: "absolute",
+              left: { xs: 8, sm: 16 },
+              top: { xs: -8, sm: -12 },
+              display: "flex",
+              alignItems: "center",
             }}
-          />
-          <CustomTitle text={commerce.name} color="#2D2D2D" variant="h5" />
+          >
+            <BackButton />
+          </Box>
+
+          {/* Imagen de perfil y nombre del comercio */}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Avatar
+              src={mainImage}
+              onClick={() => images.length > 0 && setShowCarousel(true)}
+              sx={{
+                width: { xs: 120, sm: 140 },
+                height: { xs: 120, sm: 140 },
+                mb: 2,
+                border: "4px solid #FFFFFF",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                cursor: images.length > 1 ? "pointer" : "default",
+              }}
+            />
+            <CustomTitle text={commerce.name} color="#2D2D2D" variant="h5" />
+          </Box>
         </Box>
 
         {/* Sección de Información */}
@@ -98,7 +121,7 @@ export default function CommerceProfilePage() {
               variant="body2"
               align="left"
               fontWeight={500}
-              fontSize={12}
+              fontSize={{ xs: 15, sm: 17 }}
             />
             <Box display="flex" flexWrap="wrap" gap={1} mt={0.5}>
               {commerce.commerceTypes.map((type) => (

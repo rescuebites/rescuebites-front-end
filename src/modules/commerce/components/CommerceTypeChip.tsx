@@ -28,7 +28,9 @@ export default function CommerceTypeChip({
         bgcolor: styles.bg,
         color: styles.color,
         fontWeight: 600,
-        fontSize: size === "small" ? 11 : 13,
+        fontSize: size === "small" ? 13 : 15,
+        px: { xs: 1, sm: 1.25 },
+        py: { xs: 0.4, sm: 0.5 },
         borderRadius: 2,
         "& .MuiChip-icon": { color: styles.color },
       }}

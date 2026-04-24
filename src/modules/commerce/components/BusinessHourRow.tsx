@@ -12,16 +12,16 @@ export default function BusinessHourRow({ bh }: { bh: BusinessHoursResponse }) {
       display="flex"
       alignItems="flex-start"
       justifyContent="space-between"
-      mb={1.5}
+      mb={2}
     >
       <Box display="flex" alignItems="center" gap={1}>
         <Box
           sx={{
-            width: 8,
-            height: 8,
+            width: 11,
+            height: 11,
             borderRadius: "50%",
             bgcolor: bh.closed ? "#9CA3AF" : "#5A9A6E",
-            mt: 0.4,
+            mt: -0.4,
             flexShrink: 0,
           }}
         />
@@ -29,8 +29,9 @@ export default function BusinessHourRow({ bh }: { bh: BusinessHoursResponse }) {
           text={dayLabel}
           variant="body2"
           color="#2D2D2D"
-          fontWeight={500}
+          fontWeight={600}
           align="left"
+          fontSize={{ xs: 15, sm: 17 }}
         />
       </Box>
 
@@ -40,7 +41,8 @@ export default function BusinessHourRow({ bh }: { bh: BusinessHoursResponse }) {
           variant="body2"
           color="#9CA3AF"
           align="right"
-          fontWeight="normal"
+          fontWeight={500}
+          fontSize={{ xs: 15, sm: 17 }}
         />
       ) : (
         <Box textAlign="right">
@@ -50,7 +52,8 @@ export default function BusinessHourRow({ bh }: { bh: BusinessHoursResponse }) {
               variant="body2"
               color="#6B7280"
               align="right"
-              fontWeight="normal"
+              fontWeight={500}
+              fontSize={{ xs: 15, sm: 17  }}
             />
           )}
           {bh.afternoonOpenTime && bh.afternoonCloseTime && (
@@ -59,7 +62,8 @@ export default function BusinessHourRow({ bh }: { bh: BusinessHoursResponse }) {
               variant="body2"
               color="#6B7280"
               align="right"
-              fontWeight="normal"
+              fontWeight={500}
+              fontSize={{ xs: 15, sm: 17 }}
             />
           )}
         </Box>
