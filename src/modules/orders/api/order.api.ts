@@ -75,11 +75,12 @@ export const cancelOrder = async (
 export const createOrder = async (
   clientId: string,
   commerceId: string,
+  paymentMethod: string,
   notes?: string
 ): Promise<OrderResponse> => {
   const { data } = await httpClient.post<OrderResponse>(
     `/api/v1/clients/${clientId}/orders`,
-    { commerceId, notes }
+    { commerceId, paymentMethod, notes }
   );
   return data;
 };
