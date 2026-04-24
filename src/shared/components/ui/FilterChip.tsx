@@ -7,7 +7,7 @@ interface FilterChipProps {
   active?: boolean;
   onClick?: () => void;
   sx?: SxProps<Theme>;
-  icon?: React.ReactElement | null;
+  icon?: React.ReactElement;
 }
 
 export default function FilterChip({ label, active = false, onClick, sx, icon }: FilterChipProps) {
@@ -15,8 +15,7 @@ export default function FilterChip({ label, active = false, onClick, sx, icon }:
     <Chip
       label={label}
       onClick={onClick}
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      icon={icon as any}
+      icon={icon ?? undefined}
       sx={[
         {
           flexShrink: 0,

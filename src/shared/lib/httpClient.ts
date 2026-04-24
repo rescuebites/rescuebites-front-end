@@ -10,6 +10,32 @@ export const httpClient = axios.create({
    baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
 });
 
+/**
+ * Cliente HTTP sin interceptores de snackbar/logout.
+ * Usar para llamadas "best-effort" o donde el manejo de errores es manual/silencioso.
+ */
+export const rawHttpClient = axios.create({
+  baseURL: import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080',
+});
+
+// El interceptor de request (token) aplica también al rawHttpClient
+rawHttpClient.interceptors.request.use((config) => {
+  const { authResponse } = useAuthStore.getState();
+  if (!authResponse) return config;
+  const { token } = authResponse;
+  if (isTokenExpired(token)) {
+    return Promise.reject(new axios.Cancel("Token expirado"));
+  }
+  const shouldExclude = EXCLUDED_BEARER_ROUTES.some((path) => {
+    const urlWithoutBase = config.url?.split('?')[0];
+    return urlWithoutBase === path || urlWithoutBase === `${path}/`;
+  });
+  if (!shouldExclude && token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
 httpClient.interceptors.response.use(
   (response) => response,
   (error: AxiosError<ErrorResponse>) => {
