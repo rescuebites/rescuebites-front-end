@@ -1,12 +1,16 @@
 import { Avatar, Box, Stack, Typography } from "@mui/material";
-import { MdStorefront, MdCancel } from "react-icons/md";
+import { MdStorefront, MdCancel, MdCreditCard } from "react-icons/md";
 import CustomButton from "@/shared/components/CustomButton";
 import { PaymentMethodDisplayName } from "@/modules/orders/utils/payment-method-mapping";
 import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
+import { useState } from "react";
+import { createPaymentPreference } from "@/modules/orders/api/payment.api";
+import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
 
 interface OrderPaymentSectionProps {
   paymentMethod: PaymentMethod;
   onCancelClick: () => void;
+  orderId?: string;
 }
 
 /**
@@ -16,7 +20,25 @@ interface OrderPaymentSectionProps {
 const OrderPaymentSection = ({
   paymentMethod,
   onCancelClick,
+  orderId,
 }: OrderPaymentSectionProps) => {
+  const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const { showMessage } = useSnackbarStore();
+
+  const handleContinuePayment = async () => {
+    if (!orderId) return;
+    setIsProcessingPayment(true);
+    try {
+      const pref = await createPaymentPreference(orderId);
+      // Redirect to Mercado Pago sandbox/init point
+      const target = pref.sandboxInitPoint || pref.initPoint;
+      window.location.href = target;
+    } catch (err: any) {
+      console.error("continue payment failed:", err);
+      showMessage("No se pudo iniciar el pago. Por favor intentá nuevamente.", "error");
+      setIsProcessingPayment(false);
+    }
+  };
   return (
     <Stack
       direction={{ xs: "column", sm: "row" }}
@@ -89,6 +111,31 @@ const OrderPaymentSection = ({
           },
         }}
       />
+
+      {/* Continuar Pago: sólo para Mercado Pago */}
+      {paymentMethod === PaymentMethod.MERCADO_PAGO && (
+        <CustomButton
+          text="Continuar pago"
+          fullWidth
+          onClick={handleContinuePayment}
+          isLoading={isProcessingPayment}
+          startIcon={<MdCreditCard size={20} />}
+          sx={{
+            borderRadius: 3,
+            py: 1.5,
+            fontWeight: 600,
+            fontSize: { xs: 14, sm: 15 },
+            textTransform: "none",
+            boxShadow: "none",
+            flex: { xs: "none", sm: 1 },
+            backgroundColor: "#477e5c",
+            color: "#FFFFFF",
+            "&:hover": {
+              boxShadow: "0 2px 8px rgba(119,167,135,0.3)",
+            },
+          }}
+        />
+      )}
     </Stack>
   );
 };

@@ -61,7 +61,7 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
               )}
             </Box>
             <Box>
-              <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }}>
+              <Typography fontWeight={600} fontSize={{ xs: 16, sm: 18 }}>
                 {order.commerceName}
               </Typography>
               <Chip
@@ -80,8 +80,8 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
                   backgroundColor: bg,
                   color: color,
                   fontWeight: 600,
-                  fontSize: { xs: 13, sm: 14 },
-                  height: { xs: 28, sm: 36 },
+                  fontSize: { xs: 14, sm: 15 },
+                  height: { xs: 30, sm: 38 },
                   px: 2,
                   "& .MuiChip-icon": {
                     ml: 0.5,
@@ -91,7 +91,7 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
               />
             </Box>
           </Box>
-          <Typography fontSize={{ xs: 14, sm: 16 }} color="text.secondary">
+          <Typography fontSize={{ xs: 15, sm: 17 }} color="text.secondary">
             #{getShortOrderNumber(order.orderNumber)}
           </Typography>
         </Box>
@@ -107,11 +107,11 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
           <Box display="flex" flexDirection="column" gap={0.5}>
             <Box display="flex" alignItems="center" gap={0.75}>
               <Clock size={20} color="gray" />
-              <Typography fontSize={{ xs: 13, sm: 14 }} color="text.secondary">
+              <Typography fontSize={{ xs: 14, sm: 15 }} color="text.secondary">
                 {formatDateWithTime(order.createdAt)}
               </Typography>
             </Box>
-            <Typography fontSize={20} color="text.disabled">
+            <Typography fontSize={{ xs: 21, sm: 22 }} color="text.disabled">
               {order.totalItems}{" "}
               {order.totalItems === 1 ? "Producto" : "Productos"}
             </Typography>
@@ -120,7 +120,7 @@ function OrderCard({ order }: { order: OrderSummaryForClientResponse }) {
               {(order.totalItems ?? (order.items ?? []).reduce((sum, it) => sum + (it.quantity ?? 0), 0)) === 1 ? "Producto" : "Productos"}
             </Typography> */}
           </Box>
-          <Typography fontWeight={600} fontSize={{ xs: 15, sm: 17 }} color="#77A787">
+          <Typography fontWeight={600} fontSize={{ xs: 16, sm: 18 }} color="#77A787">
             ${formatCurrency(order.total)}
           </Typography>
         </Box>
@@ -144,8 +144,8 @@ export default function OrdersListCard({
         gap={0.5}
       >
         <img src="/emptyBag.png" alt="Sin pedidos" width={400} height={300} />
-        <CustomTitle text="Sin pedidos" fontSize={20} fontWeight={500} color="#2d2d2d" align="center" />
-        <CustomTitle text="No encontramos pedidos en esta categoría. Realizá tu próxima compra y llená tu lista." fontSize={18} color="#6d6d6d" align="center" fontWeight={400} />
+        <CustomTitle text="Sin pedidos" fontSize={22} fontWeight={500} color="#2d2d2d" align="center" />
+        <CustomTitle text="No encontramos pedidos en esta categoría. Realizá tu próxima compra y llená tu lista." fontSize={20} color="#6d6d6d" align="center" fontWeight={400} />
       </Box>
     );
   }

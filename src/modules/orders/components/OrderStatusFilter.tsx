@@ -1,4 +1,5 @@
-import { Box, Chip } from "@mui/material";
+import { Box } from "@mui/material";
+import FilterChip from "@/shared/components/ui/FilterChip";
 import { OrderStatus } from "../enums/order-status.enum";
 import type { FilterValue } from "../hooks/useOrderFilters";
 import { OrderStatusDisplayName } from "../utils/order-status-mapping";
@@ -37,22 +38,11 @@ const OrderStatusFilter = ({ value, onChange }: OrderStatusFilterProps) => {
       {FILTER_OPTIONS.map((option) => {
         const isActive = value === option;
         return (
-          <Chip
+          <FilterChip
             key={option}
             label={getLabel(option)}
+            active={isActive}
             onClick={() => onChange(option)}
-            sx={{
-              flexShrink: 0,
-              fontWeight: isActive ? 600 : 500,
-              fontSize: 20,
-              bgcolor: isActive ? "#77A787" : "transparent",
-              color: isActive ? "#FFFFFF" : "text.secondary",
-              border: "2px solid",
-              borderColor: isActive ? "#77A787" : "divider",
-              "&:hover": {
-                bgcolor: isActive ? "#77A787" : "action.hover",
-              },
-            }}
           />
         );
       })}
