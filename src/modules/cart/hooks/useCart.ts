@@ -6,13 +6,10 @@ import { PaymentMethod } from "@/modules/orders/enums/payment-method.enum";
 import type { CommerceCartSummary } from "../interfaces/responses/cart-response.interface";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
-import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
-import axios from "axios";
 
 export function useCart() {
   const clientId = useAuthStore((state) => state.clientId);
   const queryClient = useQueryClient();
-  const { showMessage } = useSnackbarStore();
 
   const {
     cart,
@@ -73,10 +70,15 @@ export function useCart() {
             const pref = await createPaymentPreference(order.orderId);
             // eslint-disable-next-line no-console
             console.debug("createPaymentPreference response:", pref);
-            const { sandboxInitPoint } = pref;
+            const { sandboxInitPoint, initPoint } = pref;
+            const redirectTarget = sandboxInitPoint || initPoint;
+            if (!redirectTarget) {
+              setRedirectingToMP(false);
+              throw new Error("No se recibió una URL válida de Mercado Pago.");
+            }
             // don't clear UI state until redirect happens on the client;
             // backend already cleared the cart on order creation, so show modal instead
-            window.location.href = sandboxInitPoint;
+            window.location.href = redirectTarget;
             return;
           } catch (prefError) {
             // Log and handle error: stop redirecting so UI returns to cart
@@ -92,13 +94,6 @@ export function useCart() {
       setCreatedOrderId(order.orderId);
     } catch (error) {
       console.error("Error al confirmar pedido:", error);
-      if (axios.isAxiosError(error)) {
-        const apiData = error.response?.data as any;
-        const detail = apiData?.detail ?? apiData?.message;
-        showMessage(detail ?? "No se pudo confirmar el pedido. Por favor, intentá nuevamente.", "error");
-      } else {
-        showMessage("No se pudo confirmar el pedido. Por favor, intentá nuevamente.", "error");
-      }
     } finally {
       setConfirming(false);
     }
