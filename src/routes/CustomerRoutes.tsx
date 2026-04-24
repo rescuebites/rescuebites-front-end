@@ -15,6 +15,7 @@ import ShoppingCartPage from "@/modules/cart/pages/ShoppingCartPage";
 import ListClientOrdersPage from "@/modules/orders/pages/ListClientOrdersPage";
 import OrderDetailPage from "@/modules/orders/pages/OrderDetailPage";
 import ClientProfilePage from "@/modules/client/pages/ClientProfilePage";
+import PaymentResultPage from "@/modules/orders/pages/PaymentResultPage";
 import { useClientSync } from "@/modules/customer/home/hooks/useClientSync";
 import { Box, CircularProgress } from "@mui/material";
 
@@ -26,7 +27,7 @@ import { Box, CircularProgress } from "@mui/material";
  *     - Still fetching profile (locality not yet synced) → show spinner
  *     - Profile loaded but locality missing (edge case) → redirect to /locality
  *     - Locality ready → render children
- */import PaymentResultPage from "@/modules/orders/pages/PaymentResultPage";
+ */
 
 function LocalityGuard() {
   const locality = useLocalityStore((s) => s.locality);
