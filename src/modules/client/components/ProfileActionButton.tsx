@@ -30,7 +30,7 @@ export default function ProfileActionButton({
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        p: 2.5,
+        p: 3,
         cursor: "pointer",
         borderBottom: showBorder ? "1px solid #F0F0F0" : "none",
         "&:hover": {
@@ -41,8 +41,8 @@ export default function ProfileActionButton({
       <Box display="flex" alignItems="center" gap={2}>
         <Box
           sx={{
-            width: 40,
-            height: 40,
+            width: 48,
+            height: 48,
             bgcolor: iconBgColor,
             borderRadius: 2,
             display: "flex",
@@ -50,18 +50,19 @@ export default function ProfileActionButton({
             justifyContent: "center",
           }}
         >
-          <Box sx={{ color: iconColor, fontSize: 20, display: "flex" }}>
+          <Box sx={{ color: iconColor, fontSize: 24, display: "flex" }}>
             {icon}
           </Box>
         </Box>
         <CustomTitle
           text={label}
           color={textColor}
-          variant="subtitle2"
+          variant="subtitle1"
           align="left"
+          fontSize={16}
         />
       </Box>
-      <Typography sx={{ fontSize: 20, color: "#9CA3AF" }}>›</Typography>
+      <Typography sx={{ fontSize: 22, color: "#9CA3AF" }}>›</Typography>
     </Box>
   );
 }

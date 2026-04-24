@@ -20,6 +20,7 @@ import LoadingState from "@/shared/components/LoadingState";
 import EmptyState from "@/shared/components/EmptyState";
 import { useState } from "react";
 import { formatDate } from "@/shared/utils/dateFormat";
+import BackButton from "@/shared/components/ui/BackButton";
 
 export default function ClientProfilePage() {
   const { clientId, logout } = useAuthStore();
@@ -51,28 +52,49 @@ export default function ClientProfilePage() {
     <Box
       sx={{
         bgcolor: "#FAFAFA",
-        pb: 2,
       }}
     >
       <Box sx={{ px: 3, pt: 3 }}>
-        {/* Imagen de perfil y nombre del cliente */}
-        <Box display="flex" flexDirection="column" alignItems="center" mb={3}>
-          <Avatar
-            src={client.image?.url}
+        <Box
+          sx={{
+            position: "relative",
+            mb: 3,
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Box
             sx={{
-              width: 120,
-              height: 120,
-              mb: 2,
-              border: "4px solid #FFFFFF",
-              boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              position: "absolute",
+              left: { xs: 8, sm: 16 },
+              top: { xs: -8, sm: -12 },
+              display: "flex",
+              alignItems: "center",
             }}
-          />
+          >
+            <BackButton />
+          </Box>
 
-          <CustomTitle
-            text={`${client.firstName} ${client.lastName}`}
-            color="#2D2D2D"
-            variant="h5"
-          />
+          {/* Imagen de perfil y nombre del cliente */}
+          <Box display="flex" flexDirection="column" alignItems="center">
+            <Avatar
+              src={client.image?.url}
+              sx={{
+                width: 140,
+                height: 140,
+                mb: 2,
+                border: "4px solid #FFFFFF",
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+              }}
+            />
+
+            <CustomTitle
+              text={`${client.firstName} ${client.lastName}`}
+              color="#2D2D2D"
+              variant="h4"
+            />
+          </Box>
         </Box>
 
         {/* Sección de Información Personal */}

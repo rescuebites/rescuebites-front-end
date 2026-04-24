@@ -19,9 +19,9 @@ export function StoreCard({ commerce, onClick }: StoreCardProps) {
     <Stack
       onClick={handleClick}
       sx={{
-        minWidth: { xs: 140, sm: 160 },
+        minWidth: { xs: 180, sm: 220 },
         bgcolor: "#FFFFFF",
-        borderRadius: 3,
+        borderRadius: 4,
         overflow: "hidden",
         boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
         cursor: "pointer",
@@ -36,7 +36,7 @@ export function StoreCard({ commerce, onClick }: StoreCardProps) {
       <Box
         sx={{
           width: "100%",
-          height: { xs: 120, sm: 140 },
+          height: { xs: 160, sm: 200 },
           backgroundImage: `url(${commerce.images[0]?.url || "/placeholder.jpg"})`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -47,7 +47,7 @@ export function StoreCard({ commerce, onClick }: StoreCardProps) {
           sx={{
             color: "#2D2D2D",
             fontWeight: 600,
-            fontSize: { xs: 14, sm: 15 },
+            fontSize: { xs: 15, sm: 17 },
             overflow: "hidden",
             textOverflow: "ellipsis",
             whiteSpace: "nowrap",

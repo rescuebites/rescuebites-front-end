@@ -13,9 +13,9 @@ export default function ProfileSection({ title, children }: ProfileSectionProps)
     <Box
       sx={{
         bgcolor: "#FFFFFF",
-        borderRadius: 3,
-        p: 2.5,
-        mb: 2,
+        borderRadius: 4,
+        p: 2,
+        mb: 1,
         boxShadow: "0 2px 8px rgba(0,0,0,0.05)",
       }}
     >
@@ -23,6 +23,7 @@ export default function ProfileSection({ title, children }: ProfileSectionProps)
         text={title}
         color="#2D2D2D"
         variant="subtitle1"
+        fontSize={{ xs: 18, sm: 20 }}
         align="left"
       />
       {children}
