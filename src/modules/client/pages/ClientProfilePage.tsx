@@ -27,6 +27,7 @@ export default function ClientProfilePage() {
   const { mutate: deleteClient, isPending: isDeleting } = useDeleteClient();
   const navigate = useNavigate();
   const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [showLogoutModal, setShowLogoutModal] = useState(false);
 
   const handleLogout = () => {
     logout();
@@ -129,7 +130,7 @@ export default function ClientProfilePage() {
           <ProfileActionButton
             icon={<LogoutIcon />}
             label="Cerrar sesión"
-            onClick={handleLogout}
+            onClick={() => setShowLogoutModal(true)}
           />
 
           <ProfileActionButton
@@ -144,6 +145,16 @@ export default function ClientProfilePage() {
           />
         </Box>
       </Box>
+
+      <ConfirmModal
+        open={showLogoutModal}
+        title="¿Cerrar sesión?"
+        description="¿Estás seguro de que querés cerrar sesión?"
+        confirmText="Cerrar sesión"
+        cancelText="Cancelar"
+        onConfirm={handleLogout}
+        onCancel={() => setShowLogoutModal(false)}
+      />
 
       <ConfirmModal
         open={showDeleteModal}
