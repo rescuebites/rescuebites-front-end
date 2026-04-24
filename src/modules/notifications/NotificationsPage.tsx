@@ -84,6 +84,17 @@ export default function NotificationsPage() {
     }
   };
 
+  const goOrders = (registerId: string) => {
+    const role = getRole();
+
+    if (role == "CLIENT") {
+      navigate(`/orders/${registerId}`);
+    }
+    if (role == "COMMERCE") {
+      navigate(`/commerce/orders/${registerId}`);
+    }
+  };
+
   return (
     <Box p={2} bgcolor="#F5F5F5" minHeight="100vh">
       <BackButton
@@ -128,7 +139,7 @@ export default function NotificationsPage() {
           return (
             <Paper
               key={n.id} // 👈 mejor que index
-              onClick={() => navigate(`/commerce/orders/${n.registerId}`)}
+              onClick={() => goOrders(n.registerId)}
               sx={{
                 p: 2,
                 mb: 2,
@@ -163,6 +174,12 @@ export default function NotificationsPage() {
                 <Typography variant="body2" color="text.secondary">
                   {n.message}
                 </Typography>
+
+                {n.type === "CONFIRMED" && (
+                  <Typography variant="body2" color="text.secondary">
+                    Notas de pedido: {n.notes}
+                  </Typography>
+                )}
               </Box>
             </Paper>
           );
