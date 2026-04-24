@@ -8,6 +8,7 @@ interface NavbarUIProps {
   cartCount?: number;
   notificationCount?: number;
   onOpenNotifications?: () => void;
+  onOpenNotifications?: () => void;
 }
 
 export default function NavbarUI({
@@ -86,8 +87,8 @@ export default function NavbarUI({
         <IconButton
           onClick={() => handleNavigation(routes.products || routes.orders)}
           sx={{
-            color: isActive(routes.products || routes.orders) ? '#77A787' : '#757575',
-            transition: 'color 0.2s',
+            color: isActive(routes.products || routes.orders) ? "#77A787" : "#757575",
+            transition: "color 0.2s",
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
             justifySelf: "center",
@@ -101,7 +102,7 @@ export default function NavbarUI({
 
         {/* Cart (client) or Orders (commerce) - Central elevated button */}
         {hasMainAction && (
-          <Box sx={{ position: 'relative', justifySelf: 'center' }}>
+          <Box sx={{ position: "relative", justifySelf: "center" }}>
             <IconButton
               onClick={() => handleNavigation(routes.cart || routes.orders)}
               sx={{

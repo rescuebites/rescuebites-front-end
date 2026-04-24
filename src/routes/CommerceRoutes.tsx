@@ -64,7 +64,6 @@ export function CommerceRoutes() {
           path={"products/:productId/edit-product"}
           element={<EditProductPage />}
         />
-        
       </Route>
     </Routes>
   );
