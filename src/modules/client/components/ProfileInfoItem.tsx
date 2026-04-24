@@ -18,11 +18,11 @@ export default function ProfileInfoItem({
   iconColor = "#5A9A6E",
 }: ProfileInfoItemProps) {
   return (
-    <Box display="flex" alignItems="center" gap={2} mb={2}>
+    <Box display="flex" alignItems="center" gap={2} mb={3}>
       <Box
         sx={{
-          width: 40,
-          height: 40,
+          width: 56,
+          height: 56,
           bgcolor: iconBgColor,
           borderRadius: 2,
           display: "flex",
@@ -30,7 +30,7 @@ export default function ProfileInfoItem({
           justifyContent: "center",
         }}
       >
-        <Box sx={{ color: iconColor, fontSize: 20, display: "flex" }}>
+        <Box sx={{ color: iconColor, fontSize: 28, display: "flex" }}>
           {icon}
         </Box>
       </Box>
@@ -41,13 +41,14 @@ export default function ProfileInfoItem({
           variant="body2"
           align="left"
           fontWeight={500}
-          fontSize={12}
+          fontSize={{ xs: 15, sm: 17 }}
         />
         <CustomTitle
           text={value}
           color="#2D2D2D"
           variant="body2"
           align="left"
+          fontSize={{ xs: 18, sm: 20 }}
         />
       </Box>
     </Box>
