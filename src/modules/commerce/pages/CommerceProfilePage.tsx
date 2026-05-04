@@ -56,7 +56,7 @@ export default function CommerceProfilePage() {
   const mainImage = images[0]?.url;
 
   return (
-    <Box sx={{ bgcolor: "#FAFAFA", pb: 10 }}>
+    <Box sx={{ bgcolor: "#FAFAFA", pb: 2 }}>
       <Box sx={{ px: 3, pt: 3 }}>
         <Box
           sx={{
@@ -143,7 +143,10 @@ export default function CommerceProfilePage() {
         {/* Sección de Horarios */}
         <ProfileSection title="Horarios">
           {[...commerce.businessHours]
-            .sort((a, b) => DAY_ORDER.indexOf(a.dayOfWeek) - DAY_ORDER.indexOf(b.dayOfWeek))
+            .sort(
+              (a, b) =>
+                DAY_ORDER.indexOf(a.dayOfWeek) - DAY_ORDER.indexOf(b.dayOfWeek),
+            )
             .map((bh) => (
               <BusinessHourRow key={bh.dayOfWeek} bh={bh} />
             ))}
