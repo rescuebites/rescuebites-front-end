@@ -24,27 +24,34 @@ export const checkCommerceIdentityAvailability = async (
   name: string,
   address: string,
   locality: string,
-  excludeCommerceId?: string
+  excludeCommerceId?: string,
 ): Promise<CommerceIdentityCheckResponse> => {
   const { data } = await httpClient.get<CommerceIdentityCheckResponse>(
     `/api/v1/commerces/identity/availability`,
-    { params: { name, address, locality, ...(excludeCommerceId ? { excludeCommerceId } : {}) } }
+    {
+      params: {
+        name,
+        address,
+        locality,
+        ...(excludeCommerceId ? { excludeCommerceId } : {}),
+      },
+    },
   );
   return data;
 };
 
 export const validateCommerceBusinessHours = async (
-  businessHours: BusinessHoursRequest[]
+  businessHours: BusinessHoursRequest[],
 ): Promise<BusinessHoursValidationResponse> => {
   const { data } = await httpClient.post<BusinessHoursValidationResponse>(
     `/api/v1/commerces/validate-business-hours`,
-    businessHours
+    businessHours,
   );
   return data;
 };
 
 export const createCommerce = async (
-  params: CreateCommerceParams
+  params: CreateCommerceParams,
 ): Promise<void> => {
   const { createCommerceRequest } = params;
   const formData = new FormData();
@@ -53,15 +60,17 @@ export const createCommerce = async (
     "commerce",
     new Blob([JSON.stringify(createCommerceRequest)], {
       type: "application/json",
-    })
+    }),
   );
 
-  (params.profilePictures ?? []).forEach((img) => formData.append("images", img));
+  (params.profilePictures ?? []).forEach((img) =>
+    formData.append("images", img),
+  );
   await httpClient.post<void>(`${BACKEND_URL}/api/v1/commerces`, formData);
 };
 
 export const updateCommerce = async (
-  params: UpdateCommerceParams
+  params: UpdateCommerceParams,
 ): Promise<void> => {
   const { commerceId, updateCommerceRequest, images } = params;
   const formData = new FormData();
@@ -70,7 +79,7 @@ export const updateCommerce = async (
     "commerce",
     new Blob([JSON.stringify(updateCommerceRequest)], {
       type: "application/json",
-    })
+    }),
   );
 
   if (images && images.length > 0) {
@@ -83,32 +92,40 @@ export const updateCommerce = async (
 };
 
 export const getCommerceOrders = async (
-  commerceId: string
+  commerceId: string,
+  page = 0,
+  size = 20,
 ): Promise<Page<OrderSummaryForCommerceResponse>> => {
   const { data } = await httpClient.get<Page<OrderSummaryForCommerceResponse>>(
-    `/api/v1/commerces/${commerceId}/orders`
+    `/api/v1/commerces/${commerceId}/orders`,
+    { params: { page, size, sort: "createdAt,desc" } },
   );
   return data;
 };
 
 export const getCommerceProductsByStock = async (
-  commerceId: string
+  commerceId: string,
+  stockFilter = "ACTIVE",
+  size = 8,
 ): Promise<Page<ProductResponse>> => {
   const { data } = await httpClient.get<Page<ProductResponse>>(
-    `/api/v1/commerces/${commerceId}/products/ordered-by-stock`
+    `/api/v1/commerces/${commerceId}/products/ordered-by-stock`,
+    { params: { stockFilter, size } },
   );
   return data;
 };
 
 export const getCommerceProductsByExpiration = async (
   commerceId: string,
-  filter: ProductExpirationFilter
+  filter: ProductExpirationFilter,
+  page = 0,
+  size = 20,
 ): Promise<Page<ProductResponse>> => {
   const { data } = await httpClient.get<Page<ProductResponse>>(
     `/api/v1/commerces/${commerceId}/products/expiration`,
     {
-      params: { filter },
-    }
+      params: { filter, page, size },
+    },
   );
   return data;
 };
@@ -119,7 +136,7 @@ export const deleteCommerce = async (commerceId: string): Promise<void> => {
 
 export const deleteCommerceImage = async (
   _commerceId: string,
-  imageId: string
+  imageId: string,
 ): Promise<void> => {
   // Se importa dinámicamente para evitar dependencia circular
   const { deleteImage } = await import("@/shared/lib/images.api");
