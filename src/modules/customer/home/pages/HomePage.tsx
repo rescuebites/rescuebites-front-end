@@ -51,7 +51,6 @@ export default function HomePage() {
       <Container
         maxWidth={false}
         sx={{
-          //mt: { xs: 4, md: 6 },
           pt: { xs: 2, sm: 3 },
           px: { xs: 2, sm: 3 },
           maxWidth: "1600px",

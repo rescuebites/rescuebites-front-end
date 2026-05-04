@@ -14,7 +14,6 @@ import SearchBar from "../../../filterPanel/components/SearchBar";
 import { ProductCard } from "../../../catalog/components/ProductCard";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import BackButton from "@/shared/components/ui/BackButton";
 import type { SearchCommerceResponse } from "../../../filterPanel/interfaces/responses/search-response.interface";
 import { SearchX, Store } from "lucide-react";
 import { CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
@@ -23,20 +22,32 @@ import CustomTitle from "@/shared/components/CustomTitle";
 import ProductDetailDialog from "@/modules/customer/home/components/ProductDetailDialog";
 import FilterDrawer from "../../../filterPanel/components/FilterDrawer";
 
-
-
-
 //-------------------------------------------------------------------------------------
 const GRID_SX = {
   display: "grid",
-  gridTemplateColumns: { xs: "1fr", sm: "repeat(2, 1fr)", md: "repeat(4, 1fr)" },
+  gridTemplateColumns: {
+    xs: "1fr",
+    sm: "repeat(2, 1fr)",
+    md: "repeat(4, 1fr)",
+  },
   gap: 2,
 };
 
 function ProductCardSkeleton() {
   return (
-    <Box sx={{ borderRadius: 3, overflow: "hidden", bgcolor: "#FFF", boxShadow: "0 2px 8px rgba(0,0,0,0.08)" }}>
-      <Skeleton variant="rectangular" width="100%" sx={{ aspectRatio: "1/1" }} />
+    <Box
+      sx={{
+        borderRadius: 3,
+        overflow: "hidden",
+        bgcolor: "#FFF",
+        boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
+      }}
+    >
+      <Skeleton
+        variant="rectangular"
+        width="100%"
+        sx={{ aspectRatio: "1/1" }}
+      />
       <Box sx={{ p: 2 }}>
         <Skeleton width="80%" height={28} sx={{ mb: 1 }} />
         <Skeleton width="50%" height={24} sx={{ mb: 0.5 }} />
@@ -46,7 +57,13 @@ function ProductCardSkeleton() {
   );
 }
 
-function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse; onClick: () => void }) {
+function CommerceCard({
+  commerce,
+  onClick,
+}: {
+  commerce: SearchCommerceResponse;
+  onClick: () => void;
+}) {
   return (
     <Paper
       onClick={onClick}
@@ -58,7 +75,10 @@ function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse;
         p: 2,
         cursor: "pointer",
         boxShadow: "0 2px 8px rgba(0,0,0,0.06)",
-        "&:hover": { boxShadow: "0 4px 16px rgba(0,0,0,0.1)", borderColor: "#77A787" },
+        "&:hover": {
+          boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          borderColor: "#77A787",
+        },
         transition: "all 0.2s",
       }}
     >
@@ -66,7 +86,13 @@ function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse;
         <Avatar
           src={commerce.images?.[0]?.url}
           alt={commerce.name}
-          sx={{ width: 52, height: 52, bgcolor: "#77A787", fontWeight: 700, fontSize: 20 }}
+          sx={{
+            width: 52,
+            height: 52,
+            bgcolor: "#77A787",
+            fontWeight: 700,
+            fontSize: 20,
+          }}
         >
           {!commerce.images?.[0]?.url && commerce.name.charAt(0).toUpperCase()}
         </Avatar>
@@ -91,7 +117,14 @@ function CommerceCard({ commerce, onClick }: { commerce: SearchCommerceResponse;
 
 function SectionHeader({ title, count }: { title: string; count: number }) {
   return (
-    <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", mb: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        justifyContent: "space-between",
+        alignItems: "baseline",
+        mb: 2,
+      }}
+    >
       <CustomTitle text={title} variant="h4" color="#2D2D2D" />
       <Typography fontSize={16} color="#9E9E9E">
         {count} resultado{count !== 1 ? "s" : ""}
@@ -102,9 +135,19 @@ function SectionHeader({ title, count }: { title: string; count: number }) {
 
 function EmptyState({ query }: { query: string }) {
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", py: 10, gap: 2 }}>
+    <Box
+      sx={{
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        py: 10,
+        gap: 2,
+      }}
+    >
       <SearchX size={60} color="#2d2d2d" />
-      <Typography fontWeight={700} fontSize={20} color="#2D2D2D">Sin resultados</Typography>
+      <Typography fontWeight={700} fontSize={20} color="#2D2D2D">
+        Sin resultados
+      </Typography>
       <Typography color="#9E9E9E" textAlign="center" maxWidth={280}>
         No encontramos nada para <strong>"{query}"</strong>.
       </Typography>
@@ -119,7 +162,11 @@ function LoadMoreButton({ onClick }: { onClick: () => void }) {
         variant="outlined"
         onClick={onClick}
         sx={{
-          borderColor: "#77A787", color: "#77A787", borderRadius: 3, px: 4, fontWeight: 600,
+          borderColor: "#77A787",
+          color: "#77A787",
+          borderRadius: 3,
+          px: 4,
+          fontWeight: 600,
           "&:hover": { bgcolor: "#F0F7F2", borderColor: "#5a8f6a" },
         }}
       >
@@ -132,18 +179,29 @@ function LoadMoreButton({ onClick }: { onClick: () => void }) {
 export default function SearchResultsPage() {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
 
   const {
-    query, setQuery,
-    suggestions, showSuggestions, setShowSuggestions,
-    commerces, products,
-    isLoading, isLoadingMore,
-    hasMoreCommerces, hasMoreProducts,
-    totalCommerces, totalProducts,
+    query,
+    setQuery,
+    suggestions,
+    showSuggestions,
+    setShowSuggestions,
+    commerces,
+    products,
+    isLoading,
+    isLoadingMore,
+    hasMoreCommerces,
+    hasMoreProducts,
+    totalCommerces,
+    totalProducts,
     error,
-    loadMoreCommerces, loadMoreProducts,
-    clearSearch, confirmSearch,
+    loadMoreCommerces,
+    loadMoreProducts,
+    clearSearch,
+    confirmSearch,
   } = useSearch();
 
   useEffect(() => {
@@ -157,13 +215,9 @@ export default function SearchResultsPage() {
   const isEmpty = !isLoading && !hasResults && !!query && !error;
 
   return (
-    <Box sx={{ px: { xs: 2, sm: 3 }, pt: 0.5, pb: 10, maxWidth: 1600, mx: "auto" }}>
+    <Box sx={{ px: { xs: 2, sm: 3 }, pt: 0.5, maxWidth: 1600, mx: "auto" }}>
       <FilterDrawer />
       <Box sx={{ pt: { xs: 0.5, sm: 1 }, mb: 3 }}>
-        <BackButton />
-      </Box>
-
-      <Box sx={{ mb: 3 }}>
         <SearchBar
           query={query}
           onQueryChange={setQuery}
@@ -173,13 +227,24 @@ export default function SearchResultsPage() {
           showSuggestions={showSuggestions}
           onHideSuggestions={() => setShowSuggestions(false)}
           onShowSuggestions={() => setShowSuggestions(true)}
+          onBack={() => navigate(-1)}
         />
       </Box>
 
-      {error && <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>{error}</Alert>}
+      {error && (
+        <Alert severity="error" sx={{ mb: 2, borderRadius: 2 }}>
+          {error}
+        </Alert>
+      )}
 
       {/* Skeletons */}
-      {isLoading && <Box sx={GRID_SX}>{[...Array(6)].map((_, i) => <ProductCardSkeleton key={i} />)}</Box>}
+      {isLoading && (
+        <Box sx={GRID_SX}>
+          {[...Array(6)].map((_, i) => (
+            <ProductCardSkeleton key={i} />
+          ))}
+        </Box>
+      )}
 
       {/* Comercios */}
       {!isLoading && commerces.length > 0 && (
@@ -198,7 +263,9 @@ export default function SearchResultsPage() {
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress size={28} sx={{ color: "#77A787" }} />
             </Box>
-          ) : hasMoreCommerces && <LoadMoreButton onClick={loadMoreCommerces} />}
+          ) : (
+            hasMoreCommerces && <LoadMoreButton onClick={loadMoreCommerces} />
+          )}
         </Box>
       )}
 
@@ -219,7 +286,9 @@ export default function SearchResultsPage() {
             <Box sx={{ display: "flex", justifyContent: "center", mt: 3 }}>
               <CircularProgress size={28} sx={{ color: "#77A787" }} />
             </Box>
-          ) : hasMoreProducts && <LoadMoreButton onClick={loadMoreProducts} />}
+          ) : (
+            hasMoreProducts && <LoadMoreButton onClick={loadMoreProducts} />
+          )}
         </Box>
       )}
 

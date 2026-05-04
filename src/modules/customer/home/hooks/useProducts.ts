@@ -1,5 +1,5 @@
 ﻿import { useMemo } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   getProductDetail,
   getProductsByCommerceType,
@@ -23,21 +23,28 @@ interface UseProductsParams {
   page?: number;
 }
 
-
 export function useTopDeals(size = 6) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
-  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const temporaryPreferences = useFilterStore(
+    (state) => state.temporaryPreferences,
+  );
   const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
+  const effectiveSize = categories.length > 0 ? 200 : size;
 
   const query = useQuery<ProductResponse[], Error>({
-    queryKey: [TOP_DEALS_QUERY_KEY, isClient ? `client-prefs-${clientId}` : locality, size],
+    queryKey: [
+      TOP_DEALS_QUERY_KEY,
+      isClient ? `client-prefs-${clientId}` : locality,
+      effectiveSize,
+      categories,
+    ],
     queryFn: () =>
       isClient
-        ? getProductsByPreferencesForClient(clientId!, size)
-        : getTopDeals(locality || "Cordoba Capital", size),
+        ? getProductsByPreferencesForClient(clientId!, effectiveSize)
+        : getTopDeals(locality || "Cordoba Capital", effectiveSize),
     staleTime: 5 * 60 * 1000,
     retry: 2,
     enabled: isClient || !!locality,
@@ -49,11 +56,13 @@ export function useTopDeals(size = 6) {
     let result = query.data;
     if (temporaryPreferences.length > 0) {
       result = result.filter((p) =>
-        temporaryPreferences.every((pref) => p.preferences?.includes(pref))
+        temporaryPreferences.every((pref) => p.preferences?.includes(pref)),
       );
     }
     if (categories.length > 0) {
-      result = result.filter((p) => categories.includes(p.category as ProductCategory));
+      result = result.filter((p) =>
+        categories.includes(p.category as ProductCategory),
+      );
     }
     return result;
   }, [query.data, temporaryPreferences, categories]);
@@ -62,7 +71,11 @@ export function useTopDeals(size = 6) {
 }
 
 //hook para obtener los productos de un comercio específico, si no se pasa commerceId, obtiene todos los productos
-export const useProducts = ({ commerceId, size = 20, page = 0 }: UseProductsParams = {}) => {
+export const useProducts = ({
+  commerceId,
+  size = 20,
+  page = 0,
+}: UseProductsParams = {}) => {
   return useQuery<PaginatedResponse<ProductResponse>, Error>({
     queryKey: ["products", { commerceId, size, page }],
     queryFn: () => getProductsByCommerce(commerceId!, page, size),
@@ -72,6 +85,24 @@ export const useProducts = ({ commerceId, size = 20, page = 0 }: UseProductsPara
   });
 };
 
+export const useInfiniteProducts = (
+  commerceId: string | undefined,
+  size = 20,
+) => {
+  return useInfiniteQuery<PaginatedResponse<ProductResponse>, Error>({
+    queryKey: ["products-infinite", { commerceId, size }],
+    queryFn: ({ pageParam }) =>
+      getProductsByCommerce(commerceId!, pageParam as number, size),
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
+      lastPage.number + 1 < lastPage.totalPages
+        ? lastPage.number + 1
+        : undefined,
+    enabled: !!commerceId,
+    staleTime: 2 * 60 * 1000,
+    retry: 2,
+  });
+};
 
 //hook para obtener el detalle de un producto específico
 export const useProductDetail = (productId: string | null) => {
@@ -84,25 +115,49 @@ export const useProductDetail = (productId: string | null) => {
 };
 
 //hook para obtener los productos filtrados por tipo de comercio seleccionado
-export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | null, size = 12) {
+export function useProductsByCommerceType(
+  commerceType: CommerceTypeDisplay | null,
+  size = 12,
+) {
   const { isAuthenticated, clientId } = useAuthStore();
   const locality = useLocalityStore((state) => state.locality);
-  const temporaryPreferences = useFilterStore((state) => state.temporaryPreferences);
+  const temporaryPreferences = useFilterStore(
+    (state) => state.temporaryPreferences,
+  );
   const categories = useFilterStore((state) => state.categories);
 
   const isClient = isAuthenticated && !!clientId;
+  const effectiveSize =
+    categories.length > 0 || temporaryPreferences.length > 0 ? 200 : size;
 
   const query = useQuery<ProductResponse[], Error>({
-    queryKey: ["products-by-category", commerceType, isClient ? `client-${clientId}` : locality, size],
+    queryKey: [
+      "products-by-category",
+      commerceType,
+      isClient ? `client-${clientId}` : locality,
+      effectiveSize,
+      categories,
+      temporaryPreferences,
+    ],
     queryFn: () => {
       if (isClient) {
         return commerceType
-          ? getProductsByCommerceTypeForClient(clientId!, commerceType, 0, size)
-          : getProductsByPreferencesForClient(clientId!, size);
+          ? getProductsByCommerceTypeForClient(
+              clientId!,
+              commerceType,
+              0,
+              effectiveSize,
+            )
+          : getProductsByPreferencesForClient(clientId!, effectiveSize);
       }
       return commerceType
-        ? getProductsByCommerceType(commerceType, locality || "Cordoba Capital", 0, size)
-        : getTopDeals(locality || "Cordoba Capital", size);
+        ? getProductsByCommerceType(
+            commerceType,
+            locality || "Cordoba Capital",
+            0,
+            effectiveSize,
+          )
+        : getTopDeals(locality || "Cordoba Capital", effectiveSize);
     },
     staleTime: 2 * 60 * 1000,
     retry: 2,
@@ -115,11 +170,13 @@ export function useProductsByCommerceType(commerceType: CommerceTypeDisplay | nu
     let result = query.data;
     if (temporaryPreferences.length > 0) {
       result = result.filter((p) =>
-        temporaryPreferences.every((pref) => p.preferences?.includes(pref))
+        temporaryPreferences.every((pref) => p.preferences?.includes(pref)),
       );
     }
     if (categories.length > 0) {
-      result = result.filter((p) => categories.includes(p.category as ProductCategory));
+      result = result.filter((p) =>
+        categories.includes(p.category as ProductCategory),
+      );
     }
     return result;
   }, [query.data, temporaryPreferences, categories]);
