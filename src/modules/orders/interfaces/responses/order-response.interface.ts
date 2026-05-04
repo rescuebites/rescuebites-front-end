@@ -36,6 +36,5 @@ export interface OrderResponse {
   paymentMethod: PaymentMethod;
   createdAt: string;
   confirmedAt: string | null;
-  scheduledPickupTime: string | null;
   notes: string | null;
 }
