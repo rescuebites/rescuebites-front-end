@@ -7,13 +7,25 @@ import { StoreCard } from "./StoreCard";
 const FEATURED_LIMIT = 10;
 
 export default function FeaturedStores() {
-  const selectedCommerceType = useCommerceTypeStore((state) => state.selectedCommerceType);
+  const selectedCommerceType = useCommerceTypeStore(
+    (state) => state.selectedCommerceType,
+  );
   const categoryToFetch = selectedCommerceType || "Panadería";
 
-  const { data: filteredData, isLoading: filteredLoading } = useCommercesByType(categoryToFetch);
-  const { data: allData, isLoading: allLoading } = useAllCommerces();
+  const {
+    data: filteredData,
+    isLoading: filteredLoading,
+    isFetching: filteredFetching,
+  } = useCommercesByType(categoryToFetch);
+  const {
+    data: allData,
+    isLoading: allLoading,
+    isFetching: allFetching,
+  } = useAllCommerces();
 
-  const isLoading = selectedCommerceType ? filteredLoading : allLoading;
+  const isLoading = selectedCommerceType
+    ? filteredLoading || filteredFetching
+    : allLoading || allFetching;
   const allCommerces = selectedCommerceType
     ? (filteredData?.content ?? [])
     : (allData?.content ?? []);
@@ -66,7 +78,16 @@ function StoresSkeleton() {
     <Box sx={{ display: "flex", gap: 2, py: 2 }}>
       {[1, 2, 3, 4, 5, 6].map((i) => (
         <Stack key={i} sx={{ minWidth: 200, gap: 1 }}>
-          <Skeleton variant="rectangular" sx={{ width: "100%", aspectRatio: "4/5", borderRadius: 3, height: { xs: 160, sm: 200 } }} animation="wave" />
+          <Skeleton
+            variant="rectangular"
+            sx={{
+              width: "100%",
+              aspectRatio: "4/5",
+              borderRadius: 3,
+              height: { xs: 160, sm: 200 },
+            }}
+            animation="wave"
+          />
           <Skeleton width="80%" animation="wave" />
           <Skeleton width="60%" animation="wave" />
         </Stack>

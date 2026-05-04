@@ -16,6 +16,7 @@ import { useCartStore } from "@/modules/cart/hooks/useCartStore";
 import { useAddToCart } from "@/modules/cart/hooks/useAddToCart";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
 import ClosedCommercePopup from "@/modules/cart/components/ClosedCommercePopup";
+import ClosedReopensPopup from "@/modules/cart/components/ClosedReopensPopup";
 
 type DialogMode = "addToCart" | "viewOnly" | "edit";
 
@@ -51,7 +52,13 @@ export default function ProductDetailDialog({
   const quantityInCart = productId ? getQuantity(productId) : 0;
 
   const { data: productDetail, isLoading } = useProductDetail(productId);
-  const cart = useAddToCart(productId ?? "", quantityInCart, productDetail?.commerceId, productDetail?.commerceName);
+  const cart = useAddToCart(
+    productId ?? "",
+    quantityInCart,
+    productDetail?.commerceId,
+    productDetail?.commerceName,
+    productDetail?.commerceBusinessHours ?? undefined,
+  );
 
   if (!open || !productId) {
     return null;
@@ -96,7 +103,7 @@ export default function ProductDetailDialog({
   }
 
   const handleGoToCommerce = () => {
-    onClose(); 
+    onClose();
     navigate(`/stores/${productDetail.commerceId}`, { replace: true });
   };
 
@@ -152,12 +159,24 @@ export default function ProductDetailDialog({
         confirmText="Vaciar y agregar"
         cancelText="Cancelar"
         variant="danger"
-        onConfirm={async () => { await cart.handleConflictConfirm(); onClose(); }}
+        onConfirm={async () => {
+          await cart.handleConflictConfirm();
+          onClose();
+        }}
         onCancel={cart.closeCommerceConflict}
       />
       <ClosedCommercePopup
         open={cart.closedCommerceOpen}
         onClose={cart.closeClosedCommercePopup}
+      />
+      <ClosedReopensPopup
+        open={cart.closedReopensOpen}
+        onClose={cart.closeClosedReopensPopup}
+        onConfirm={async () => {
+          cart.closeClosedReopensPopup();
+          const added = await cart.handleAddWithQuantity(quantity);
+          if (added) onClose();
+        }}
       />
       <ConfirmModal
         open={alreadyInCartOpen}
@@ -165,7 +184,11 @@ export default function ProductDetailDialog({
         description="Este producto ya está en el carrito. Podés modificar la cantidad desde el carrito."
         confirmText="Ver carrito"
         cancelText="Cancelar"
-        onConfirm={() => { setAlreadyInCartOpen(false); onClose(); navigate("/cart"); }}
+        onConfirm={() => {
+          setAlreadyInCartOpen(false);
+          onClose();
+          navigate("/cart");
+        }}
         onCancel={() => setAlreadyInCartOpen(false)}
       />
 
@@ -189,10 +212,10 @@ export default function ProductDetailDialog({
           flex: 1,
           overflow: "auto",
           paddingBottom: mode !== "viewOnly" ? "88px" : "16px",
-          scrollbarWidth: "none", 
-          msOverflowStyle: "none", 
+          scrollbarWidth: "none",
+          msOverflowStyle: "none",
           "&::-webkit-scrollbar": {
-            display: "none", 
+            display: "none",
           },
         }}
       >
@@ -221,17 +244,19 @@ export default function ProductDetailDialog({
           />
 
           {/* Información del comercio (oculta en modo edición o cuando se solicita) */}
-          {mode !== "edit" && !hideCommerceInfo && productDetail.commerceName && (
-            <Box sx={{ mt: 3 }}>
-              <ProductDetailCommerce
-                commerceName={productDetail.commerceName}
-                commerceOpeningHours={productDetail.commerceOpeningHours}
-                commerceImages={productDetail.commerceImages}
-                onCommerceClick={handleGoToCommerce}
-                showDivider={false}
-              />
-            </Box>
-          )}
+          {mode !== "edit" &&
+            !hideCommerceInfo &&
+            productDetail.commerceName && (
+              <Box sx={{ mt: 3 }}>
+                <ProductDetailCommerce
+                  commerceName={productDetail.commerceName}
+                  commerceOpeningHours={productDetail.commerceOpeningHours}
+                  commerceImages={productDetail.commerceImages}
+                  onCommerceClick={handleGoToCommerce}
+                  showDivider={false}
+                />
+              </Box>
+            )}
 
           {/* Control de cantidad */}
           <ProductDetailQuantity
