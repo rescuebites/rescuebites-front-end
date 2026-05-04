@@ -1,5 +1,6 @@
 import { CommerceResponse } from "@/modules/commerce/interfaces/responses/commerce.response";
 import { ImageResponse } from "@/shared/interfaces/image-response.interface";
+import type { BusinessHoursResponse } from "@/modules/commerce/interfaces/responses/business-hours.response";
 
 export interface ProductResponse {
   productId: string;
@@ -8,6 +9,7 @@ export interface ProductResponse {
   commerceName: string;
   commerceImages: ImageResponse[];
   commerceOpeningHours: string;
+  commerceBusinessHours: BusinessHoursResponse[];
   name: string;
   description: string;
   stock: number;
