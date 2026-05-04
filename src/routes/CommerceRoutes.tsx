@@ -1,6 +1,8 @@
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import UnauthorizedPage from "@/shared/pages/UnauthorizedPage";
+import { ProtectedRoute } from "@/routes/ProtectedRoute";
+import PublicNavbar from "@/modules/navbar/components/PublicNavbar";
 import CommerceDashboardPage from "@/modules/commerce/pages/CommerceDashboardPage";
 import SearchResultsPage from "@/modules/commerce/pages/SearchResultsPage";
 import ExpiringProductsPage from "@/modules/products/pages/ExpiringProductsPage";
@@ -17,33 +19,33 @@ import CommerceOrderDetailPage from "@/modules/orders/pages/CommerceOrderDetailP
 import { SalesReportPage } from "@/modules/reports/pages/SalesReportPage";
 import ListCommerceOrdersPage from "@/modules/orders/pages/ListCommerceOrdersPage";
 import ListCommerceProductsPage from "@/modules/products/pages/ListCommerceProductsPage";
+import NotificationsPage from "@/modules/notifications/NotificationsPage";
 
 export function CommerceRoutes() {
-  const { isAuthenticated, commerceId, clientId } = useAuthStore();
+  const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
+  const clientId = useAuthStore((s) => s.clientId);
 
-  // No autenticado → login
-  if (!isAuthenticated) {
-    return <Navigate to="/auth/login" replace />;
-  }
-
-  // Autenticado como cliente → no puede acceder a rutas de comercio
-  if (!!clientId && !commerceId) {
+  // Un usuario autenticado como cliente no puede acceder a rutas de comercio
+  if (isAuthenticated && !!clientId) {
     return <UnauthorizedPage />;
   }
 
   return (
     <Routes>
-      {/* Layout principal del comercio */}
-      <Route element={<AppLayout navbar={<CommerceNavbar />} />}>
-        {/* Dashboard principal */}
-        <Route index element={<CommerceDashboardPage />} />
-        <Route path="profile" element={<CommerceProfilePage />} />
-        <Route path="search" element={<SearchResultsPage />} />
-        <Route path="products" element={<ListCommerceProductsPage />} />
-        <Route path="products/expiring" element={<ExpiringProductsPage />} />
-        <Route path="orders" element={<ListCommerceOrdersPage />} />
-        <Route path="orders/:orderId" element={<CommerceOrderDetailPage />} />
-        <Route path="sales" element={<SalesReportPage />} />
+      {/* Layout principal del comercio — rutas protegidas */}
+      <Route element={<AppLayout navbar={isAuthenticated ? <CommerceNavbar /> : <PublicNavbar />} />}>
+        <Route element={<ProtectedRoute />}>
+          {/* Dashboard principal */}
+          <Route index element={<CommerceDashboardPage />} />
+          <Route path="profile" element={<CommerceProfilePage />} />
+          <Route path="search" element={<SearchResultsPage />} />
+          <Route path="products" element={<ListCommerceProductsPage />} />
+          <Route path="products/expiring" element={<ExpiringProductsPage />} />
+          <Route path="orders" element={<ListCommerceOrdersPage />} />
+          <Route path="orders/:orderId" element={<CommerceOrderDetailPage />} />
+          <Route path="sales" element={<SalesReportPage />} />
+          <Route path="notifications" element={<NotificationsPage />} />
+        </Route>
       </Route>
 
       <Route element={<AuthLayout />}>

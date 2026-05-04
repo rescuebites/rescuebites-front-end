@@ -17,10 +17,17 @@ const CommerceOrderDetailPage = () => {
   const commerceId = useAuthStore((state) => state.commerceId);
 
   const [productDialogOpen, setProductDialogOpen] = useState(false);
-  const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
-  const [selectedProductQuantity, setSelectedProductQuantity] = useState<number>(1);
+  const [selectedProductId, setSelectedProductId] = useState<string | null>(
+    null,
+  );
+  const [selectedProductQuantity, setSelectedProductQuantity] =
+    useState<number>(1);
 
-  const { data: order, isLoading, error } = useCommerceOrderDetail(commerceId, orderId);
+  const {
+    data: order,
+    isLoading,
+    error,
+  } = useCommerceOrderDetail(commerceId, orderId);
 
   const { handleProductClick } = useOrderPageActions();
 
@@ -129,6 +136,29 @@ const CommerceOrderDetailPage = () => {
           serviceFee={order.serviceFee}
           total={order.total}
         />
+
+        {order.notes && (
+          <>
+            <CustomTitle
+              variant="h6"
+              align="left"
+              text="Notas del pedido"
+              color="#2D2D2D"
+            />
+
+            <Box
+              sx={{
+                mb: 3,
+                p: 2,
+                borderRadius: 2,
+                backgroundColor: "#FFF",
+                border: "1px solid #E0E0E0",
+              }}
+            >
+              {order.notes}
+            </Box>
+          </>
+        )}
 
         {commerceId && (
           <CommerceOrderActionSection

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { TextField, Typography } from "@mui/material";
+import { TextField, Box, Typography } from "@mui/material";
+import BackButton from "@/shared/components/ui/BackButton";
 import CustomTitle from "@/shared/components/CustomTitle";
 import { useResendVerification } from "@/modules/users/hooks/useResendVerification";
 import CustomButton from "@/shared/components/CustomButton";
@@ -16,12 +17,18 @@ export function ResendVerificationPage() {
 
   return (
     <>
-      <CustomTitle text="Reenviar correo de verificación" />
+      <Box sx={{ position: "relative", mb: 2 }}>
+        <BackButton sx={{ position: "absolute", left: { xs: 2, sm: 2 }, top: { xs: 80, sm: -60 }, zIndex: 10 }} />
 
-      <Typography variant="body1" sx={{ mb: 2, color: "#555" }}>
-        Ingresa tu correo electrónico y te enviaremos nuevamente el correo de
-        verificación.
-      </Typography>
+        <Box display="flex" flexDirection="column" alignItems="center">
+          <CustomTitle text="Reenviar correo de verificación" />
+
+          <Typography variant="body1" sx={{ mb: 2, color: "#555" }}>
+            Ingresa tu correo electrónico y te enviaremos nuevamente el correo de
+            verificación.
+          </Typography>
+        </Box>
+      </Box>
 
       <form onSubmit={handleSubmit}>
         <TextField
