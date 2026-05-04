@@ -15,6 +15,8 @@ interface DateRangeFilterProps {
   from: string;
   to: string;
   onApply: () => void;
+  fromError?: string;
+  toError?: string;
 }
 
 export const DateRangeFilter = ({
@@ -22,7 +24,11 @@ export const DateRangeFilter = ({
   from,
   to,
   onApply,
+  fromError,
+  toError,
 }: DateRangeFilterProps) => {
+  const today = new Date().toISOString().split("T")[0];
+
   return (
     <Box sx={{ width: "100%" }}>
       <Box
@@ -52,6 +58,8 @@ export const DateRangeFilter = ({
             control={control}
             name="from"
             size="small"
+            maxDate={today}
+            error={fromError}
             sx={{ ...fieldSx, margin: "0 auto" }}
           />
         </Box>
@@ -73,6 +81,8 @@ export const DateRangeFilter = ({
             control={control}
             name="to"
             size="small"
+            maxDate={today}
+            error={toError}
             sx={{ ...fieldSx, margin: "0 auto" }}
           />
         </Box>
