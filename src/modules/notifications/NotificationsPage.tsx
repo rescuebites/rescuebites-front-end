@@ -87,8 +87,8 @@ export default function NotificationsPage() {
   };
 
   return (
-    <Box sx={{ px: 2.5, pt: 3, pb: 12, maxWidth: 700, mx: "auto" }}>
-      <Box sx={{ position: "relative", mb: 2 }}>
+    <Box sx={{ px: 2.5, pt: 3, maxWidth: 700, mx: "auto" }}>
+      <Box sx={{ position: "relative", mb: 3 }}>
         <BackButton sx={{ position: "absolute", left: { xs: 6, sm: 8 } }} />
 
         <Box display="flex" flexDirection="column" alignItems="center">
@@ -106,6 +106,7 @@ export default function NotificationsPage() {
             align="center"
             color="#6d6d6d"
             fontWeight={400}
+            sx={{ mt: -1 }}
           />
         </Box>
       </Box>
