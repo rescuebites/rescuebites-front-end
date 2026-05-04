@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { Box, Typography, Container, Button, Dialog, DialogTitle, DialogContent, DialogContentText, CircularProgress, TextField } from "@mui/material";
+import {
+  Box,
+  Typography,
+  Container,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogContentText,
+  CircularProgress,
+  TextField,
+} from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import BackButton from "@/shared/components/ui/BackButton";
 import CustomTitle from "@/shared/components/CustomTitle";
@@ -15,6 +26,7 @@ const CartPage: React.FC = () => {
   const {
     cart,
     commerce,
+    cartLoading,
     confirming,
     redirectingToMP,
     createdOrderId,
@@ -61,11 +73,16 @@ const CartPage: React.FC = () => {
           aria-labelledby="redirecting-dialog-full"
           PaperProps={{ sx: { borderRadius: 3, p: 1 } }}
         >
-          <DialogTitle id="redirecting-dialog-full" sx={{ fontWeight: 600, color: "#2D2D2D" }}>
+          <DialogTitle
+            id="redirecting-dialog-full"
+            sx={{ fontWeight: 600, color: "#2D2D2D" }}
+          >
             Redirigiendo a Mercado Pago
           </DialogTitle>
 
-          <DialogContent sx={{ display: "flex", alignItems: "center", gap: 2, py: 3 }}>
+          <DialogContent
+            sx={{ display: "flex", alignItems: "center", gap: 2, py: 3 }}
+          >
             <CircularProgress sx={{ color: "#5A9A6E" }} />
             <DialogContentText sx={{ color: "#6B7280" }}>
               Estamos redirigiéndote al checkout de Mercado Pago...
@@ -131,7 +148,16 @@ const CartPage: React.FC = () => {
           />
         )}
 
-        {!commerce ? (
+        {cartLoading ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            py={10}
+          >
+            <CircularProgress sx={{ color: "#77A787" }} />
+          </Box>
+        ) : !commerce ? (
           <Box
             sx={{
               display: "flex",
@@ -174,6 +200,8 @@ const CartPage: React.FC = () => {
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               inputProps={{ maxLength: 300 }}
+              helperText={`${notes.length}/300`}
+              FormHelperTextProps={{ sx: { textAlign: "right", mr: 0 } }}
               sx={{ ...fieldSx, mb: 3 }}
             />
 
