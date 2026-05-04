@@ -2,7 +2,11 @@ import { ProductCategory } from "../../modules/products/enums/product-category.e
 import { ProductCondition } from "../../modules/products/enums/product-condition.enum";
 import { CommerceType } from "../../modules/commerce/enums/commerce-type.enum";
 
-export function getProductCategoryGroups(): Array<{ key: string; title: string; categories: ProductCategory[] }> {
+export function getProductCategoryGroups(): Array<{
+  key: string;
+  title: string;
+  categories: ProductCategory[];
+}> {
   return [
     {
       key: "frutas_verduras",
@@ -41,6 +45,8 @@ export function getProductCategoryGroups(): Array<{ key: string; title: string; 
       key: "kiosco_super",
       title: "Kiosco y Supermercado",
       categories: [
+        ProductCategory.GREENGROCERY_SECTION,
+        ProductCategory.BAKERY_SECTION,
         ProductCategory.CLEANING,
         ProductCategory.BEVERAGES,
         ProductCategory.GROCERIES,
@@ -56,15 +62,13 @@ export function getProductCategoryGroups(): Array<{ key: string; title: string; 
     {
       key: "otros",
       title: "Otros",
-      categories: [
-        ProductCategory.GREENGROCERY_SECTION,
-        ProductCategory.BAKERY_SECTION,
-        ProductCategory.OTHER,
-      ],
+      categories: [ProductCategory.OTHER],
     },
   ];
 }
-export function getAllowedProductCategories(commerceType: CommerceType): ProductCategory[] {
+export function getAllowedProductCategories(
+  commerceType: CommerceType,
+): ProductCategory[] {
   switch (commerceType) {
     case CommerceType.GREENGROCERY:
       return [
@@ -128,7 +132,9 @@ export function getAllowedProductCategories(commerceType: CommerceType): Product
   }
 }
 
-export function getAllowedProductConditions(commerceType: CommerceType): ProductCondition[] {
+export function getAllowedProductConditions(
+  commerceType: CommerceType,
+): ProductCondition[] {
   switch (commerceType) {
     case CommerceType.GREENGROCERY:
       return [
