@@ -10,7 +10,9 @@ interface Props {
 
 export default function SearchResultCard({ product, onClick }: Props) {
   const image = product.productImages?.[0]?.url || "/placeholder.jpg";
-  const expiresLabel = product.expirationDate ? formatDateShort(product.expirationDate) : null;
+  const expiresLabel = product.expirationDate
+    ? formatDateShort(product.expirationDate)
+    : null;
 
   return (
     <Paper
@@ -24,7 +26,10 @@ export default function SearchResultCard({ product, onClick }: Props) {
         alignItems: "center",
         bgcolor: "#FFF",
         cursor: onClick ? "pointer" : "default",
-        "&:hover": { boxShadow: "0 4px 16px rgba(0,0,0,0.1)", borderColor: "#77A787" },
+        "&:hover": {
+          boxShadow: "0 4px 16px rgba(0,0,0,0.1)",
+          borderColor: "#77A787",
+        },
         transition: "all 0.2s",
       }}
     >
@@ -70,9 +75,15 @@ export default function SearchResultCard({ product, onClick }: Props) {
 
         <Stack direction="row" spacing={1} mt={0.5} mb={0.5}>
           {expiresLabel && (
-            <ProductStatusBadge text={`Vence: ${expiresLabel}`} variant="expire" />
+            <ProductStatusBadge
+              text={`Vence: ${expiresLabel}`}
+              variant="expire"
+            />
           )}
-          <ProductStatusBadge text={`${product.stock} restantes`} variant="stock" />
+          <ProductStatusBadge
+            text={`${product.stock} restantes`}
+            variant="stock"
+          />
         </Stack>
 
         <Stack direction="row" spacing={1} alignItems="center">
@@ -83,6 +94,7 @@ export default function SearchResultCard({ product, onClick }: Props) {
           <Typography
             sx={{
               textDecoration: "line-through",
+              fontStyle: "italic",
               color: "#BDBDBD",
               fontSize: 14,
             }}
