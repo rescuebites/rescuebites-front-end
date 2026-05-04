@@ -13,8 +13,9 @@ import {
   Typography,
   ClickAwayListener,
 } from "@mui/material";
-import { MdClose, MdSearch, } from "react-icons/md";
+import { MdClose, MdSearch } from "react-icons/md";
 import TuneIcon from "@mui/icons-material/Tune";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 import { useFilterStore } from "../hooks/useFilterStore";
 import type { SearchSuggestion } from "../interfaces/responses/search-response.interface";
 import { ShoppingBasket, Store } from "lucide-react";
@@ -29,6 +30,7 @@ interface SearchBarProps {
   onHideSuggestions: () => void;
   onShowSuggestions: () => void;
   showFilterButton?: boolean;
+  onBack?: () => void;
 }
 
 export default function SearchBar({
@@ -41,6 +43,7 @@ export default function SearchBar({
   onHideSuggestions,
   onShowSuggestions,
   showFilterButton = true,
+  onBack,
 }: SearchBarProps) {
   const { openFilterDrawer, getActiveFiltersCount } = useFilterStore();
   const activeFiltersCount = getActiveFiltersCount();
@@ -51,12 +54,12 @@ export default function SearchBar({
 
   return (
     <ClickAwayListener onClickAway={onHideSuggestions}>
-      <Box sx={{ display: "flex", gap: 1.5, alignItems: "flex-start" }}>
+      <Box sx={{ display: "flex", gap: 1.5, alignItems: "center" }}>
         {/* Search input + dropdown wrapper */}
         <Box sx={{ flex: 1, position: "relative" }}>
           <TextField
             fullWidth
-            placeholder="Buscar productos..."
+            placeholder="Buscar productos, comercios ..."
             autoComplete="off"
             value={query}
             onChange={(e) => onQueryChange(e.target.value)}
@@ -85,7 +88,22 @@ export default function SearchBar({
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
-                  <MdSearch size={32} color="#757575" />
+                  {onBack ? (
+                    <IconButton
+                      onClick={onBack}
+                      size="small"
+                      edge="start"
+                      sx={{
+                        color: "#77A787",
+                        ml: -0.5,
+                        "&:hover": { color: "#3E6A53", bgcolor: "transparent" },
+                      }}
+                    >
+                      <ArrowBackIcon sx={{ fontSize: { xs: 22, sm: 24 } }} />
+                    </IconButton>
+                  ) : (
+                    <MdSearch size={32} color="#757575" />
+                  )}
                 </InputAdornment>
               ),
               endAdornment: query && (
@@ -219,35 +237,37 @@ export default function SearchBar({
         </Box>
 
         {/* Filter button */}
-        {showFilterButton && <IconButton
-          onClick={openFilterDrawer}
-          sx={{
-            bgcolor: "#FFF",
-            border: "1px solid #E0E0E0",
-            borderRadius: 2,
-            width: { xs: 56, sm: 48 },
-            height: { xs: 56, sm: 48 },
-            flexShrink: 0,
-            "&:hover": { bgcolor: "#F5F5F5", borderColor: "#77A787" },
-          }}
-        >
-          <Badge
-            badgeContent={activeFiltersCount}
-            color="primary"
+        {showFilterButton && (
+          <IconButton
+            onClick={openFilterDrawer}
             sx={{
-              "& .MuiBadge-badge": {
-                bgcolor: "#77A787",
-                color: "#FFF",
-                fontSize: { xs: 18, sm: 11 },
-                fontWeight: 700,
-                minWidth: { xs: 26, sm: 18 },
-                height: { xs: 26, sm: 18 },
-              },
+              bgcolor: "#FFF",
+              border: "1px solid #E0E0E0",
+              borderRadius: 2,
+              width: { xs: 56, sm: 48 },
+              height: { xs: 56, sm: 48 },
+              flexShrink: 0,
+              "&:hover": { bgcolor: "#F5F5F5", borderColor: "#77A787" },
             }}
           >
-            <TuneIcon sx={{ color: "#77A787", fontSize: 24 }} />
-          </Badge>
-        </IconButton>}
+            <Badge
+              badgeContent={activeFiltersCount}
+              color="primary"
+              sx={{
+                "& .MuiBadge-badge": {
+                  bgcolor: "#77A787",
+                  color: "#FFF",
+                  fontSize: { xs: 18, sm: 11 },
+                  fontWeight: 700,
+                  minWidth: { xs: 26, sm: 18 },
+                  height: { xs: 26, sm: 18 },
+                },
+              }}
+            >
+              <TuneIcon sx={{ color: "#77A787", fontSize: 24 }} />
+            </Badge>
+          </IconButton>
+        )}
       </Box>
     </ClickAwayListener>
   );
