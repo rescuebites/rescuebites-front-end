@@ -63,7 +63,10 @@ export default function CartProductCard({
               />
               <IconButton
                 size="small"
-                onClick={(e) => { e.stopPropagation(); onRemove(item.cartItemId); }}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onRemove(item.cartItemId);
+                }}
                 sx={{ color: "#9CA3AF", p: 0.5, ml: 0.5 }}
               >
                 <DeleteOutlineIcon
@@ -94,7 +97,8 @@ export default function CartProductCard({
                 align="left"
                 color="#999"
                 fontSize={{ xs: 16, sm: 18, md: 24 }}
-                sx={{ textDecoration: "line-through" }}
+                textDecoration="line-through"
+                fontStyle="italic"
               />
             </Box>
 
