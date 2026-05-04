@@ -1,6 +1,9 @@
 import type { Day } from "../components/BusinessHours";
 import { INITIAL_DAYS } from "../components/BusinessHours";
-import type { BusinessHoursRequest, DayOfWeek } from "../interfaces/requests/business-hours.request";
+import type {
+  BusinessHoursRequest,
+  DayOfWeek,
+} from "../interfaces/requests/business-hours.request";
 import type { BusinessHoursResponse } from "../interfaces/responses/business-hours.response";
 import { DAY_OF_WEEK_META } from "./constants";
 
@@ -59,21 +62,28 @@ export const mapDaysToBusinessHours = (days: Day[]): BusinessHoursRequest[] => {
     const morningEnabled = !day.closed && day.shifts.morning.enabled;
     const afternoonEnabled = !day.closed && day.shifts.afternoon.enabled;
     const dayId = day.id.toLowerCase();
-    const dayOfWeek = (ID_TO_DAY_OF_WEEK as Record<string, DayOfWeek>)[dayId] ?? "MONDAY";
+    const dayOfWeek =
+      (ID_TO_DAY_OF_WEEK as Record<string, DayOfWeek>)[dayId] ?? "MONDAY";
 
     return {
       dayOfWeek,
       closed: day.closed,
       openTime: morningEnabled ? toLocalTime(day.shifts.morning.open) : null,
       closeTime: morningEnabled ? toLocalTime(day.shifts.morning.close) : null,
-      afternoonOpenTime: afternoonEnabled ? toLocalTime(day.shifts.afternoon.open) : null,
-      afternoonCloseTime: afternoonEnabled ? toLocalTime(day.shifts.afternoon.close) : null,
+      afternoonOpenTime: afternoonEnabled
+        ? toLocalTime(day.shifts.afternoon.open)
+        : null,
+      afternoonCloseTime: afternoonEnabled
+        ? toLocalTime(day.shifts.afternoon.close)
+        : null,
     };
   });
 };
 
 // Función para convertir BusinessHoursResponse[] a Day[] (desde el backend)
-export const mapBusinessHoursToDay = (hours: BusinessHoursResponse[] = []): Day[] => {
+export const mapBusinessHoursToDay = (
+  hours: BusinessHoursResponse[] = [],
+): Day[] => {
   if (!hours || hours.length === 0) return INITIAL_DAYS;
 
   const responseByDay = new Map<DayOfWeek, BusinessHoursResponse>();
@@ -82,7 +92,7 @@ export const mapBusinessHoursToDay = (hours: BusinessHoursResponse[] = []): Day[
   // Preserve order and defaults from INITIAL_DAYS, overriding when response exists
   return INITIAL_DAYS.map((d) => {
     const dayOfWeek = (Object.keys(DAY_OF_WEEK_META) as DayOfWeek[]).find(
-      (k) => DAY_OF_WEEK_META[k].id === d.id
+      (k) => DAY_OF_WEEK_META[k].id === d.id,
     );
 
     if (!dayOfWeek) return d;
@@ -90,7 +100,6 @@ export const mapBusinessHoursToDay = (hours: BusinessHoursResponse[] = []): Day[
     const h = responseByDay.get(dayOfWeek);
     if (!h) return d;
 
-    const morningEnabled = !h.closed && !!h.openTime;
     const afternoonEnabled = !h.closed && !!h.afternoonOpenTime;
 
     return {
@@ -98,23 +107,31 @@ export const mapBusinessHoursToDay = (hours: BusinessHoursResponse[] = []): Day[
       closed: h.closed,
       shifts: {
         morning: {
-          enabled: morningEnabled,
+          enabled: true,
           open: h.openTime ? h.openTime.substring(0, 5) : d.shifts.morning.open,
-          close: h.closeTime ? h.closeTime.substring(0, 5) : d.shifts.morning.close,
+          close: h.closeTime
+            ? h.closeTime.substring(0, 5)
+            : d.shifts.morning.close,
         },
         afternoon: {
           enabled: afternoonEnabled,
-          open: h.afternoonOpenTime ? h.afternoonOpenTime.substring(0, 5) : d.shifts.afternoon.open,
-          close: h.afternoonCloseTime ? h.afternoonCloseTime.substring(0, 5) : d.shifts.afternoon.close,
+          open: h.afternoonOpenTime
+            ? h.afternoonOpenTime.substring(0, 5)
+            : d.shifts.afternoon.open,
+          close: h.afternoonCloseTime
+            ? h.afternoonCloseTime.substring(0, 5)
+            : d.shifts.afternoon.close,
         },
       },
     };
   });
 };
 
-// Formatea BusinessHoursResponse[] para que se vea como "Lun: 09:00 - 18:00, Mar: Cerrado, ...", 
+// Formatea BusinessHoursResponse[] para que se vea como "Lun: 09:00 - 18:00, Mar: Cerrado, ...",
 // útil para mostrar en el detalle del comercio
-export const formatBusinessHours = (hours: BusinessHoursResponse[] = []): string => {
+export const formatBusinessHours = (
+  hours: BusinessHoursResponse[] = [],
+): string => {
   if (!hours || hours.length === 0) return "";
 
   const shortDays: Record<string, string> = {
