@@ -100,12 +100,19 @@ export const CancelOrderDialog: React.FC<CancelOrderDialogProps> = ({
           onChange={(e) => setReason(e.target.value)}
           disabled={isLoading}
           placeholder="Ingresa el motivo de la cancelación..."
+          inputProps={{ maxLength: 300 }}
+          helperText={`${reason.length}/300`}
+          FormHelperTextProps={{ sx: { textAlign: "right", mr: 0 } }}
           sx={fieldSx}
         />
       </DialogContent>
 
       <DialogActions sx={{ px: 0, pb: 1, pt: 2, gap: 1.5 }}>
-        <Button onClick={handleClose} disabled={isLoading} sx={secondaryButtonSx}>
+        <Button
+          onClick={handleClose}
+          disabled={isLoading}
+          sx={secondaryButtonSx}
+        >
           Volver
         </Button>
         <Button

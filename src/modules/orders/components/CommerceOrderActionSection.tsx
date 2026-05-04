@@ -26,6 +26,7 @@ const CommerceOrderActionSection = ({
 }: CommerceOrderActionSectionProps) => {
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [confirmReadyOpen, setConfirmReadyOpen] = useState(false);
+  const [confirmCompleteOpen, setConfirmCompleteOpen] = useState(false);
   const [isAccepting, setIsAccepting] = useState(false);
 
   const { mutate: updateStatus, isPending } = useUpdateOrderStatus();
@@ -37,28 +38,40 @@ const CommerceOrderActionSection = ({
       {
         onSuccess: () => setIsAccepting(false),
         onError: () => setIsAccepting(false),
-      }
+      },
     );
   };
 
   const handleReady = () => {
     updateStatus(
       { commerceId, orderId, body: { newStatus: OrderStatus.READY } },
-      { onSuccess: () => setConfirmReadyOpen(false) }
+      { onSuccess: () => setConfirmReadyOpen(false) },
+    );
+  };
+
+  const handleComplete = () => {
+    updateStatus(
+      { commerceId, orderId, body: { newStatus: OrderStatus.COMPLETED } },
+      { onSuccess: () => setConfirmCompleteOpen(false) },
     );
   };
 
   const handleCancel = (reason: string) => {
     updateStatus(
-      { commerceId, orderId, body: { newStatus: OrderStatus.CANCELLED, reason } },
-      { onSuccess: () => setCancelDialogOpen(false) }
+      {
+        commerceId,
+        orderId,
+        body: { newStatus: OrderStatus.CANCELLED, reason },
+      },
+      { onSuccess: () => setCancelDialogOpen(false) },
     );
   };
 
   const showActions =
     status === OrderStatus.PENDING ||
     status === OrderStatus.CONFIRMED ||
-    status === OrderStatus.PREPARING;
+    status === OrderStatus.PREPARING ||
+    status === OrderStatus.READY;
 
   if (!showActions) return null;
 
@@ -98,17 +111,18 @@ const CommerceOrderActionSection = ({
         />
       </Box>
 
-      <Stack
-        direction={{ xs: "column", sm: "row" }}
-        spacing={2}
-        sx={{ mb: 3 }}
-      >
+      <Stack direction={{ xs: "column", sm: "row" }} spacing={2} sx={{ mb: 3 }}>
         <Box sx={{ flex: 1 }}>
           <CustomButton
             text="Cancelar Pedido"
             fullWidth
             onClick={() => setCancelDialogOpen(true)}
-            disabled={isPending || isAccepting || status === OrderStatus.PREPARING}
+            disabled={
+              isPending ||
+              isAccepting ||
+              status === OrderStatus.PREPARING ||
+              status === OrderStatus.READY
+            }
             startIcon={<MdCancel size={20} />}
             sx={{
               borderRadius: 3,
@@ -127,7 +141,8 @@ const CommerceOrderActionSection = ({
           />
         </Box>
 
-        {(status === OrderStatus.PENDING || status === OrderStatus.CONFIRMED) && (
+        {(status === OrderStatus.PENDING ||
+          status === OrderStatus.CONFIRMED) && (
           <Box sx={{ flex: 1 }}>
             <CustomButton
               text="Aceptar pedido"
@@ -172,6 +187,32 @@ const CommerceOrderActionSection = ({
             />
           </Box>
         )}
+
+        {status === OrderStatus.READY && (
+          <Box sx={{ flex: 1 }}>
+            <CustomButton
+              text="Confirmar entrega"
+              fullWidth
+              onClick={() => setConfirmCompleteOpen(true)}
+              isLoading={isPending}
+              startIcon={<MdCheckCircle size={20} />}
+              sx={{
+                borderRadius: 3,
+                py: 1.5,
+                fontWeight: 600,
+                fontSize: { xs: 14, sm: 15 },
+                textTransform: "none",
+                boxShadow: "none",
+                backgroundColor: "#77A787",
+                color: "#FFFFFF",
+                "&:hover": {
+                  backgroundColor: "#5d8f6d",
+                  boxShadow: "0 2px 8px rgba(119,167,135,0.4)",
+                },
+              }}
+            />
+          </Box>
+        )}
       </Stack>
 
       <ConfirmModal
@@ -182,6 +223,16 @@ const CommerceOrderActionSection = ({
         cancelText="Volver"
         onConfirm={handleReady}
         onCancel={() => setConfirmReadyOpen(false)}
+      />
+
+      <ConfirmModal
+        open={confirmCompleteOpen}
+        title="Confirmar entrega"
+        description="¿Confirmás que el cliente retiró su pedido?"
+        confirmText="Confirmar entrega"
+        cancelText="Volver"
+        onConfirm={handleComplete}
+        onCancel={() => setConfirmCompleteOpen(false)}
       />
 
       <CancelOrderDialog
