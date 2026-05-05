@@ -232,6 +232,29 @@ export function useSearch(): UseSearchReturn {
     return result;
   }, [products, temporaryPreferences, categories]);
 
+  useEffect(() => {
+    const hasFilters = temporaryPreferences.length > 0 || categories.length > 0;
+    if (!hasFilters) return;
+    if (filteredProducts.length > 0) return;
+    if (products.length === 0) return; 
+    if (isLoading || isLoadingMore) return;
+    const next = productPage + 1;
+    if (next >= productTotalPages) return;
+    if (!confirmedQuery) return;
+    runSearch(confirmedQuery, next, true, "products");
+  }, [
+    filteredProducts.length,
+    products.length,
+    isLoading,
+    isLoadingMore,
+    productPage,
+    productTotalPages,
+    temporaryPreferences,
+    categories,
+    confirmedQuery,
+    runSearch,
+  ]);
+
   return {
     query,
     setQuery,
