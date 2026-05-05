@@ -174,7 +174,9 @@ export default function ProductDetailDialog({
         onClose={cart.closeClosedReopensPopup}
         onConfirm={async () => {
           cart.closeClosedReopensPopup();
-          const added = await cart.handleAddWithQuantity(quantity);
+          const added = await cart.handleAddWithQuantity(quantity, {
+            skipBusinessHoursCheck: true,
+          });
           if (added) onClose();
         }}
       />

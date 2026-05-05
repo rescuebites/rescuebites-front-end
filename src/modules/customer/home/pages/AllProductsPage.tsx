@@ -1,6 +1,6 @@
 import { Box, Typography, CircularProgress, Button } from "@mui/material";
-import { useState, useEffect } from "react";
-import { useProductsByCommerceType } from "../hooks/useProducts";
+import { useState } from "react";
+import { useInfiniteProductsByCommerceType } from "../hooks/useProducts";
 import { useCommerceTypeStore } from "../hooks/useCommerceTypeStore";
 import { useFilterStore } from "@/modules/filterPanel/hooks/useFilterStore";
 import ProductDetailDialog from "../components/ProductDetailDialog";
@@ -11,8 +11,6 @@ import { useSearch } from "@/modules/filterPanel/hooks/useSearch";
 import FilterDrawer from "@/modules/filterPanel/components/FilterDrawer";
 import CustomTitle from "@/shared/components/CustomTitle";
 import CommerceTypeChips from "../components/CommerceTypeChips";
-
-const PAGE_SIZE = 20;
 
 export default function AllProductsPage() {
   const {
@@ -39,7 +37,6 @@ export default function AllProductsPage() {
   const [selectedProductId, setSelectedProductId] = useState<string | null>(
     null,
   );
-  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   const selectedCommerceType = useCommerceTypeStore(
     (state) => state.selectedCommerceType,
@@ -49,17 +46,12 @@ export default function AllProductsPage() {
     data: products,
     isLoading,
     isFetching,
-  } = useProductsByCommerceType(selectedCommerceType, 200);
+    isFetchingNextPage,
+    fetchNextPage,
+    hasNextPage,
+  } = useInfiniteProductsByCommerceType(selectedCommerceType);
 
   const navigate = useNavigate();
-
-  // Resetear visibleCount al cambiar filtros o tipo de comercio
-  useEffect(() => {
-    setVisibleCount(PAGE_SIZE);
-  }, [selectedCommerceType, categories]);
-
-  const visibleProducts = products?.slice(0, visibleCount) ?? [];
-  const hasMore = (products?.length ?? 0) > visibleCount;
 
   return (
     <Box sx={{ px: { xs: 2, sm: 4, md: 8 }, mx: "auto", mb: 3 }}>
@@ -91,7 +83,7 @@ export default function AllProductsPage() {
       </Box>
 
       {/* Contenido */}
-      {isLoading || isFetching ? (
+      {isLoading || (isFetching && !isFetchingNextPage) ? (
         <Box display="flex" justifyContent="center" alignItems="center" py={10}>
           <CircularProgress sx={{ color: "#77A787" }} />
         </Box>
@@ -122,7 +114,7 @@ export default function AllProductsPage() {
               },
             }}
           >
-            {visibleProducts.map((product) => (
+            {products.map((product) => (
               <ProductCard
                 key={product.productId}
                 product={product}
@@ -132,11 +124,12 @@ export default function AllProductsPage() {
           </Box>
 
           {/* Cargar más */}
-          {hasMore && (
+          {hasNextPage && (
             <Box display="flex" justifyContent="center" mt={3}>
               <Button
                 variant="outlined"
-                onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}
+                onClick={() => fetchNextPage()}
+                disabled={isFetchingNextPage}
                 sx={{
                   borderRadius: 8,
                   borderColor: "#77A787",
@@ -149,7 +142,11 @@ export default function AllProductsPage() {
                   },
                 }}
               >
-                Cargar más
+                {isFetchingNextPage ? (
+                  <CircularProgress size={20} sx={{ color: "#77A787" }} />
+                ) : (
+                  "Cargar más"
+                )}
               </Button>
             </Box>
           )}

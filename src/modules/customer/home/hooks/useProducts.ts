@@ -1,4 +1,4 @@
-﻿import { useMemo } from "react";
+﻿import { useMemo, useEffect } from "react";
 import { useQuery, useInfiniteQuery } from "@tanstack/react-query";
 import {
   getProductDetail,
@@ -7,6 +7,10 @@ import {
   getTopDeals,
   getProductsByCommerceTypeForClient,
   getProductsByPreferencesForClient,
+  getProductsByCommerceTypePage,
+  getProductsByCommerceTypeForClientPage,
+  getProductsByPreferencesPage,
+  getTopDealsPage,
 } from "../api/home.api";
 import { TOP_DEALS_QUERY_KEY } from "../constants";
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
@@ -103,6 +107,105 @@ export const useInfiniteProducts = (
     retry: 2,
   });
 };
+
+// Hook con infinite-query + auto-fetch para AllProductsPage
+export function useInfiniteProductsByCommerceType(
+  commerceType: CommerceTypeDisplay | null,
+  size = 20,
+) {
+  const { isAuthenticated, clientId } = useAuthStore();
+  const locality = useLocalityStore((state) => state.locality);
+  const temporaryPreferences = useFilterStore(
+    (state) => state.temporaryPreferences,
+  );
+  const categories = useFilterStore((state) => state.categories);
+
+  const isClient = isAuthenticated && !!clientId;
+
+  const query = useInfiniteQuery<PaginatedResponse<ProductResponse>, Error>({
+    queryKey: [
+      "products-by-category-infinite",
+      commerceType,
+      isClient ? `client-${clientId}` : locality,
+      size,
+    ],
+    queryFn: ({ pageParam }) => {
+      const page = pageParam as number;
+      if (isClient) {
+        return commerceType
+          ? getProductsByCommerceTypeForClientPage(
+              clientId!,
+              commerceType,
+              page,
+              size,
+            )
+          : getProductsByPreferencesPage(clientId!, page, size);
+      }
+      return commerceType
+        ? getProductsByCommerceTypePage(
+            commerceType,
+            locality || "Cordoba Capital",
+            page,
+            size,
+          )
+        : getTopDealsPage(locality || "Cordoba Capital", page, size);
+    },
+    initialPageParam: 0,
+    getNextPageParam: (lastPage) =>
+      lastPage.number + 1 < lastPage.totalPages
+        ? lastPage.number + 1
+        : undefined,
+    enabled: isClient || !!locality,
+  });
+
+  const allProducts = useMemo(
+    () => query.data?.pages.flatMap((p) => p.content) ?? [],
+    [query.data],
+  );
+
+  const filteredData = useMemo(() => {
+    let result = allProducts;
+    if (temporaryPreferences.length > 0) {
+      result = result.filter((p) =>
+        temporaryPreferences.every((pref) => p.preferences?.includes(pref)),
+      );
+    }
+    if (categories.length > 0) {
+      result = result.filter((p) =>
+        categories.includes(p.category as ProductCategory),
+      );
+    }
+    return result;
+  }, [allProducts, temporaryPreferences, categories]);
+
+  const hasFilters = temporaryPreferences.length > 0 || categories.length > 0;
+
+  // Auto-fetch more pages when client-side filters yield sparse results
+  useEffect(() => {
+    if (!hasFilters) return;
+    if (!query.hasNextPage || query.isFetchingNextPage || query.isFetching)
+      return;
+    if (filteredData.length >= size) return;
+    query.fetchNextPage();
+  }, [
+    filteredData.length,
+    hasFilters,
+    query.hasNextPage,
+    query.isFetchingNextPage,
+    query.isFetching,
+    size,
+    query.fetchNextPage,
+  ]);
+
+  return {
+    data: filteredData,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    isFetchingNextPage: query.isFetchingNextPage,
+    fetchNextPage: query.fetchNextPage,
+    hasNextPage: query.hasNextPage,
+  };
+}
 
 //hook para obtener el detalle de un producto específico
 export const useProductDetail = (productId: string | null) => {

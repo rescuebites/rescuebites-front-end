@@ -226,3 +226,89 @@ export const getProductsByCommerceType = async (
     return [];
   }
 };
+
+// ── Paginated versions for infinite-query support ─────────────────────────────
+const normalizeImages = (product: ProductResponse): ProductResponse => ({
+  ...product,
+  productImages: (product as any).images || product.productImages || [],
+});
+
+const emptyPage = (page: number): PaginatedResponse<ProductResponse> => ({
+  content: [],
+  totalElements: 0,
+  totalPages: 0,
+  size: 0,
+  number: page,
+});
+
+export const getProductsByCommerceTypePage = async (
+  commerceTypeDisplay: CommerceTypeDisplay,
+  locality: string,
+  page = 0,
+  size = 20,
+): Promise<PaginatedResponse<ProductResponse>> => {
+  try {
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/public/products/type/${commerceType}/ordered-by-price`,
+      { params: { locality, page, size } },
+    );
+    return { ...data, content: (data?.content ?? []).map(normalizeImages) };
+  } catch (error) {
+    console.error("Error fetching products by category page:", error);
+    return emptyPage(page);
+  }
+};
+
+export const getProductsByCommerceTypeForClientPage = async (
+  clientId: string,
+  commerceTypeDisplay: CommerceTypeDisplay,
+  page = 0,
+  size = 20,
+): Promise<PaginatedResponse<ProductResponse>> => {
+  try {
+    const commerceType = getCommerceTypeFromDisplay(commerceTypeDisplay);
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/type/${commerceType}/ordered-by-price`,
+      { params: { page, size } },
+    );
+    return { ...data, content: (data?.content ?? []).map(normalizeImages) };
+  } catch (error) {
+    console.error("Error fetching client products by category page:", error);
+    return emptyPage(page);
+  }
+};
+
+export const getProductsByPreferencesPage = async (
+  clientId: string,
+  page = 0,
+  size = 20,
+): Promise<PaginatedResponse<ProductResponse>> => {
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/clients/${clientId}/products/preferences`,
+      { params: { page, size } },
+    );
+    return { ...data, content: (data?.content ?? []).map(normalizeImages) };
+  } catch (error) {
+    console.error("Error fetching client preferences products page:", error);
+    return emptyPage(page);
+  }
+};
+
+export const getTopDealsPage = async (
+  locality: string,
+  page = 0,
+  size = 20,
+): Promise<PaginatedResponse<ProductResponse>> => {
+  try {
+    const { data } = await httpClient.get<PaginatedResponse<ProductResponse>>(
+      `/api/v1/public/products/ordered-by-price`,
+      { params: { locality, page, size } },
+    );
+    return { ...data, content: data?.content ?? [] };
+  } catch (error) {
+    console.error("Error fetching top deals page:", error);
+    return emptyPage(page);
+  }
+};
