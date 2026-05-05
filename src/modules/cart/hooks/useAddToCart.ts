@@ -98,11 +98,8 @@ export function useAddToCart(
   async function handleConflictConfirm() {
     const quantity = pendingQty ?? qty;
     setPendingQty(null);
+    setCommerceConflictOpen(false);
 
-    // Attempt the add BEFORE clearing. The backend validates commerce availability
-    // first, so if commerce2 is closed the error is thrown immediately and the
-    // commerce1 cart remains intact. doAddOrUpdate will open the closed-commerce
-    // popup and return false in that case.
     const success = await doAddOrUpdate(quantity);
     if (!success) return;
 
@@ -116,7 +113,6 @@ export function useAddToCart(
         await fetchCart();
         return;
       }
-      setCommerceConflictOpen(false);
     } catch {
       // clearCart or an unexpected network error — sync cart state and inform the user.
       await fetchCart();
@@ -150,12 +146,19 @@ export function useAddToCart(
   }
 
   /** For consumers that manage their own quantity UI (ej ProductDetailDialog). */
-  async function handleAddWithQuantity(quantity: number): Promise<boolean> {
+  async function handleAddWithQuantity(
+    quantity: number,
+    options?: { skipBusinessHoursCheck?: boolean },
+  ): Promise<boolean> {
     if (!isAuthenticated) {
       setLoginModalOpen(true);
       return false;
     }
-    if (businessHours && isCommerceCurrentlyClosed(businessHours)) {
+    if (
+      !options?.skipBusinessHoursCheck &&
+      businessHours &&
+      isCommerceCurrentlyClosed(businessHours)
+    ) {
       if (willCommerceReopenToday(businessHours)) {
         setPendingQty(quantity);
         setClosedReopensOpen(true);

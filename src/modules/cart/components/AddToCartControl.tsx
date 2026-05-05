@@ -51,6 +51,7 @@ export default function AddToCartControl({
         description={`Tu carrito tiene productos de ${cart.cartCommerceName ?? "otro comercio"}. Si continuás, se vaciará el carrito y se agregarán productos de ${cart.productCommerceName ?? "este comercio"}.`}
         confirmText="Vaciar y agregar"
         cancelText="Cancelar"
+        variant="danger"
         onConfirm={cart.handleConflictConfirm}
         onCancel={cart.closeCommerceConflict}
       />
