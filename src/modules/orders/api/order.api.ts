@@ -9,40 +9,45 @@ import { PaymentMethod } from "../enums/payment-method.enum";
 export const getClientOrders = async (
   clientId: string,
   page = 0,
-  size = 20
+  size = 20,
 ): Promise<PaginatedResponse<OrderSummaryForClientResponse>> => {
-  const { data } = await httpClient.get<PaginatedResponse<OrderSummaryForClientResponse>>(
-    `/api/v1/clients/${clientId}/orders`,
-    { params: { page, size, sort: "createdAt,desc" } }
-  );
+  const { data } = await httpClient.get<
+    PaginatedResponse<OrderSummaryForClientResponse>
+  >(`/api/v1/clients/${clientId}/orders`, {
+    params: { page, size, sort: "createdAt,desc" },
+  });
   return data;
 };
 
 export const getCommerceOrders = async (
   commerceId: string,
   page = 0,
-  size = 20
+  size = 20,
 ): Promise<PaginatedResponse<OrderSummaryForCommerceResponse>> => {
-  const { data } = await httpClient.get<PaginatedResponse<OrderSummaryForCommerceResponse>>(
-    `/api/v1/commerces/${commerceId}/orders`,
-    { params: { page, size, sort: "createdAt,desc" } }
-  );
+  const { data } = await httpClient.get<
+    PaginatedResponse<OrderSummaryForCommerceResponse>
+  >(`/api/v1/commerces/${commerceId}/orders`, {
+    params: { page, size, sort: "createdAt,desc" },
+  });
   return data;
 };
 
-export const getOrderDetail = async (clientId: string, orderId: string): Promise<OrderResponse> => {
+export const getOrderDetail = async (
+  clientId: string,
+  orderId: string,
+): Promise<OrderResponse> => {
   const { data } = await httpClient.get<OrderResponse>(
-    `/api/v1/clients/${clientId}/orders/${orderId}`
+    `/api/v1/clients/${clientId}/orders/${orderId}`,
   );
   return data;
 };
 
 export const getCommerceOrderDetail = async (
   commerceId: string,
-  orderId: string
+  orderId: string,
 ): Promise<OrderResponse> => {
   const { data } = await httpClient.get<OrderResponse>(
-    `/api/v1/commerces/${commerceId}/orders/${orderId}`
+    `/api/v1/commerces/${commerceId}/orders/${orderId}`,
   );
   return data;
 };
@@ -50,25 +55,25 @@ export const getCommerceOrderDetail = async (
 export const updateOrderStatus = async (
   commerceId: string,
   orderId: string,
-  body: UpdateOrderStatusRequest
+  body: UpdateOrderStatusRequest,
 ): Promise<void> => {
   await httpClient.patch(
     `/api/v1/commerces/${commerceId}/orders/${orderId}/status`,
-    body
+    body,
   );
 };
 
 export const cancelOrder = async (
   clientId: string,
   orderId: string,
-  reason: string
+  reason: string,
 ): Promise<OrderResponse> => {
   const { data } = await httpClient.patch<OrderResponse>(
     `/api/v1/clients/${clientId}/orders/${orderId}/cancel`,
     null,
     {
       params: { reason },
-    }
+    },
   );
   return data;
 };
@@ -77,11 +82,11 @@ export const createOrder = async (
   clientId: string,
   commerceId: string,
   paymentMethod: PaymentMethod,
-  notes?: string
+  notes?: string,
 ): Promise<OrderResponse> => {
   const { data } = await httpClient.post<OrderResponse>(
     `/api/v1/clients/${clientId}/orders`,
-    { commerceId, paymentMethod, notes }
+    { commerceId, paymentMethod, notes },
   );
   return data;
 };

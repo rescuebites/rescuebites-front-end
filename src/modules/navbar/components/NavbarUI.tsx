@@ -8,14 +8,13 @@ interface NavbarUIProps {
   cartCount?: number;
   notificationCount?: number;
   onOpenNotifications?: () => void;
-  onOpenNotifications?: () => void;
 }
 
 export default function NavbarUI({
   routes,
   cartCount = 0,
   notificationCount = 0,
-  onOpenNotifications
+  onOpenNotifications,
 }: NavbarUIProps) {
   const navigate = useNavigate();
   const location = useLocation();
@@ -27,6 +26,9 @@ export default function NavbarUI({
 
   const handleNavigation = (route: string) => {
     navigate(route);
+    document
+      .getElementById("main-scroll")
+      ?.scrollTo({ top: 0, behavior: "instant" });
   };
 
   const hasCart = !!routes.cart;
@@ -87,7 +89,9 @@ export default function NavbarUI({
         <IconButton
           onClick={() => handleNavigation(routes.products || routes.orders)}
           sx={{
-            color: isActive(routes.products || routes.orders) ? "#77A787" : "#757575",
+            color: isActive(routes.products || routes.orders)
+              ? "#77A787"
+              : "#757575",
             transition: "color 0.2s",
             width: { xs: 48, md: 56, lg: 64 },
             height: { xs: 48, md: 56, lg: 64 },
@@ -108,11 +112,13 @@ export default function NavbarUI({
               sx={{
                 width: { xs: 64, md: 76, lg: 88 },
                 height: { xs: 64, md: 76, lg: 88 },
-                bgcolor: isActive(routes.cart || routes.orders) ? '#3E6A53' : '#77A787',
-                color: '#FFFFFF',
-                border: '4px solid #FFFFFF',
-                boxShadow: '0 4px 12px rgba(119, 167, 135, 0.4)',
-                position: 'relative',
+                bgcolor: isActive(routes.cart || routes.orders)
+                  ? "#3E6A53"
+                  : "#77A787",
+                color: "#FFFFFF",
+                border: "4px solid #FFFFFF",
+                boxShadow: "0 4px 12px rgba(119, 167, 135, 0.4)",
+                position: "relative",
                 top: { xs: -32, md: -38, lg: -44 },
                 "&:hover": {
                   bgcolor: "#6B9A7B",

@@ -23,7 +23,6 @@ import { useFilterStore } from "../hooks/useFilterStore";
 import { ProductCategoryDisplayName } from "@/modules/products/utils/category-mapping";
 import { PreferenceTypeDisplayName } from "@/modules/client/utils/preference-mapping";
 
-
 // Transición para el modal (slide desde abajo en mobile)
 const Transition = forwardRef(function Transition(
   props: TransitionProps & {
@@ -105,30 +104,33 @@ export default function FilterDrawer() {
         >
           <Box
             sx={{
-              p: isMobile ? 2 : 3,
+              p: isMobile ? 1.25 : 2,
               display: "flex",
               alignItems: "center",
               justifyContent: "space-between",
+              gap: 1,
             }}
           >
             <Typography
               variant="h2"
               sx={{
                 fontWeight: 700,
-                fontSize: isMobile ? 28 : 28,
+                fontSize: isMobile ? 26 : 26,
                 color: "#2D2D2D",
               }}
             >
-              Filtros
+              Filtra tus productos
             </Typography>
+
             <IconButton
               onClick={closeFilterDrawer}
               size="large"
+              tabIndex={-1}
               sx={{
-                width: isMobile ? 40 : 48,
-                height: isMobile ? 40 : 48,
+                width: isMobile ? 36 : 44,
+                height: isMobile ? 36 : 44,
                 "& .MuiSvgIcon-root": {
-                  fontSize: isMobile ? 24 : 32,
+                  fontSize: isMobile ? 20 : 28,
                 },
               }}
             >
@@ -138,7 +140,7 @@ export default function FilterDrawer() {
 
           {/* Botón limpiar filtros cuando hay activos */}
           {activeFiltersCount > 0 && (
-            <Box sx={{ px: isMobile ? 2 : 3, pb: isMobile ? 2 : 3 }}>
+            <Box sx={{ px: isMobile ? 1.5 : 2, pb: isMobile ? 1 : 1.5 }}>
               <Button
                 fullWidth
                 variant="outlined"
@@ -147,9 +149,9 @@ export default function FilterDrawer() {
                   color: "#77A787",
                   borderColor: "#77A787",
                   textTransform: "none",
-                  fontSize: isMobile ? 14 : 16,
+                  fontSize: isMobile ? 13 : 14,
                   fontWeight: 600,
-                  py: isMobile ? 1 : 1.5,
+                  py: isMobile ? 0.75 : 1.25,
                   borderRadius: 2,
                   borderWidth: isMobile ? 1 : 2,
                   "&:hover": {
@@ -277,18 +279,6 @@ export default function FilterDrawer() {
 
             {/* Filtros Adicionales */}
             <Box>
-              <Typography
-                variant="h3"
-                sx={{
-                  fontWeight: 700,
-                  fontSize: isMobile ? 22 : 20,
-                  mb: isMobile ? 2 : 3,
-                  color: "#2D2D2D",
-                }}
-              >
-                Filtros adicionales
-              </Typography>
-
               {/* Preferencias temporales */}
               <CollapsibleSection
                 title="Preferencias alimenticias"
@@ -303,7 +293,11 @@ export default function FilterDrawer() {
                   overflow: "hidden",
                   px: isMobile ? 1.5 : 2,
                 }}
-                titleSx={{ fontWeight: 600, fontSize: isMobile ? 19 : 16, color: "#2D2D2D" }}
+                titleSx={{
+                  fontWeight: 600,
+                  fontSize: isMobile ? 19 : 16,
+                  color: "#2D2D2D",
+                }}
                 contentSx={{ gap: isMobile ? 2 : 1.5, pb: 2 }}
                 iconSize={isMobile ? 16 : 28}
                 badgeSx={{
@@ -317,28 +311,30 @@ export default function FilterDrawer() {
                 }}
                 headerSx={{ minHeight: isMobile ? 35 : 56 }}
               >
-                    {(Object.values(PreferenceType) as PreferenceType[]).map((pref) => {
-                      const isPermanent = permanentPreferences.includes(pref);
-                      const isActive = temporaryPreferences.includes(pref);
+                {(Object.values(PreferenceType) as PreferenceType[]).map(
+                  (pref) => {
+                    const isPermanent = permanentPreferences.includes(pref);
+                    const isActive = temporaryPreferences.includes(pref);
 
-                      return (
-                        <Chip
-                          key={pref}
-                          label={PreferenceTypeDisplayName[pref]}
-                          onClick={() =>
-                            !isPermanent && toggleTemporaryPreference(pref)
-                          }
-                          disabled={isPermanent}
-                          sx={filterChipSx(isActive, { isMobile, isPermanent })}
-                        />
-                      );
-                    })}
+                    return (
+                      <Chip
+                        key={pref}
+                        label={PreferenceTypeDisplayName[pref]}
+                        onClick={() =>
+                          !isPermanent && toggleTemporaryPreference(pref)
+                        }
+                        disabled={isPermanent}
+                        sx={filterChipSx(isActive, { isMobile, isPermanent })}
+                      />
+                    );
+                  },
+                )}
               </CollapsibleSection>
 
               {/* Categorías por grupo */}
               {getProductCategoryGroups().map((group) => {
                 const groupCount = group.categories.filter((cat) =>
-                  categories.includes(cat)
+                  categories.includes(cat),
                 ).length;
                 return (
                   <CollapsibleSection
@@ -355,7 +351,11 @@ export default function FilterDrawer() {
                       overflow: "hidden",
                       px: isMobile ? 1.5 : 2,
                     }}
-                    titleSx={{ fontWeight: 600, fontSize: isMobile ? 19 : 16, color: "#2D2D2D" }}
+                    titleSx={{
+                      fontWeight: 600,
+                      fontSize: isMobile ? 19 : 16,
+                      color: "#2D2D2D",
+                    }}
                     contentSx={{ gap: isMobile ? 1 : 1.5, pb: 2 }}
                     iconSize={isMobile ? 20 : 28}
                     badgeSx={{
@@ -369,17 +369,25 @@ export default function FilterDrawer() {
                     }}
                     headerSx={{ minHeight: isMobile ? 40 : 56 }}
                   >
-                      {group.categories.map((category) => {
-                        const isActive = categories.includes(category as ProductCategory);
-                        return (
-                          <Chip
-                            key={category}
-                            label={ProductCategoryDisplayName[category as ProductCategory]}
-                            onClick={() => toggleCategory(category as ProductCategory)}
-                            sx={filterChipSx(isActive, { isMobile })}
-                          />
-                        );
-                      })}
+                    {group.categories.map((category) => {
+                      const isActive = categories.includes(
+                        category as ProductCategory,
+                      );
+                      return (
+                        <Chip
+                          key={category}
+                          label={
+                            ProductCategoryDisplayName[
+                              category as ProductCategory
+                            ]
+                          }
+                          onClick={() =>
+                            toggleCategory(category as ProductCategory)
+                          }
+                          sx={filterChipSx(isActive, { isMobile })}
+                        />
+                      );
+                    })}
                   </CollapsibleSection>
                 );
               })}

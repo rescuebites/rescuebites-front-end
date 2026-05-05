@@ -4,6 +4,8 @@ import AddToCartButton from "./AddToCartButton";
 import AddToCartPopup from "./AddToCartPopUp";
 import { ConfirmModal } from "@/shared/components/ui/ConfirmModal";
 import ClosedCommercePopup from "./ClosedCommercePopup";
+import ClosedReopensPopup from "./ClosedReopensPopup";
+import type { BusinessHoursResponse } from "@/modules/commerce/interfaces/responses/business-hours.response";
 
 interface AddToCartControlProps {
   productId: string;
@@ -14,6 +16,7 @@ interface AddToCartControlProps {
   imageUrl?: string;
   commerceId?: string;
   commerceName?: string;
+  businessHours?: BusinessHoursResponse[];
 }
 
 export default function AddToCartControl({
@@ -25,10 +28,11 @@ export default function AddToCartControl({
   imageUrl,
   commerceId,
   commerceName,
+  businessHours,
 }: AddToCartControlProps) {
   const { getQuantity } = useCartStore();
   const quantityInCart = getQuantity(productId);
-  const cart = useAddToCart(productId, quantityInCart, commerceId, commerceName);
+  const cart = useAddToCart(productId, quantityInCart, commerceId, commerceName, businessHours);
 
   return (
     <>
@@ -47,6 +51,7 @@ export default function AddToCartControl({
         description={`Tu carrito tiene productos de ${cart.cartCommerceName ?? "otro comercio"}. Si continuás, se vaciará el carrito y se agregarán productos de ${cart.productCommerceName ?? "este comercio"}.`}
         confirmText="Vaciar y agregar"
         cancelText="Cancelar"
+        variant="danger"
         onConfirm={cart.handleConflictConfirm}
         onCancel={cart.closeCommerceConflict}
       />
@@ -72,6 +77,11 @@ export default function AddToCartControl({
       <ClosedCommercePopup
         open={cart.closedCommerceOpen}
         onClose={cart.closeClosedCommercePopup}
+      />
+      <ClosedReopensPopup
+        open={cart.closedReopensOpen}
+        onClose={cart.closeClosedReopensPopup}
+        onConfirm={cart.handleReopensConfirm}
       />
     </>
   );

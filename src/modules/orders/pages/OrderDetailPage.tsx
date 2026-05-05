@@ -32,8 +32,7 @@ const OrderDetailPage = () => {
 
   const { data: order, isLoading, error } = useOrderDetail(clientId, orderId);
 
-  const { handleCommerceClick, handleProductClick } =
-    useOrderPageActions();
+  const { handleCommerceClick, handleProductClick } = useOrderPageActions();
 
   const { handleCancelOrder, isCanceling } = useCancelOrderWithFeedback({
     clientId,
@@ -186,13 +185,20 @@ const OrderDetailPage = () => {
           total={order.total}
         />
 
-        {/* Método de Pago y Botón Cancelar */}
+        {/* Método de Pago, Cancelar y Confirmar entrega */}
         {(order.status === OrderStatus.PENDING ||
-          order.status === OrderStatus.CONFIRMED) && (
+          order.status === OrderStatus.CONFIRMED ||
+          order.status === OrderStatus.READY ||
+          order.status === OrderStatus.COMPLETED) && (
           <OrderPaymentSection
             paymentMethod={order.paymentMethod}
             onCancelClick={() => setCancelDialogOpen(true)}
             orderId={order.orderId}
+            cancelDisabled={
+              order.status === OrderStatus.READY ||
+              order.status === OrderStatus.COMPLETED
+            }
+            showContinuePayment={order.status === OrderStatus.PENDING}
           />
         )}
 

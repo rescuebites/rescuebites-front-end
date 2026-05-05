@@ -32,6 +32,7 @@ export default function ClientProfilePage() {
 
   const handleLogout = () => {
     logout();
+    navigate("/auth/login", { replace: true });
   };
 
   const handleDeleteAccount = () => {
@@ -127,11 +128,17 @@ export default function ClientProfilePage() {
 
         {/* Sección de Preferencias */}
         <ProfileSection title="Preferencias">
-          <Box display="flex" flexWrap="wrap" gap={1}>
-            {client.preferences.map((preference) => (
-              <PreferenceChip key={preference} preference={preference} />
-            ))}
-          </Box>
+          {client.preferences.length === 0 ? (
+            <Box sx={{ color: "#9E9E9E", fontSize: 14 }}>
+              Sin preferencias registradas
+            </Box>
+          ) : (
+            <Box display="flex" flexWrap="wrap" gap={1}>
+              {client.preferences.map((preference) => (
+                <PreferenceChip key={preference} preference={preference} />
+              ))}
+            </Box>
+          )}
         </ProfileSection>
 
         {/* Sección de Acciones */}

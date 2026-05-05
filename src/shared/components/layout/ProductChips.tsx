@@ -1,10 +1,24 @@
 import { ProductCondition } from "@/modules/products/enums/product-condition.enum";
 import { ProductConditionDisplayName } from "@/modules/products/utils/condition-mapping";
 import { CommerceType } from "@/modules/commerce/enums/commerce-type.enum";
-import { CommerceTypeDisplay, CommerceTypeDisplayName } from "@/shared/utils/commerce-mapping";
+import {
+  CommerceTypeDisplay,
+  CommerceTypeDisplayName,
+} from "@/shared/utils/commerce-mapping";
 import { COMMERCE_TYPE_STYLES } from "@/shared/config/commerce-styles";
 import { Box, Chip } from "@mui/material";
-import {  Sprout, ClockCheck, CheckCircle, Star, Sparkles, ClockAlert, Microwave, BookmarkX, PackageOpen, Tag } from "lucide-react";
+import {
+  Sprout,
+  ClockCheck,
+  CheckCircle,
+  Star,
+  Sparkles,
+  ClockAlert,
+  Microwave,
+  BookmarkX,
+  PackageOpen,
+  Tag,
+} from "lucide-react";
 
 // Estilo genérico para categorías de producto (Golosinas, Fruta, Pan, etc.)
 // Todas comparten el mismo estilo neutro — podés diferenciarlas después si querés
@@ -17,21 +31,81 @@ const PRODUCT_CATEGORY_STYLE = { bg: "#EEF2FF", color: "#4F46E5" };
 type ConditionConfig = { bg: string; color: string; icon: React.ReactNode };
 
 const CONDITION_CONFIG: Record<ProductCondition, ConditionConfig> = {
-  [ProductCondition.EXCELLENT]:        { bg: "#e8f9ff", color: "#209AC7", icon: <Sparkles size={14} />        },
-  [ProductCondition.GOOD]:             { bg: "#e8f9ff", color: "#209AC7", icon: <Star size={14} /> },
-  [ProductCondition.RIPE]:             { bg: "#B9EEA6",   color: "#39714C" , icon: <ClockCheck size={14} />  },
-  [ProductCondition.ALMOST_RIPE]:      { bg: "#B9EEA6",   color: "#39714C" , icon: <Sprout size={14} />      },
-  [ProductCondition.OVERRIPE]:         { bg: "#B9EEA6",   color: "#39714C", icon: <ClockCheck size={14} />  },
-  [ProductCondition.FRESHLY_BAKED]:    { bg: "#EB951C87", color: "#A16A0A", icon: <ClockCheck size={14} />        },
-  [ProductCondition.SAME_DAY]:         { bg: "#EB951C87", color: "#A16A0A", icon: <ClockCheck size={14} />        },
-  [ProductCondition.PREVIOUS_DAY]:     { bg: "#EB951C87", color: "#A16A0A", icon: <ClockAlert size={14} />  },
-  [ProductCondition.READY_TO_SERVE]:   { bg: "#E6E6E7",   color: "#6C6567" , icon: <CheckCircle size={14} /> },
-  [ProductCondition.NEEDS_REHEATING]:  { bg: "#E6E6E7",   color: "#6C6567" , icon: <Microwave size={14} />  },
-  [ProductCondition.DENTED_PACKAGING]: { bg: "#DDD4F9",   color: "#6D59D3", icon: <PackageOpen size={14} />        },
-  [ProductCondition.NEAR_EXPIRY]:      { bg: "#DDD4F9",   color: "#6D59D3", icon: <ClockCheck size={14} />  },
-  [ProductCondition.EXPIRED_TODAY]:    { bg: "#DDD4F9",   color: "#6D59D3", icon: <ClockCheck size={14} />  },
-  [ProductCondition.DAMAGED_LABEL]:    { bg: "#DDD4F9",   color: "#6D59D3", icon: <BookmarkX size={14} />        },
-  [ProductCondition.OTHER]:            { bg: "#E6E6E7", color: "#6C6567", icon: <Tag size={14} />        },
+  [ProductCondition.EXCELLENT]: {
+    bg: "#e8f9ff",
+    color: "#209AC7",
+    icon: <Sparkles size={14} />,
+  },
+  [ProductCondition.GOOD]: {
+    bg: "#e8f9ff",
+    color: "#209AC7",
+    icon: <Star size={14} />,
+  },
+  [ProductCondition.RIPE]: {
+    bg: "#B9EEA6",
+    color: "#39714C",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.ALMOST_RIPE]: {
+    bg: "#B9EEA6",
+    color: "#39714C",
+    icon: <Sprout size={14} />,
+  },
+  [ProductCondition.OVERRIPE]: {
+    bg: "#B9EEA6",
+    color: "#39714C",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.FRESHLY_BAKED]: {
+    bg: "#EB951C87",
+    color: "#A16A0A",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.SAME_DAY]: {
+    bg: "#EB951C87",
+    color: "#A16A0A",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.PREVIOUS_DAY]: {
+    bg: "#EB951C87",
+    color: "#A16A0A",
+    icon: <ClockAlert size={14} />,
+  },
+  [ProductCondition.READY_TO_SERVE]: {
+    bg: "#E6E6E7",
+    color: "#6C6567",
+    icon: <CheckCircle size={14} />,
+  },
+  [ProductCondition.NEEDS_REHEATING]: {
+    bg: "#E6E6E7",
+    color: "#6C6567",
+    icon: <Microwave size={14} />,
+  },
+  [ProductCondition.DENTED_PACKAGING]: {
+    bg: "#DDD4F9",
+    color: "#6D59D3",
+    icon: <PackageOpen size={14} />,
+  },
+  [ProductCondition.NEAR_EXPIRY]: {
+    bg: "#DDD4F9",
+    color: "#6D59D3",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.EXPIRED_TODAY]: {
+    bg: "#DDD4F9",
+    color: "#6D59D3",
+    icon: <ClockCheck size={14} />,
+  },
+  [ProductCondition.DAMAGED_LABEL]: {
+    bg: "#DDD4F9",
+    color: "#6D59D3",
+    icon: <BookmarkX size={14} />,
+  },
+  [ProductCondition.OTHER]: {
+    bg: "#E6E6E7",
+    color: "#6C6567",
+    icon: <Tag size={14} />,
+  },
 };
 
 // ESTILOS BASE
@@ -43,7 +117,6 @@ const BASE_CHIP_SX = {
   "& .MuiChip-icon": { ml: 1, mr: -0.5 },
 } as const;
 
-
 // HELPER para etiqueta de vence en ...
 export function getDaysUntilExpiration(expirationDate: string): number {
   const exp = new Date(expirationDate);
@@ -53,7 +126,6 @@ export function getDaysUntilExpiration(expirationDate: string): number {
   const ms = exp.getTime() - today.getTime();
   return Math.max(0, Math.ceil(ms / (1000 * 60 * 60 * 24)));
 }
-
 
 // SUB-COMPONENTES REUTILIZABLES
 
@@ -69,7 +141,7 @@ export function CommerceTypeChip({ commerceType }: { commerceType: string }) {
   return (
     <Chip
       label={display}
-      icon={style.icon as any} 
+      icon={style.icon as any}
       size="small"
       sx={{
         ...BASE_CHIP_SX,
@@ -82,12 +154,20 @@ export function CommerceTypeChip({ commerceType }: { commerceType: string }) {
 }
 
 /** Chip de categoría de producto */
-export function ProductCategoryChip({ categoryDisplayName }: { categoryDisplayName: string }) {
+export function ProductCategoryChip({
+  categoryDisplayName,
+}: {
+  categoryDisplayName: string;
+}) {
   return (
     <Chip
       label={categoryDisplayName}
       size="small"
-      sx={{ ...BASE_CHIP_SX, bgcolor: PRODUCT_CATEGORY_STYLE.bg, color: PRODUCT_CATEGORY_STYLE.color }}
+      sx={{
+        ...BASE_CHIP_SX,
+        bgcolor: PRODUCT_CATEGORY_STYLE.bg,
+        color: PRODUCT_CATEGORY_STYLE.color,
+      }}
     />
   );
 }
@@ -118,8 +198,6 @@ export function ConditionChip({
   );
 }
 
-
-
 // COMPONENTE PRINCIPAL
 interface ProductChipsProps {
   discountPercentage?: number;
@@ -127,9 +205,9 @@ interface ProductChipsProps {
   stock?: number;
   condition?: ProductCondition | string;
   conditionDisplayName?: string | null;
-  conditions?: string[];         // array de condiciones (nuevo)
-  category?: string;             // tipo de comercio: "KIOSK", "Kiosco", etc.
-  categoryDisplayName?: string;  // categoría de producto: "Golosinas", "Fruta", etc.
+  conditions?: string[]; // array de condiciones (nuevo)
+  category?: string; // tipo de comercio: "KIOSK", "Kiosco", etc.
+  categoryDisplayName?: string; // categoría de producto: "Golosinas", "Fruta", etc.
   // Visibilidad
   showDiscount?: boolean;
   showExpiration?: boolean;
@@ -197,20 +275,28 @@ export function ProductChips({
       )}
 
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap" }}>
-
         {/* Descuento */}
         {hasDiscount && !discountAsImageBadge && (
           <Chip
             label={`${Math.round(Number(discountPercentage))}% Menos`}
             size="small"
-            sx={{ ...BASE_CHIP_SX, bgcolor: "#fff3e0", color: "#FF8A65", fontWeight: 700 }}
+            sx={{
+              ...BASE_CHIP_SX,
+              bgcolor: "#fff3e0",
+              color: "#FF8A65",
+              fontWeight: 700,
+            }}
           />
         )}
 
         {/* Vencimiento */}
         {showExpiration && daysUntilExpiration !== null && (
           <Chip
-            label={`Vence en ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "día" : "días"}`}
+            label={
+              daysUntilExpiration === 0
+                ? "Vence hoy"
+                : `Vence en ${daysUntilExpiration} ${daysUntilExpiration === 1 ? "día" : "días"}`
+            }
             size="small"
             sx={{ ...BASE_CHIP_SX, bgcolor: "#ffebee", color: "#c62828" }}
           />
@@ -229,7 +315,8 @@ export function ProductChips({
         {showCondition && conditions && conditions.length > 0 ? (
           conditions.map((cond) => {
             const conditionEnum = cond as ProductCondition;
-            const displayName = ProductConditionDisplayName[conditionEnum] || cond;
+            const displayName =
+              ProductConditionDisplayName[conditionEnum] || cond;
             return (
               <ConditionChip
                 key={cond}
@@ -244,7 +331,8 @@ export function ProductChips({
             conditionDisplayName={conditionDisplayName!}
           />
         ) : (
-          showCondition && conditionDisplayName && (
+          showCondition &&
+          conditionDisplayName && (
             <Chip
               label={conditionDisplayName}
               size="small"
@@ -259,8 +347,9 @@ export function ProductChips({
         )}
 
         {/* Tipo de comercio — "Kiosco", "Verdulería", etc. */}
-        {showCategory && category && <CommerceTypeChip commerceType={category} />}
-
+        {showCategory && category && (
+          <CommerceTypeChip commerceType={category} />
+        )}
       </Box>
     </>
   );

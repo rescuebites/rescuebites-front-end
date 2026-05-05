@@ -1,9 +1,11 @@
 import {
   Box,
+  Button,
   ButtonBase,
   Card,
   CardContent,
   CardMedia,
+  CircularProgress,
   Typography,
   Avatar,
 } from "@mui/material";
@@ -18,7 +20,7 @@ import {
 
 import { ProductResponse } from "@/modules/products/interfaces/responses/product-response.interface";
 import { useCommerceDetail } from "@/modules/commerce/hooks/useCommerceDetail";
-import { useProducts } from "../hooks/useProducts";
+import { useInfiniteProducts } from "../hooks/useProducts";
 import BackButton from "../../../../shared/components/ui/BackButton";
 import { ProductChips } from "@/shared/components/layout/ProductChips";
 import { CommerceTypeChip } from "@/shared/components/layout/ProductChips";
@@ -30,6 +32,8 @@ import AddToCartControl from "@/modules/cart/components/AddToCartControl";
 import ClosedCommerceAlert from "./ClosedCommerceAlert";
 import { isCommerceCurrentlyClosed } from "../utils/commerceStatus";
 import BusinessHoursDialog from "./BusinessHoursDialog";
+import type { BusinessHoursResponse } from "@/modules/commerce/interfaces/responses/business-hours.response";
+import { formatCurrency } from "@/shared/utils/currency.utils";
 
 interface CommerceDetailDialogProps {
   commerceId: string;
@@ -42,22 +46,22 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
 
   useEffect(() => {
     setShowCarousel(false);
+    document
+      .getElementById("main-scroll")
+      ?.scrollTo({ top: 0, behavior: "instant" });
   }, [commerceId]);
   // Obtener detalles del comercio
   const { data: commerce, isLoading: isLoadingCommerce } =
     useCommerceDetail(commerceId);
 
-  // Obtener productos del comercio específico
-  const { data: productsData, isLoading: isLoadingProducts } = useProducts({
-    commerceId,
-    size: 50, // Traer más productos para el catálogo completo
-  });
-
-  // Función para ordenar productos
-  const getSortedProducts = (products: ProductResponse[]) => {
-    const sorted = [...products];
-    return sorted;
-  };
+  // Obtener productos del comercio específico (paginado)
+  const {
+    data: productsData,
+    isLoading: isLoadingProducts,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteProducts(commerceId);
 
   //función para probar si funciona el agregado de productos a carrito
   const { fetchCart } = useCartStore();
@@ -77,7 +81,7 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
   }
 
   // Error state
-  if (!commerce || !productsData) {
+  if (!commerce) {
     return (
       <Box sx={{ backgroundColor: "#FAFAFA", minHeight: "100vh" }}>
         <EmptyState message="Error al cargar la información del comercio" />
@@ -85,8 +89,8 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
     );
   }
 
-  // Extraer productos del PaginatedResponse
-  const products = getSortedProducts(productsData.content || []);
+  // Extraer y aplanar productos de todas las páginas cargadas
+  const products = productsData?.pages.flatMap((p) => p.content) ?? [];
 
   return (
     <Box
@@ -101,7 +105,6 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
       </Box>
       <Box
         sx={{
-          pt: { xs: 5, sm: 7, md: 10 },
           px: { xs: 2, sm: 3, md: 5 },
           maxWidth: { xs: "100%" },
           mx: "auto",
@@ -302,33 +305,63 @@ const CommerceDetailDialog: React.FC<CommerceDetailDialogProps> = ({
         </Box>
 
         {/* Menu Items */}
-        {products.length === 0 ? (
+        {!isLoadingProducts && products.length === 0 ? (
           <Box textAlign="center" py={8}>
             <Typography color="text.secondary" fontSize={{ xs: 18, md: 24 }}>
               Este comercio aún no tiene productos disponibles
             </Typography>
           </Box>
         ) : (
-          <Box
-            sx={{
-              display: "grid",
-              gridTemplateColumns: {
-                xs: "1fr",
-                sm: "1fr",
-                md: "repeat(2, 1fr)",
-              },
-              gap: { xs: 1, sm: 2, md: 3 },
-            }}
-          >
-            {products.map((item: ProductResponse) => (
-              <ProductCard
-                key={item.productId}
-                product={item}
-                commerceId={commerceId}
-                commerceName={commerce?.name}
-              />
-            ))}
-          </Box>
+          <>
+            <Box
+              sx={{
+                display: "grid",
+                gridTemplateColumns: {
+                  xs: "1fr",
+                  sm: "1fr",
+                  md: "repeat(2, 1fr)",
+                },
+                gap: { xs: 1, sm: 2, md: 3 },
+              }}
+            >
+              {products.map((item: ProductResponse) => (
+                <ProductCard
+                  key={item.productId}
+                  product={item}
+                  commerceId={commerceId}
+                  commerceName={commerce?.name}
+                  businessHours={commerce?.businessHours}
+                />
+              ))}
+            </Box>
+
+            {hasNextPage && (
+              <Box display="flex" justifyContent="center" mt={3}>
+                <Button
+                  variant="outlined"
+                  onClick={() => fetchNextPage()}
+                  disabled={isFetchingNextPage}
+                  sx={{
+                    borderRadius: 8,
+                    borderColor: "#77A787",
+                    color: "#77A787",
+                    px: 4,
+                    "&:hover": {
+                      borderColor: "#3E6A53",
+                      color: "#3E6A53",
+                      bgcolor: "transparent",
+                    },
+                  }}
+                >
+                  {isFetchingNextPage ? (
+                    <CircularProgress size={20} sx={{ color: "#77A787" }} />
+                  ) : (
+                    "Cargar más"
+                  )}
+                </Button>
+              </Box>
+            )}
+          </>
         )}
       </Box>
 
@@ -346,10 +379,12 @@ function ProductCard({
   product,
   commerceId,
   commerceName,
+  businessHours,
 }: {
   product: ProductResponse;
   commerceId: string;
   commerceName?: string;
+  businessHours?: BusinessHoursResponse[];
 }) {
   return (
     <Card
@@ -432,17 +467,18 @@ function ProductCard({
                   color: "#77A787",
                 }}
               >
-                ${product.discountedPrice.toFixed(2)}
+                {`$${formatCurrency(product.discountedPrice)}`}
               </Typography>
               {product.originalPrice && (
                 <Typography
                   variant="body1"
                   sx={{
                     textDecoration: "line-through",
+                    fontStyle: "italic",
                     color: "#999",
                   }}
                 >
-                  ${product.originalPrice.toFixed(2)}
+                  {`$${formatCurrency(product.originalPrice)}`}
                 </Typography>
               )}
             </Box>
@@ -472,6 +508,7 @@ function ProductCard({
             imageUrl={product.productImages?.[0]?.url}
             commerceId={commerceId}
             commerceName={commerceName}
+            businessHours={businessHours}
           />
         </Box>
       </CardContent>

@@ -10,16 +10,20 @@ interface OrderPaymentSectionProps {
   paymentMethod: PaymentMethod;
   onCancelClick: () => void;
   orderId?: string;
+  cancelDisabled?: boolean;
+  showContinuePayment?: boolean;
 }
 
 /**
- * Componente que muestra la sección de método de pago y el botón para cancelar pedido
- * Solo se muestra para pedidos en estados PENDING o CONFIRMED
+ * Componente que muestra la sección de método de pago y el botón para cancelar pedido.
+ * También muestra "Confirmar entrega" cuando el pedido está listo para retirar.
  */
 const OrderPaymentSection = ({
   paymentMethod,
   onCancelClick,
   orderId,
+  cancelDisabled = false,
+  showContinuePayment = true,
 }: OrderPaymentSectionProps) => {
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
 
@@ -91,6 +95,7 @@ const OrderPaymentSection = ({
         text="Cancelar Pedido"
         fullWidth
         onClick={onCancelClick}
+        disabled={cancelDisabled}
         startIcon={<MdCancel size={20} />}
         sx={{
           borderRadius: 3,
@@ -99,18 +104,18 @@ const OrderPaymentSection = ({
           fontSize: { xs: 14, sm: 15 },
           textTransform: "none",
           boxShadow: "none",
-          backgroundColor: "#F5F5F5",
-          color: "#D32F2F",
+          backgroundColor: cancelDisabled ? "#EEEEEE" : "#F5F5F5",
+          color: cancelDisabled ? "#BDBDBD" : "#D32F2F",
           flex: { xs: "none", sm: 1 },
           "&:hover": {
-            backgroundColor: "#FFEBEE",
+            backgroundColor: cancelDisabled ? "#EEEEEE" : "#FFEBEE",
             boxShadow: "none",
           },
         }}
       />
 
-      {/* Continuar Pago: sólo para Mercado Pago */}
-      {paymentMethod === PaymentMethod.MERCADO_PAGO && (
+      {/* Continuar Pago: sólo para Mercado Pago cuando el pago aún no fue completado */}
+      {paymentMethod === PaymentMethod.MERCADO_PAGO && showContinuePayment && (
         <CustomButton
           text="Continuar pago"
           fullWidth

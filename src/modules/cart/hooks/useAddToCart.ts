@@ -5,6 +5,11 @@ import { useCartStore } from "./useCartStore";
 import { useAuthStore } from "@/modules/auth/hooks/useAuthStore";
 import { AxiosError } from "axios";
 import { useSnackbarStore } from "@/shared/hooks/useSnackbarStore";
+import type { BusinessHoursResponse } from "@/modules/commerce/interfaces/responses/business-hours.response";
+import {
+  isCommerceCurrentlyClosed,
+  willCommerceReopenToday,
+} from "@/modules/customer/home/utils/commerceStatus";
 
 function isClosedForDayError(error: unknown): boolean {
   if (error instanceof AxiosError) {
@@ -14,17 +19,32 @@ function isClosedForDayError(error: unknown): boolean {
   return false;
 }
 
-export function useAddToCart(productId: string, quantityInCart: number, productCommerceId?: string, productCommerceName?: string) {
+export function useAddToCart(
+  productId: string,
+  quantityInCart: number,
+  productCommerceId?: string,
+  productCommerceName?: string,
+  businessHours?: BusinessHoursResponse[],
+) {
   const [open, setOpen] = useState(false);
   const [qty, setQty] = useState(1);
   const [loginModalOpen, setLoginModalOpen] = useState(false);
   const [commerceConflictOpen, setCommerceConflictOpen] = useState(false);
   const [closedCommerceOpen, setClosedCommerceOpen] = useState(false);
+  const [closedReopensOpen, setClosedReopensOpen] = useState(false);
   const [pendingQty, setPendingQty] = useState<number | null>(null);
 
   const isAuthenticated = useAuthStore((s) => s.isAuthenticated);
   const navigate = useNavigate();
-  const { addItem, updateItem, removeItem, getCartItemId, clearCart, fetchCart, cart } = useCartStore();
+  const {
+    addItem,
+    updateItem,
+    removeItem,
+    getCartItemId,
+    clearCart,
+    fetchCart,
+    cart,
+  } = useCartStore();
   const cartItemId = getCartItemId(productId);
   const inCart = quantityInCart > 0;
 
@@ -46,7 +66,21 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
       setLoginModalOpen(true);
       return;
     }
+    if (businessHours && isCommerceCurrentlyClosed(businessHours)) {
+      if (willCommerceReopenToday(businessHours)) {
+        setQty(quantityInCart > 0 ? quantityInCart : 1);
+        setClosedReopensOpen(true);
+      } else {
+        setClosedCommerceOpen(true);
+      }
+      return;
+    }
     setQty(quantityInCart > 0 ? quantityInCart : 1);
+    setOpen(true);
+  }
+
+  function handleReopensConfirm() {
+    setClosedReopensOpen(false);
     setOpen(true);
   }
 
@@ -64,11 +98,8 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
   async function handleConflictConfirm() {
     const quantity = pendingQty ?? qty;
     setPendingQty(null);
+    setCommerceConflictOpen(false);
 
-    // Attempt the add BEFORE clearing. The backend validates commerce availability
-    // first, so if commerce2 is closed the error is thrown immediately and the
-    // commerce1 cart remains intact. doAddOrUpdate will open the closed-commerce
-    // popup and return false in that case.
     const success = await doAddOrUpdate(quantity);
     if (!success) return;
 
@@ -82,14 +113,15 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
         await fetchCart();
         return;
       }
-      setCommerceConflictOpen(false);
     } catch {
       // clearCart or an unexpected network error — sync cart state and inform the user.
       await fetchCart();
-      useSnackbarStore.getState().showMessage(
-        "No se pudo actualizar el carrito. Por favor, inténtalo de nuevo.",
-        "error"
-      );
+      useSnackbarStore
+        .getState()
+        .showMessage(
+          "No se pudo actualizar el carrito. Por favor, inténtalo de nuevo.",
+          "error",
+        );
     }
   }
 
@@ -114,9 +146,25 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
   }
 
   /** For consumers that manage their own quantity UI (ej ProductDetailDialog). */
-  async function handleAddWithQuantity(quantity: number): Promise<boolean> {
+  async function handleAddWithQuantity(
+    quantity: number,
+    options?: { skipBusinessHoursCheck?: boolean },
+  ): Promise<boolean> {
     if (!isAuthenticated) {
       setLoginModalOpen(true);
+      return false;
+    }
+    if (
+      !options?.skipBusinessHoursCheck &&
+      businessHours &&
+      isCommerceCurrentlyClosed(businessHours)
+    ) {
+      if (willCommerceReopenToday(businessHours)) {
+        setPendingQty(quantity);
+        setClosedReopensOpen(true);
+      } else {
+        setClosedCommerceOpen(true);
+      }
       return false;
     }
     if (hasCommerceConflict()) {
@@ -133,7 +181,10 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
   }
 
   return {
-    open, qty, inCart, cartItemId,
+    open,
+    qty,
+    inCart,
+    cartItemId,
     setQty,
     handleOpenPopup,
     handleConfirm,
@@ -150,5 +201,8 @@ export function useAddToCart(productId: string, quantityInCart: number, productC
     productCommerceName,
     closedCommerceOpen,
     closeClosedCommercePopup: () => setClosedCommerceOpen(false),
+    closedReopensOpen,
+    closeClosedReopensPopup: () => setClosedReopensOpen(false),
+    handleReopensConfirm,
   };
 }

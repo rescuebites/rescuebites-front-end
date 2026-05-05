@@ -13,6 +13,7 @@ interface UpdateOrderStatusParams {
 const statusSuccessMessage: Partial<Record<OrderStatus, string>> = {
   [OrderStatus.PREPARING]: "Pedido aceptado. El cliente será notificado.",
   [OrderStatus.READY]: "El cliente fue notificado que su pedido está listo.",
+  [OrderStatus.COMPLETED]: "Entrega confirmada exitosamente.",
   [OrderStatus.CANCELLED]: "Pedido cancelado exitosamente.",
 };
 

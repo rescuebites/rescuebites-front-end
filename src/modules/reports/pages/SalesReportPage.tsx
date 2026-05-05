@@ -29,6 +29,8 @@ export const SalesReportPage = () => {
 
   const [appliedFrom, setAppliedFrom] = useState("");
   const [appliedTo, setAppliedTo] = useState("");
+  const [fromError, setFromError] = useState("");
+  const [toError, setToError] = useState("");
 
   const reportQuery = useCommerceReport(commerceId, appliedFrom, appliedTo);
   const report = reportQuery.data;
@@ -42,10 +44,36 @@ export const SalesReportPage = () => {
       fill: COLORS[index] ?? "#86EFAC",
     }));
 
-  const totalUnits = report?.totalProductsSold ?? 0;
+  const totalUnits = chartData.reduce((sum, item) => sum + item.unitsSold, 0);
 
   const handleApplyFilter = () => {
     if (!from || !to) return;
+    const today = new Date().toISOString().split("T")[0];
+
+    // Clear previous errors
+    setFromError("");
+    setToError("");
+
+    let hasError = false;
+
+    if (from > today) {
+      setFromError("La fecha no puede ser posterior al día de hoy.");
+      hasError = true;
+    }
+    if (to > today) {
+      setToError("La fecha no puede ser posterior al día de hoy.");
+      hasError = true;
+    }
+
+    if (!hasError && from > to) {
+      setFromError(
+        "La fecha de inicio no puede ser posterior a la fecha de fin.",
+      );
+      hasError = true;
+    }
+
+    if (hasError) return;
+
     setAppliedFrom(from);
     setAppliedTo(to);
   };
@@ -69,6 +97,8 @@ export const SalesReportPage = () => {
             from={from}
             to={to}
             onApply={handleApplyFilter}
+            fromError={fromError}
+            toError={toError}
           />
         </Box>
       </Box>
@@ -94,7 +124,7 @@ export const SalesReportPage = () => {
       >
         <CardContent>
           <CustomTitle
-            text="Total ventas"
+            text="Importe total"
             color="white"
             variant="body2"
             fontSize={22}
@@ -133,7 +163,7 @@ export const SalesReportPage = () => {
           icon={
             <ReceiptLongOutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />
           }
-          title="Pedidos"
+          title="Total de Pedidos"
           value={report?.totalOrders ?? "—"}
           isLoading={isLoading}
         />
@@ -141,7 +171,7 @@ export const SalesReportPage = () => {
           icon={
             <Inventory2OutlinedIcon sx={{ color: "#2E7D32", fontSize: 24 }} />
           }
-          title="Productos"
+          title="Total de Productos Vendidos"
           value={report?.totalProductsSold ?? "—"}
           isLoading={isLoading}
         />

@@ -158,6 +158,7 @@ const OrderItemCard = ({
               <Typography
                 sx={{
                   textDecoration: "line-through",
+                  fontStyle: "italic",
                   color: "#9CA3AF",
                   fontSize: { xs: 13, sm: 14 },
                 }}

@@ -10,9 +10,9 @@ interface ProductCardProps {
 function getExpirationText(date: string) {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
-  
+
   // Parsear la fecha en zona horaria local para evitar problemas con UTC
-  const [year, month, day] = date.split('T')[0].split('-').map(Number);
+  const [year, month, day] = date.split("T")[0].split("-").map(Number);
   const exp = new Date(year, month - 1, day);
   exp.setHours(0, 0, 0, 0);
 
@@ -108,6 +108,7 @@ export function ProductCard({ product, onClick }: ProductCardProps) {
               sx={{
                 color: "#9E9E9E",
                 textDecoration: "line-through",
+                fontStyle: "italic",
                 fontSize: 18,
               }}
             >

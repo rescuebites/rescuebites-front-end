@@ -13,6 +13,7 @@ export function useCart() {
 
   const {
     cart,
+    loading: cartLoading,
     fetchCart,
     updateItem,
     removeItem,
@@ -26,7 +27,7 @@ export function useCart() {
   const [createdOrderId, setCreatedOrderId] = useState<string | null>(null);
 
   const commerceSummaries: CommerceCartSummary[] = Object.values(
-    cart?.commerceSummaries ?? {}
+    cart?.commerceSummaries ?? {},
   );
   const commerce = commerceSummaries[0];
 
@@ -55,39 +56,44 @@ export function useCart() {
     if (!cart?.selectedPaymentMethod || !commerce || !clientId) return;
     setConfirming(true);
     try {
-        const order = await createOrder(clientId, commerce.commerceId, cart.selectedPaymentMethod, notes || undefined);
+      const order = await createOrder(
+        clientId,
+        commerce.commerceId,
+        cart.selectedPaymentMethod,
+        notes || undefined,
+      );
 
-        // Log order for debugging before creating payment preference
-        // eslint-disable-next-line no-console
-        console.debug("createOrder response:", order);
+      // Log order for debugging before creating payment preference
+      // eslint-disable-next-line no-console
+      console.debug("createOrder response:", order);
 
-        if (cart.selectedPaymentMethod === PaymentMethod.MERCADO_PAGO) {
-          // indicate redirecting to the user (UI will show modal)
-          setRedirectingToMP(true);
+      if (cart.selectedPaymentMethod === PaymentMethod.MERCADO_PAGO) {
+        // indicate redirecting to the user (UI will show modal)
+        setRedirectingToMP(true);
 
-          // request preference and log response for debugging 400s
-          try {
-            const pref = await createPaymentPreference(order.orderId);
-            // eslint-disable-next-line no-console
-            console.debug("createPaymentPreference response:", pref);
-            const { sandboxInitPoint, initPoint } = pref;
-            const redirectTarget = sandboxInitPoint || initPoint;
-            if (!redirectTarget) {
-              setRedirectingToMP(false);
-              throw new Error("No se recibió una URL válida de Mercado Pago.");
-            }
-            // don't clear UI state until redirect happens on the client;
-            // backend already cleared the cart on order creation, so show modal instead
-            window.location.href = redirectTarget;
-            return;
-          } catch (prefError) {
-            // Log and handle error: stop redirecting so UI returns to cart
-            // eslint-disable-next-line no-console
-            console.error("createPaymentPreference failed:", prefError);
+        // request preference and log response for debugging 400s
+        try {
+          const pref = await createPaymentPreference(order.orderId);
+          // eslint-disable-next-line no-console
+          console.debug("createPaymentPreference response:", pref);
+          const { sandboxInitPoint, initPoint } = pref;
+          const redirectTarget = sandboxInitPoint || initPoint;
+          if (!redirectTarget) {
             setRedirectingToMP(false);
-            throw prefError;
+            throw new Error("No se recibió una URL válida de Mercado Pago.");
           }
+          // don't clear UI state until redirect happens on the client;
+          // backend already cleared the cart on order creation, so show modal instead
+          window.location.href = redirectTarget;
+          return;
+        } catch (prefError) {
+          // Log and handle error: stop redirecting so UI returns to cart
+          // eslint-disable-next-line no-console
+          console.error("createPaymentPreference failed:", prefError);
+          setRedirectingToMP(false);
+          throw prefError;
         }
+      }
 
       await clearCart();
       queryClient.invalidateQueries({ queryKey: ["client-orders", clientId] });
@@ -102,6 +108,7 @@ export function useCart() {
   return {
     cart,
     commerce,
+    cartLoading,
     confirming,
     redirectingToMP,
     createdOrderId,
